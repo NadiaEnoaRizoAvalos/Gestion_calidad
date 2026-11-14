@@ -8,6 +8,9 @@ import { Theory } from "./pages/Theory";
 import { StudyRoute } from "./pages/StudyRoute";
 import { Simulator } from "./pages/Simulator";
 import { Processes } from "./pages/Processes";
+import { Exams } from "./pages/Exams";
+import { Notes } from "./pages/Notes";
+import { Review } from "./pages/Review";
 import { NotFound } from "./pages/NotFound";
 import "./styles/global.css";
 
@@ -22,6 +25,9 @@ createRoot(document.getElementById("root")!).render(
             <Route path="ruta" element={<StudyRoute />} />
             <Route path="simulador" element={<Simulator />} />
             <Route path="procesos" element={<Processes />} />
+            <Route path="parciales" element={<Exams />} />
+            <Route path="apuntes" element={<Notes />} />
+            <Route path="repaso" element={<Review />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
