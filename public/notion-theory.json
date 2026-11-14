@@ -1,4 +1,673 @@
 {
   "version": 1,
-  "documents": []
+  "documents": [
+    {
+      "id": "notion-cda1996d4e8f83abaff0012734875055",
+      "title": "mapa de procesos",
+      "category": "General",
+      "cover": "notion-images/f648cb1702b685dfba0db8e043c65f8bcb59f943b77c4ea7fe676e32cd3f3b0e.png",
+      "blocks": [
+        {
+          "id": "aeb1996d-4e8f-835d-9fa4-81c77514aeaf",
+          "type": "heading_2",
+          "text": [
+            {
+              "text": "Sistema de gestion:",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-808a-97bb-cccb60b41f13",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-800e-a7d0-c634635e01be",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "3 conceptos:",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            },
+            {
+              "text": "\n1-mejora continua\n2-satisfaccion con el usuario en relacion con mi producto o servicio\n3-gestion por procesos",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80a1-bb8a-cde37c450183",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80ed-9000-cbe926b9fb38",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8025-9001-f6de05901822",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-808e-b950-f7436b015612",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8001-9bf3-f248f673fe4c",
+          "type": "heading_2",
+          "text": [
+            {
+              "text": "Preguntas frecuentes",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-803d-a5b9-f022258f105d",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "1.- Que es ",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            },
+            {
+              "text": "CALIDAD",
+              "bold": true,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            },
+            {
+              "text": "? (utilice criterio, google y la ISO 9000 de vocabulario)\nsegun la norma 9000:2015, la calidad es el grado en el que un conjunto de caracteristicas, de un objeto cumple con los requisitos establecidos",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8078-beb0-f869b745965a",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80fc-9253-d7bc6c382a06",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "2.- Que es ",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            },
+            {
+              "text": "SGC",
+              "bold": true,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            },
+            {
+              "text": " (Sistema de Gestión de la Calidad)\nes un conjunto de procesos, procedimientos, recursos y responsabilidades que utiliza una organizacion para garantizar que sus productos o servicios cumplan con los requisitos de calidad ",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-809f-8c27-fe0e09446c03",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "La norma ISO 9001 establece los requisitos para implementar un Sistema de Gestión de la Calidad.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80e4-8e3d-db02a381c918",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80bd-a332-c842d0dd479a",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "3.-  Cual es el objetivo de la ",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            },
+            {
+              "text": "Ley 27.506",
+              "bold": true,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            },
+            {
+              "text": "?",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-808c-a512-c8e2924c7bd6",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "Busca fomentar la innovación, la generación de empleo calificado, la competitividad y el desarrollo tecnológico del país.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8008-823b-fcb3f15b1f99",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8011-86ca-f182a7523e6e",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "4.- Cómo se relaciona con SGC",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8039-b017-ddadcee9d637",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "La Ley 27.506 se relaciona directamente con los Sistemas de Gestión de la Calidad porque promueve que las empresas mejoren continuamente sus productos, servicios y procesos.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-807d-b47b-ddd75d1404e1",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "Para acceder al régimen, una empresa puede acreditar mejoras continuas en la calidad o demostrar que cumple con una norma reconocida, como ISO 9001.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8034-becd-d783d27436c6",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8056-825f-d7d6d77ac362",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "5.- Cuáles son los requisitos?",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80c1-b10f-e571e5514744",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "Para acceder a los beneficios de la ley, las empresas deben cumplir ciertos requisitos:",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8016-88dd-c2fc1350dcea",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "1. Estar constituidas legalmente: ser personas jurídicas habilitadas para desarrollar actividades en Argentina.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80d1-bdaf-f585d5b9bfaf",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "2. Realizar actividades promovidas: desarrollar actividades relacionadas con la economía del conocimiento.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8023-90ca-d12d5f58f2ab",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "3. Cumplir con la facturación requerida: generalmente, al menos el 70% de la facturación anual debe provenir de actividades promovidas. Existen excepciones y condiciones especiales.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80c1-b062-e6bbbbecb0dd",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "4. Estar al día con sus obligaciones: no tener deudas fiscales, laborales, gremiales ni previsionales.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80eb-a905-e9ec77c36544",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "5. Inscribirse en el registro: formar parte del Registro Nacional de Beneficiarios del Régimen de Promoción de la Economía del Conocimiento.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80cf-8c7a-e410feb9be55",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "6. Cumplir al menos dos de las siguientes tres condiciones:",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80b2-9593-ec0afaf59d79",
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "text": "Acreditar mejoras continuas o una certificación de calidad reconocida.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80b8-8987-f6135f62f92f",
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "text": "Realizar inversiones en capacitación del personal o investigación y desarrollo.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8013-a15a-ead5784ae0a8",
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "text": "Exportar bienes o servicios relacionados con la economía del conocimiento.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80fb-b0ad-cabc9218c79c",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80b4-82e3-ed5367aa0a1b",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "6.-  Indique ",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            },
+            {
+              "text": "beneficios concretos que otorga",
+              "bold": true,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8092-9584-d32acb37fadc",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/ab47c6a7d16bc25f6e5622e8e312a94f6732003c792767efebb99b33f41362fb.png"
+        },
+        {
+          "id": "4141996d-4e8f-808d-bf8c-d4c0b13ae8b5",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8060-8e26-e0390f509d1e",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80c5-8074-d68c6540c412",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-800d-8639-eaa8dfe20736",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8009-8381-cc4612d39724",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-805d-83f7-e8ce29d73193",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-808f-ac42-c777a20adbc9",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-800e-9715-c54c90482ed9",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8039-8b54-db39809eade2",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-804c-a256-cee1da98389a",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80f4-b9ae-cceb7c58565e",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-808c-b875-f1039c26c0e6",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80fb-8c9d-c8f89d2936e8",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8026-b6ff-ce625f933ccb",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8077-9ee3-ebc37bfe9f12",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-807d-ad84-f45787f7cf32",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8096-818d-e5d8c48323a4",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-808d-8731-f1a77537cf05",
+          "type": "heading_3",
+          "text": [
+            {
+              "text": "conceptos importantes:",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80d2-abb7-dfe406d67865",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "~ Recordá: ISO 9000 te enseña los conceptos. No establece los requisitos para certificar una empresa.\n\n~ La ISO 9001 establece requisitos para que la empresa organice y mejore estos procesos.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8089-87a1-d0dd310418c4",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "~ISO/IEC 27001: Para identificar riesgos y proteger la información, evitando accesos no autorizados, pérdidas y modificaciones indebidas.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-8060-a16f-f1a94f61d09c",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "~ISO/IEC 27002 proporciona recomendaciones y controles de seguridad de la información.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4141996d-4e8f-80ac-b5f5-fc666ffdcd4f",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "notion-def1996d4e8f834cbd2181684a978511",
+      "title": "normas:",
+      "category": "General",
+      "cover": "notion-images/001ecb3379aaa8f007cf60151dc78516f70fe24da2b97ea30bd7cfbe608ae4e5.png",
+      "blocks": []
+    }
+  ]
 }
