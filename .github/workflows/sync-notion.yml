@@ -22,13 +22,14 @@ jobs:
           node-version: '24'
           cache: npm
       - run: npm ci
+      - run: npm run check:sync
       - name: Sincronizar solamente la fuente autorizada
+        id: notion-sync
         run: npm run sync:notion
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_THEORY_SOURCE_ID: ${{ vars.NOTION_THEORY_SOURCE_ID }}
       - run: npm run validate:theory
-      - run: npm run check:sync
       - run: npm test
       - run: npm run lint
       - run: npm run build
