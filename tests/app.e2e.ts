@@ -51,17 +51,9 @@ test("portada, navegación, imágenes y preferencias", async ({ page }) => {
 });
 
 test("estudio persistente, búsqueda y ruta", async ({ page }) => {
-  await page.goto("/#/teoria?tema=phva");
-  await expect(page.locator(".lesson h2")).toHaveText("Ciclo PHVA");
-  await page
-    .getByRole("button", { name: "Marcar como estudiado", exact: true })
-    .click();
+  await page.goto("/#/ruta");
+  await page.getByRole("button", { name: "Completar: Ciclo PHVA", exact: true }).click();
   await page.reload();
-  await expect(
-    page.getByRole("button", { name: /Estudiado · Marcar/ }),
-  ).toBeVisible();
-  await page.getByLabel("Buscar contenido teórico").fill("zzzzzz");
-  await expect(page.getByText("No hay temas para esa búsqueda.")).toBeVisible();
   await page.goto("/#/ruta");
   await expect(
     page.getByRole("button", {

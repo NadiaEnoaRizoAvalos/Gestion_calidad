@@ -1,11 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Check, Clock, Search } from "lucide-react";
-import { topics } from "../data/topics";
+import { blockText, validateTheory } from "../types/theory";
+import type { TheoryDocument } from "../types/theory";
+import { NotionContent } from "../components/NotionContent";
+import "../styles/notion.css";
+
 import { useStudy } from "../hooks/useStudy";
 import { PageHeading } from "../components/PageHeading";
 
+const readingMinutes = (document: TheoryDocument) => Math.max(1, Math.ceil(blockText(document.blocks).split(/\s+/).length / 200));
+
 export function Theory() {
+  const [topics, setTopics] = useState<TheoryDocument[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(`${import.meta.env.BASE_URL}notion-theory.json`, { signal: controller.signal, cache: "no-cache" })
+      .then(response => { if (!response.ok) throw new Error("No se pudo leer teoría"); return response.json(); })
+      .then((data: unknown) => { validateTheory(data); setTopics(data.documents); })
+      .catch(() => { if (!controller.signal.aborted) setLoadError(true); })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
+  }, []);
   const { state, toggleComplete } = useStudy();
   const [params, setParams] = useSearchParams();
   const [search, setSearch] = useState("");
@@ -15,7 +33,7 @@ export function Theory() {
   const filtered = topics.filter(
     (item) =>
       (category === "Todos" || item.category === category) &&
-      `${item.title} ${item.definition} ${item.concepts.join(" ")}`
+      `${item.title} ${item.category} ${blockText(item.blocks)}`
         .toLocaleLowerCase("es")
         .includes(search.toLocaleLowerCase("es")),
   );
@@ -25,7 +43,6 @@ export function Theory() {
         title="Un lugar para entender"
         description="Explorá los conceptos, conectá las ideas y avanzá a tu ritmo."
         image="theory"
-        example
       />
       <div className="panel toolbar">
         <label className="search-input">
@@ -40,10 +57,11 @@ export function Theory() {
         <label>
           Categoría
           <select
+            aria-label="Categoría"
             value={category}
             onChange={(event) => setCategory(event.target.value)}
           >
-            {["Todos", "Fundamentos", "Procesos", "Mejora"].map((item) => (
+            {["Todos", ...new Set(topics.map(item => item.category))].map((item) => (
               <option key={item}>{item}</option>
             ))}
           </select>
@@ -59,14 +77,14 @@ export function Theory() {
           {filtered.map((item) => (
             <button
               key={item.id}
-              className={item.id === topic.id ? "selected" : ""}
-              aria-current={item.id === topic.id ? "page" : undefined}
+              className={item.id === topic?.id ? "selected" : ""}
+              aria-current={item.id === topic?.id ? "page" : undefined}
               onClick={() => setParams({ tema: item.id })}
             >
               <span>
                 {item.title}
                 <small>
-                  {item.category} · {item.minutes} min
+                  {item.category} · {readingMinutes(item)} min
                 </small>
               </span>
               {state.completed[item.id] && (
@@ -77,27 +95,15 @@ export function Theory() {
           {!filtered.length && <p>No hay temas para esa búsqueda.</p>}
         </aside>
         <article className="panel lesson">
+          {topic ? <>
           <div className="lesson-meta">
             <span className="tag">{topic.category}</span>
-            <span>
-              <Clock size={14} /> {topic.minutes} min de lectura
-            </span>
+            <span><Clock size={14} /> {readingMinutes(topic)} min de lectura</span>
           </div>
           <h2>{topic.title}</h2>
-          <p className="lead">{topic.description}</p>
-          <h3>La idea principal</h3>
-          <p>{topic.definition}</p>
-          <div className="example-box">
-            <h3>Un ejemplo cotidiano</h3>
-            <p>{topic.example}</p>
-          </div>
-          <h3>Conceptos para recordar</h3>
-          <div className="tags">
-            {topic.concepts.map((concept) => (
-              <span className="tag" key={concept}>
-                {concept}
-              </span>
-            ))}
+          {topic.cover && <img className="notion-cover" src={`${import.meta.env.BASE_URL}${topic.cover}`} alt="" />}
+          <div className="notion-content">
+            {topic.blocks.length ? <NotionContent blocks={topic.blocks} /> : <p>Este documento todavía no tiene contenido.</p>}
           </div>
           <button
             className={state.completed[topic.id] ? "secondary" : "primary"}
@@ -108,6 +114,7 @@ export function Theory() {
               ? "Estudiado · Marcar como pendiente"
               : "Marcar como estudiado"}
           </button>
+          </> : <><h2>{loading ? "Cargando resúmenes…" : loadError ? "No pudimos cargar tus resúmenes" : "Tus resúmenes, en un solo lugar"}</h2><p>{loadError ? "Volvé a intentar recargando la página." : !loading && "Cuando publiques tus resúmenes en Notion y se sincronicen, aparecerán acá para acompañar tu estudio."}</p></>}
         </article>
       </div>
     </section>

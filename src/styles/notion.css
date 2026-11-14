@@ -1,0 +1,10 @@
+.notion-content, .notion-content p { line-height: 1.85; white-space: pre-wrap; overflow-wrap: anywhere; }
+.theory-page .lesson, .theory-page .topic-list { min-width: 0; overflow-wrap: anywhere; }
+.notion-content img, .notion-cover { display: block; max-width: 100%; height: auto; }
+.notion-content figure { margin: 20px 0; }
+.notion-content figcaption { color: var(--muted); font-size: .85rem; }
+.notion-content pre, .notion-table { max-width: 100%; overflow: auto; white-space: pre; }
+.notion-content table { border-collapse: collapse; white-space: pre-wrap; }
+.notion-content td, .notion-content th { border: 1px solid var(--border); padding: 8px 12px; min-width: 100px; }
+.notion-content a { text-decoration: underline; }
+.notion-content { margin-bottom: 22px; }
