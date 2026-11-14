@@ -59,16 +59,22 @@ test("composición y capturas de todas las secciones en distintos tamaños", asy
           ),
         )
         .toBe(true);
-      const brand = await page.locator(".brand").boundingBox();
-      const bunny = await page.locator(".resting-bunny").boundingBox();
-      expect(
-        brand &&
-          bunny &&
-          (brand.x + brand.width <= bunny.x ||
-            bunny.x + bunny.width <= brand.x ||
-            brand.y + brand.height <= bunny.y ||
-            bunny.y + bunny.height <= brand.y),
-      ).toBeTruthy();
+      if (section === "") {
+        const bunny = await page.locator(".resting-bunny").boundingBox();
+        const grid = await page.locator(".module-grid").boundingBox();
+        expect(bunny && grid && bunny.y >= grid.y + grid.height).toBeTruthy();
+        expect(bunny!.width).toBeGreaterThanOrEqual(Math.min(300, width - 36));
+        const heights = await page
+          .locator(".module-card")
+          .evaluateAll((cards) =>
+            cards.map((card) =>
+              Math.round(card.getBoundingClientRect().height),
+            ),
+          );
+        expect(new Set(heights).size).toBe(1);
+      } else {
+        await expect(page.locator(".resting-bunny")).toHaveCount(0);
+      }
       const coveredText = await page
         .locator(".module-card")
         .evaluateAll((cards) =>

@@ -9,8 +9,6 @@ import {
   Map,
   Lightbulb,
   Heart,
-  Settings2,
-  Sparkles,
 } from "lucide-react";
 import { assets } from "../data/assets";
 import { useStudy } from "../hooks/useStudy";
@@ -80,6 +78,7 @@ export function Home() {
   const [day] = useState(() => Math.floor(Date.now() / 86400000));
   return (
     <div className="dashboard">
+      <h1 className="sr-only">Mi biblioteca de Gestión de Calidad</h1>
       <section className="stats-grid" aria-label="Tu estudio en un vistazo">
         <Link to="/ruta" className="stat-card">
           <BarChart3 className="stat-icon" />
@@ -103,7 +102,6 @@ export function Home() {
               actividades
             </small>
           </div>
-          <Sparkles className="tiny-spark" />
         </Link>
         <button
           className="stat-card schedule-card"
@@ -124,9 +122,7 @@ export function Home() {
                   )
                 : "Elegí tu próximo momento"}
             </p>
-            <small>
-              Organizá tu tiempo <Settings2 size={11} />
-            </small>
+            <small>Organizá tu tiempo</small>
           </div>
         </button>
         <button
@@ -160,25 +156,16 @@ export function Home() {
       <section className="module-grid" aria-label="Tu biblioteca">
         {modules.map((module, index) => (
           <Link to={module.path} className="module-card" key={module.path}>
-            <span className="card-corner corner-tl" aria-hidden="true">
-              ❧
-            </span>
-            <span className="card-corner corner-br" aria-hidden="true">
-              ❧
-            </span>
+            <div className="module-topline">
+              <span className="module-number">0{index + 1}</span>
+              <span className="module-note">{module.note}</span>
+            </div>
             <div className="module-art">
               <img src={assets[module.image]} alt="" />
-              <span className="art-shine" aria-hidden="true">
-                ✧
-              </span>
             </div>
             <div className="module-copy">
-              <span className="module-number">CAPÍTULO 0{index + 1}</span>
-              <h2>
-                {index + 1}. {module.title}
-              </h2>
+              <h2>{module.title}</h2>
               <p>{module.description}</p>
-              <span className="module-note">{module.note}</span>
             </div>
             <span className="circle-arrow">
               <ChevronRight size={17} />
@@ -186,40 +173,39 @@ export function Home() {
           </Link>
         ))}
       </section>
-      <section className="bottom-grid" aria-label="Seguí aprendiendo">
-        <Link to="/ruta" className="route-card">
-          <div className="route-art">
-            <Map size={48} strokeWidth={1.2} />
-            <span>✦</span>
-          </div>
-          <div>
-            <h2>Ruta de estudio</h2>
-            <p>
-              {next
-                ? "Sigue un orden sugerido para avanzar de forma organizada y efectiva."
-                : "¡Completaste tu recorrido! Volvé a tus temas cuando quieras."}
-            </p>
-          </div>
-          <span className="small-button">
-            Ver ruta <ChevronRight size={13} />
-          </span>
-        </Link>
-        <article className="tip-card">
-          <Lightbulb className="bulb" size={49} strokeWidth={1.3} />
-          <div>
-            <h2>Consejito del día</h2>
-            <p>
-              {tips[day % tips.length]} <Heart size={11} />
-            </p>
-          </div>
-          <div className="little-note" aria-hidden="true">
-            ♡
-          </div>
-        </article>
-      </section>
-      <p className="home-caption">
-        <Heart size={12} /> Tu espacio para aprender, a tu ritmo.
-      </p>
+      <div className="study-corner">
+        <section className="bottom-grid" aria-label="Seguí aprendiendo">
+          <Link to="/ruta" className="route-card">
+            <div className="route-art">
+              <Map size={48} strokeWidth={1.2} />
+            </div>
+            <div>
+              <h2>Ruta de estudio</h2>
+              <p>
+                {next
+                  ? "Sigue un orden sugerido para avanzar de forma organizada y efectiva."
+                  : "¡Completaste tu recorrido! Volvé a tus temas cuando quieras."}
+              </p>
+            </div>
+            <span className="small-button">
+              Ver ruta <ChevronRight size={13} />
+            </span>
+          </Link>
+          <article className="tip-card">
+            <Lightbulb className="bulb" size={49} strokeWidth={1.3} />
+            <div>
+              <h2>Consejito del día</h2>
+              <p>
+                {tips[day % tips.length]} <Heart size={11} />
+              </p>
+            </div>
+          </article>
+        </section>
+        <div className="bunny-nook" aria-hidden="true">
+          <img className="resting-bunny" src={assets.resting} alt="" />
+          <div className="desk-surface" />
+        </div>
+      </div>
       <dialog ref={dialog} className="settings-dialog">
         <form
           onSubmit={(event) => {

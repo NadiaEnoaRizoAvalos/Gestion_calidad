@@ -35,17 +35,18 @@ export function Layout() {
         Saltar al contenido
       </a>
       <div className="room-decor" aria-hidden="true">
-        <div className="window">
-          <span />
-          <span />
+        <div className="room-corner">
+          <div className="window">
+            <span className="window-sun" />
+            <span className="window-cloud" />
+          </div>
+          <img className="window-plant" src={assets.leaves} alt="" />
+          <div className="wall-shelf">
+            <i />
+            <i />
+            <i />
+          </div>
         </div>
-        <img className="hanging-leaves" src={assets.leaves} alt="" />
-        <div className="hanging-star">✧</div>
-        <div className="cloud cloud-one" />
-        <div className="cloud cloud-two" />
-        <span className="star star-one">✦</span>
-        <span className="star star-two">✧</span>
-        <span className="star star-three">✦</span>
       </div>
       <header className="site-header">
         <Link className="home-pill" to="/">
@@ -64,7 +65,6 @@ export function Layout() {
             </div>
           </div>
         </div>
-        <img className="resting-bunny" src={assets.resting} alt="" />
       </header>
       {location.pathname !== "/" && (
         <nav className="module-nav" aria-label="Secciones de estudio">
@@ -89,8 +89,6 @@ export function Layout() {
         <span>Un poquito cada día, un gran paso en tu aprendizaje.</span>
         <Heart size={13} />
       </footer>
-      <img className="reading-bunny" src={assets.reading} alt="" />
-      <div className="bottom-clouds" aria-hidden="true" />
     </div>
   );
 }
