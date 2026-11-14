@@ -19,7 +19,7 @@ export function parseStudyState(value: string | null): StudyState {
       completed: Object.fromEntries(
         Object.entries(data.completed ?? {}).filter(
           (entry): entry is [string, string] =>
-            ids.has(entry[0]) &&
+            (ids.has(entry[0]) || /^notion-[a-f0-9]{32}$/.test(entry[0])) &&
             typeof entry[1] === "string" &&
             Number.isFinite(Date.parse(entry[1])),
         ),
