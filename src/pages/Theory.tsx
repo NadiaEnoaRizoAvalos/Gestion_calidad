@@ -20,7 +20,7 @@ export function Theory() {
         .includes(search.toLocaleLowerCase("es")),
   );
   return (
-    <section className="content-page">
+    <section className="content-page theory-page">
       <PageHeading
         title="Un lugar para entender"
         description="Explorá los conceptos, conectá las ideas y avanzá a tu ritmo."
@@ -55,10 +55,12 @@ export function Theory() {
       </div>
       <div className="reading-layout">
         <aside className="panel topic-list" aria-label="Temas de teoría">
+          <h2 className="topic-list-title">Índice de temas</h2>
           {filtered.map((item) => (
             <button
               key={item.id}
               className={item.id === topic.id ? "selected" : ""}
+              aria-current={item.id === topic.id ? "page" : undefined}
               onClick={() => setParams({ tema: item.id })}
             >
               <span>

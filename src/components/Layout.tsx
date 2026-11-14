@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import { Award, Heart, Home, Sparkles } from "lucide-react";
+import { Heart, Home, Sparkles } from "lucide-react";
 import { assets } from "../data/assets";
 import { useStudy } from "../hooks/useStudy";
 
@@ -28,7 +28,9 @@ export function Layout() {
     window.scrollTo(0, 0);
   }, [location.pathname]);
   return (
-    <div className="library">
+    <div
+      className={`library ${location.pathname === "/" ? "library-home" : "library-inner"}`}
+    >
       <a href="#contenido" className="skip-link">
         Saltar al contenido
       </a>
@@ -50,9 +52,6 @@ export function Layout() {
           <Home size={16} fill="currentColor" /> Inicio
         </Link>
         <div className="brand">
-          <div className="award">
-            <Award strokeWidth={1.4} />
-          </div>
           <div>
             <Link to="/" className="brand-title">
               Gestión de <em>Calidad</em>

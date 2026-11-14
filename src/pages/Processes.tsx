@@ -341,7 +341,7 @@ export function Processes() {
               <text x="182" y="146">
                 disponibilidad
               </text>
-              <text x="340" y="188">
+              <text x="280" y="188">
                 ¿Disponible?
               </text>
               <text x="382" y="50">
