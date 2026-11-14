@@ -19,9 +19,9 @@ const batch = (results: unknown[], more = false) => ({
     return row.type ? { has_children: false, ...row } : row;
   }), has_more: more, next_cursor: more ? "next" : null
 });
-function mock(type = "status") {
+function mock(type = "status", publishedName = "Publicado") {
   return {
-    dataSources: { retrieve: vi.fn().mockResolvedValue({ properties: { Estado: { id: "s%3A", type } } }), query: vi.fn().mockResolvedValue(batch([page("Publicado", type)])) },
+    dataSources: { retrieve: vi.fn().mockResolvedValue({ properties: { Estado: { id: "s%3A", type, [type]: { options: [{ id: "published-option", name: publishedName }, { id: "draft-option", name: "Borrador" }] } } } }), query: vi.fn().mockResolvedValue(batch([page(publishedName, type)])) },
     databases: { retrieve: vi.fn() },
     blocks: { children: { list: vi.fn().mockResolvedValue(batch([{ id: "block", type: "paragraph", has_children: false, paragraph: { rich_text: rich("Texto académico intacto") } }])) } },
   };
@@ -31,6 +31,25 @@ const png = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR
 const fetchImage = vi.fn<typeof fetch>(async () => new Response(png, { headers: { "content-type": "image/png" } }));
 
 describe("Sincronización de Notion", () => {
+  it.each([
+    ["status", "publicado"], ["select", "publicado"],
+    ["status", "Publicado"], ["select", "PUBLICADO"],
+    ["status", "PuBlIcAdO"], ["select", "PuBlIcAdO"],
+  ])("resuelve la opción real %s/%s y exporta los dos resúmenes", async (type, name) => {
+    const m = mock(type, name);
+    m.dataSources.query.mockResolvedValue(batch([page(name, type), page(name, type, "33333333-3333-3333-3333-333333333333"), page("Borrador", type, "44444444-4444-4444-4444-444444444444")]));
+    const { data } = await collectTheory(client(m), sourceId);
+    expect(data.documents).toHaveLength(2);
+    expect(m.dataSources.query).toHaveBeenCalledWith(expect.objectContaining({ filter: { property: "s%3A", [type]: { equals: name } } }));
+    expect(m.blocks.children.list).toHaveBeenCalledTimes(2);
+  });
+  it.each([[], ["Borrador"], ["Publicado", "publicado"]])("rechaza opciones ausentes o ambiguas sin consultar páginas", async (...names) => {
+    const m = mock();
+    m.dataSources.retrieve.mockResolvedValue({ properties: { Estado: { id: "s%3A", type: "status", status: { options: names.map(name => ({ name })) } } } });
+    try { await collectTheory(client(m), sourceId); throw new Error("Se esperaba un error"); }
+    catch (error) { expect(diagnoseSyncError(error)).toMatch(/PUBLICATION_OPTION_(MISSING|AMBIGUOUS)/); }
+    expect(m.dataSources.query).not.toHaveBeenCalled();
+  });
   it.each(["status", "select"])("usa el ID interno de Estado %s y excluye borradores", async type => {
     const m = mock(type);
     m.dataSources.query.mockResolvedValue(batch([page("Publicado", type), page("Borrador", type, "33333333-3333-3333-3333-333333333333")]));
@@ -68,11 +87,12 @@ describe("Sincronización de Notion", () => {
     expect(JSON.stringify(data)).not.toContain("signature");
     expect(data.documents[0].blocks[1].children[0].cells?.[0][0].text).toBe("Dato");
   });
-  it("acepta páginas vacías y ninguna publicación sin inventar contenido", async () => {
+  it("acepta documentos sin bloques, pero investiga una fuente sin páginas", async () => {
     const m = mock(); m.blocks.children.list.mockResolvedValue(batch([]));
     expect((await collectTheory(client(m), sourceId)).data.documents[0].blocks).toEqual([]);
     m.dataSources.query.mockResolvedValue(batch([]));
-    expect((await collectTheory(client(m), sourceId)).data.documents).toEqual([]);
+    await expect(collectTheory(client(m), sourceId)).rejects.toThrow("tampoco encontró páginas");
+    expect(m.dataSources.query).toHaveBeenLastCalledWith(expect.objectContaining({ data_source_id: sourceId, filter_properties: ["s%3A"] }));
   });
   it("rechaza esquemas inválidos, páginas ajenas, cursores incompletos y bloques no soportados", async () => {
     const m = mock();
@@ -96,9 +116,9 @@ describe("Sincronización de Notion", () => {
       m.dataSources.query.mockRejectedValueOnce(new Error("conexión"));
       await expect(syncTheory(client(m), sourceId, root)).rejects.toThrow();
       expect(await readFile(file, "utf8")).toBe("anterior");
-      expect(await syncTheory(client(m), sourceId, root)).toBe(true);
+      expect(await syncTheory(client(m), sourceId, root)).toMatchObject({ changed: true, published: 1 });
       const previous = await readFile(file, "utf8"), time = (await stat(file)).mtimeMs;
-      expect(await syncTheory(client(m), sourceId, root)).toBe(false);
+      expect(await syncTheory(client(m), sourceId, root)).toMatchObject({ changed: false, published: 1 });
       expect((await stat(file)).mtimeMs).toBe(time);
       m.blocks.children.list.mockRejectedValueOnce(new Error("bloques"));
       await expect(syncTheory(client(m), sourceId, root)).rejects.toThrow();
@@ -112,6 +132,41 @@ describe("Sincronización de Notion", () => {
       await syncTheory(client(m), sourceId, root);
       expect(JSON.parse(await readFile(file, "utf8")).documents).toEqual([]);
       await expect(readFile(stale)).rejects.toMatchObject({ code: "ENOENT" });
+    } finally { await rm(root, { recursive: true, force: true }); }
+  });
+  it("investiga cero resultados con paginación, preserva datos ante una fuente equivocada y cuenta las publicaciones", async () => {
+    const root = await mkdtemp(join(tmpdir(), "notion-zero-test-"));
+    try {
+      const m = mock("status", "publicado"), file = join(root, "public/notion-theory.json");
+      const secondId = "33333333-3333-3333-3333-333333333333";
+      m.dataSources.query.mockResolvedValue(batch([page("publicado"), page("publicado", "status", secondId)]));
+      expect(await syncTheory(client(m), sourceId, root)).toEqual({ changed: true, published: 2, withdrawn: false });
+      expect(await syncTheory(client(m), sourceId, root)).toEqual({ changed: false, published: 2, withdrawn: false });
+      const previous = await readFile(file, "utf8");
+      m.blocks.children.list.mockClear();
+      // A filtered query returning nothing is not proof that no published pages exist.
+      m.dataSources.query.mockResolvedValueOnce(batch([])).mockResolvedValueOnce(batch([page("publicado")], true)).mockResolvedValueOnce(batch([page("publicado", "status", secondId)]));
+      try { await syncTheory(client(m), sourceId, root); throw new Error("Se esperaba un error"); }
+      catch (error) {
+        const message = diagnoseSyncError(error);
+        expect(message).toContain("[ZERO_FILTER_MISMATCH]");
+        expect(message).toContain("2 páginas visibles; 2 con la opción de publicación");
+        expect(message).not.toContain("mapa de procesos");
+        expect(message).not.toContain(sourceId);
+      }
+      expect(m.dataSources.query.mock.calls.at(-1)?.[0]).toMatchObject({ filter_properties: ["s%3A"], start_cursor: "next" });
+      expect(await readFile(file, "utf8")).toBe(previous);
+      // An unrelated set of drafts cannot authorize deleting the previous documents.
+      m.dataSources.query.mockResolvedValueOnce(batch([])).mockResolvedValueOnce(batch([page("Borrador", "status", "44444444-4444-4444-4444-444444444444")]));
+      await expect(syncTheory(client(m), sourceId, root)).rejects.toThrow("No se pudo confirmar");
+      expect(await readFile(file, "utf8")).toBe(previous);
+      // Only confirmation that both previous pages are now drafts permits an empty snapshot.
+      m.dataSources.query.mockResolvedValueOnce(batch([])).mockResolvedValueOnce(batch([page("Borrador"), page("Borrador", "status", secondId)]));
+      expect(await syncTheory(client(m), sourceId, root)).toEqual({ changed: true, published: 0, withdrawn: true });
+      expect(m.blocks.children.list).not.toHaveBeenCalled();
+      expect(JSON.parse(await readFile(file, "utf8")).documents).toEqual([]);
+      m.dataSources.query.mockResolvedValueOnce(batch([])).mockResolvedValueOnce(batch([page("Borrador")]));
+      await expect(syncTheory(client(m), sourceId, root)).rejects.toThrow("No se pudo confirmar");
     } finally { await rm(root, { recursive: true, force: true }); }
   });
   it("valida formatos, tamaño y HTTPS de imágenes", async () => {

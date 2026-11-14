@@ -16,6 +16,11 @@ const reasons = {
   STATE_MISSING: "No existe la propiedad Estado en la fuente autorizada. Revisá el nombre exacto y que el ID apunte a la base correcta.",
   STATE_TYPE: "La propiedad Estado debe ser de tipo Status o Select; el tipo actual es incompatible.",
   STATE_INCOMPLETE: "La API devolvió una propiedad Estado incompleta o incompatible; no se exportaron páginas.",
+  PUBLICATION_OPTION_MISSING: "Estado no contiene una opción cuyo nombre sea publicado (sin distinguir mayúsculas). Revisá las opciones y que la fuente sea la de tus resúmenes.",
+  PUBLICATION_OPTION_AMBIGUOUS: "Estado contiene varias opciones equivalentes a publicado al ignorar mayúsculas. Dejá una única opción de publicación para evitar ambigüedades.",
+  ZERO_SOURCE_EMPTY: "La consulta sin filtro tampoco encontró páginas visibles en esta fuente. Verificá NOTION_THEORY_SOURCE_ID y la conexión con la base original de tus resúmenes.",
+  ZERO_FILTER_MISMATCH: "El filtro no produjo documentos, pero la revisión de Estado encontró páginas publicadas. Se canceló la sincronización para evitar una exportación incompleta; volvé a ejecutar.",
+  ZERO_NOT_CONFIRMED: "No hay páginas con la opción de publicación en la fuente consultada. Verificá que NOTION_THEORY_SOURCE_ID corresponda a tus resúmenes y que sus páginas tengan realmente ese Estado. No se pudo confirmar la retirada de todos los documentos previos.",
   PAGE_OUTSIDE_SOURCE: "Una página no pertenece a la fuente autorizada; se canceló la sincronización.",
   BLOCK_INCOMPLETE: "Un bloque o tabla está incompleto; no se publicará un documento parcial.",
   BLOCK_DEPTH: "Los bloques superan el límite de 100 niveles de anidamiento.",
@@ -30,6 +35,7 @@ class SyncFailure extends Error {
   stage: Stage;
   reason?: keyof typeof reasons;
   blockType?: string;
+  counts?: { pages: number; published: number };
   constructor(stage: Stage, reason?: keyof typeof reasons, cause?: unknown) {
     super(reason ? reasons[reason] : "Falló la sincronización", { cause });
     this.stage = stage;
@@ -70,7 +76,8 @@ export function diagnoseSyncError(error: unknown): string {
   }
   if (failure.blockType) detail = `[BLOCK_UNSUPPORTED] Bloque no compatible: ${failure.blockType}. Adaptá ese bloque antes de reintentar; no se publicará un documento parcial.`;
   const metadata = [code ? `código=${code}` : "", status ? `HTTP=${status}` : ""].filter(Boolean).join("; ");
-  return `Sincronización cancelada. Etapa: ${failure.stage}. ${detail}${metadata ? ` (${metadata})` : ""} ${failure.stage === "archivos locales" ? "No se publicarán cambios de esta ejecución." : "El contenido previo se conserva."}`;
+  const counts = failure.counts ? ` Revisión de la misma fuente: ${failure.counts.pages} páginas visibles; ${failure.counts.published} con la opción de publicación.` : "";
+  return `Sincronización cancelada. Etapa: ${failure.stage}. ${detail}${metadata ? ` (${metadata})` : ""}${counts} ${failure.stage === "archivos locales" ? "No se publicarán cambios de esta ejecución." : "El contenido previo se conserva."}`;
 }
 
 const obj = (v: unknown): Raw => {
@@ -155,15 +162,25 @@ export async function collectTheory(notion: Client, sourceId: string, fetcher: t
     }
     return source;
   });
-  const { schema, stateId, stateType } = await atStage("propiedad Estado", async () => {
+  const { schema, stateId, stateType, publishedName } = await atStage("propiedad Estado", async () => {
     const schema: (Raw & { name: string })[] = Object.entries(obj(source.properties)).map(([name, value]) => ({ name, ...obj(value) }));
     const state = schema.find(p => p.name === "Estado");
     if (!state) throw new SyncFailure("propiedad Estado", "STATE_MISSING");
     if (state.type !== "status" && state.type !== "select") throw new SyncFailure("propiedad Estado", "STATE_TYPE");
     const stateId = str(state.id), stateType = state.type;
-    return { schema, stateId, stateType };
+    const options = list(obj(state[stateType]).options).map(obj);
+    const matches = options.filter(option => str(option.name).toLocaleLowerCase("es") === "publicado");
+    if (!matches.length) throw new SyncFailure("propiedad Estado", "PUBLICATION_OPTION_MISSING");
+    if (matches.length !== 1) throw new SyncFailure("propiedad Estado", "PUBLICATION_OPTION_AMBIGUOUS");
+    return { schema, stateId, stateType, publishedName: str(matches[0].name) };
   });
-  const pages = await atStage("consulta de páginas", () => paginate(cursor => notion.dataSources.query({ data_source_id: sourceId, page_size: 100, start_cursor: cursor, filter: stateType === "status" ? { property: stateId, status: { equals: "Publicado" } } : { property: stateId, select: { equals: "Publicado" } }, sorts: [{ timestamp: "created_time", direction: "ascending" }] })));
+  const pages = await atStage("consulta de páginas", () => paginate(cursor => notion.dataSources.query({ data_source_id: sourceId, page_size: 100, start_cursor: cursor, filter: stateType === "status" ? { property: stateId, status: { equals: publishedName } } : { property: stateId, select: { equals: publishedName } }, sorts: [{ timestamp: "created_time", direction: "ascending" }] })));
+  function pageStatus(page: Raw) {
+    if (obj(page.parent).data_source_id !== sourceId) throw new SyncFailure("fuente", "PAGE_OUTSIDE_SOURCE");
+    const status = Object.values(obj(page.properties)).map(obj).find(p => p.id === stateId);
+    if (!status || status.type !== stateType) throw new SyncFailure("propiedad Estado", "STATE_INCOMPLETE");
+    return status[stateType] === null ? null : str(obj(status[stateType]).name);
+  }
   const assets = new Map<string, Buffer>();
   async function image(value: unknown) {
     return atStage("imágenes", async () => {
@@ -208,10 +225,7 @@ export async function collectTheory(notion: Client, sourceId: string, fetcher: t
     const data: TheoryData = { version: 1, documents: [] };
     for (const item of pages) {
       const page = obj(item), properties = Object.values(obj(page.properties)).map(obj);
-      const status = properties.find(p => p.id === stateId);
-      if (!status || status.type !== stateType) throw new SyncFailure("propiedad Estado", "STATE_INCOMPLETE");
-      if (status[stateType] === null || obj(status[stateType]).name !== "Publicado" || page.in_trash === true || page.archived === true) continue;
-      if (obj(page.parent).data_source_id !== sourceId) throw new SyncFailure("fuente", "PAGE_OUTSIDE_SOURCE");
+      if (pageStatus(page) !== publishedName || page.in_trash === true || page.archived === true) continue;
       const title = properties.find(p => p.type === "title");
       if (!title) throw new Error("Página sin propiedad de título");
       const categorySchema = schema.find(p => ["categoría", "categoria"].includes(p.name.toLocaleLowerCase("es")));
@@ -224,18 +238,46 @@ export async function collectTheory(notion: Client, sourceId: string, fetcher: t
     }
     data.documents.sort((a, b) => a.id.localeCompare(b.id));
     validateTheory(data);
-    return { data, assets };
+    let emptyCheck: { pages: number; published: number; withdrawnIds: Set<string> } | undefined;
+    if (!data.documents.length) {
+      emptyCheck = await atStage("consulta de páginas", async () => {
+        // Inspect only Estado in this authorized source; never read draft blocks or assets.
+        const visible = await paginate(cursor => notion.dataSources.query({ data_source_id: sourceId, page_size: 100, start_cursor: cursor, filter_properties: [stateId] }));
+        const check = { pages: visible.length, published: 0, withdrawnIds: new Set<string>() };
+        for (const item of visible) {
+          const page = obj(item), status = pageStatus(page);
+          if (status === publishedName && page.in_trash !== true && page.archived !== true) check.published++;
+          else check.withdrawnIds.add(`notion-${uuid(str(page.id))}`);
+        }
+        if (!check.pages || check.published) {
+          const error = new SyncFailure("consulta de páginas", check.published ? "ZERO_FILTER_MISMATCH" : "ZERO_SOURCE_EMPTY");
+          error.counts = check;
+          throw error;
+        }
+        return check;
+      });
+    }
+    return { data, assets, emptyCheck };
   });
 }
 
 export async function syncTheory(notion: Client, sourceId: string, root = process.cwd(), fetcher: typeof fetch = fetch) {
   // Complete all reads and validation before touching the published snapshot.
-  const { data, assets } = await collectTheory(notion, sourceId, fetcher);
+  const { data, assets, emptyCheck } = await collectTheory(notion, sourceId, fetcher);
   return atStage("archivos locales", async () => {
     const file = resolve(root, "public/notion-theory.json"), directory = resolve(root, "public/notion-images");
     const json = JSON.stringify(data, null, 2) + "\n";
     let previous = "";
     try { previous = await readFile(file, "utf8"); } catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
+    if (emptyCheck) {
+      const prior: unknown = previous ? JSON.parse(previous) : { version: 1, documents: [] };
+      validateTheory(prior);
+      if (!prior.documents.length || !prior.documents.every(document => emptyCheck.withdrawnIds.has(document.id))) {
+        const error = new SyncFailure("consulta de páginas", "ZERO_NOT_CONFIRMED");
+        error.counts = emptyCheck;
+        throw error;
+      }
+    }
     await mkdir(directory, { recursive: true });
     for (const [name, bytes] of assets) {
       const path = join(directory, name);
@@ -254,7 +296,7 @@ export async function syncTheory(notion: Client, sourceId: string, root = proces
         removed = true;
       }
     }
-    return json !== previous || removed;
+    return { changed: json !== previous || removed, published: data.documents.length, withdrawn: !!emptyCheck };
   });
 }
 
@@ -267,8 +309,13 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
   try {
     const token = process.env.NOTION_TOKEN, source = process.env.NOTION_THEORY_SOURCE_ID;
     checkConfiguration(token, source);
-    const changed = await syncTheory(new Client({ auth: token, notionVersion: "2026-03-11", logLevel: LogLevel.ERROR, logger: () => { } }), source ?? "");
-    process.stdout.write(changed ? "Teoría actualizada.\n" : "Sin cambios.\n");
+    const result = await syncTheory(new Client({ auth: token, notionVersion: "2026-03-11", logLevel: LogLevel.ERROR, logger: () => { } }), source ?? "");
+    const message = `Sincronización completada: ${result.published} páginas publicadas. ${result.changed ? "Teoría actualizada." : "Sin cambios."}${result.withdrawn ? " Se verificó que todos los documentos previos dejaron de estar publicados en la misma fuente." : ""}`;
+    process.stdout.write(`${message}\n`);
+    if (process.env.GITHUB_ACTIONS === "true" && process.env.GITHUB_STEP_SUMMARY) {
+      try { await appendFile(process.env.GITHUB_STEP_SUMMARY, `### Sincronización de Notion\n\n${message}\n`); }
+      catch { process.stderr.write("No se pudo escribir el resumen de GitHub Actions; el resultado está en el registro del paso.\n"); }
+    }
   } catch (error) {
     // SDK errors may contain request URLs; never log raw responses or credentials.
     const diagnostic = diagnoseSyncError(error);
