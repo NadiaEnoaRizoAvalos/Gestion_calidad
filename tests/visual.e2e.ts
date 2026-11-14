@@ -61,9 +61,66 @@ test("composición y capturas de todas las secciones en distintos tamaños", asy
         .toBe(true);
       if (section === "") {
         const bunny = await page.locator(".resting-bunny").boundingBox();
+        const reading = await page.locator(".reading-bunny").boundingBox();
         const grid = await page.locator(".module-grid").boundingBox();
-        expect(bunny && grid && bunny.y >= grid.y + grid.height).toBeTruthy();
-        expect(bunny!.width).toBeGreaterThanOrEqual(Math.min(300, width - 36));
+        const stats = await page.locator(".stats-grid").boundingBox();
+        const brand = await page.locator(".brand").boundingBox();
+        expect(
+          bunny && stats && bunny.y + bunny.height <= stats.y,
+        ).toBeTruthy();
+        expect(
+          reading && grid && reading.y >= grid.y + grid.height,
+        ).toBeTruthy();
+        expect(bunny!.width).toBeGreaterThanOrEqual(width > 950 ? 300 : 230);
+        expect(reading!.width).toBeGreaterThanOrEqual(
+          Math.min(290, width - 36),
+        );
+        expect(
+          brand &&
+            bunny &&
+            (brand.x + brand.width <= bunny.x ||
+              brand.y + brand.height <= bunny.y),
+        ).toBeTruthy();
+        expect(Math.abs(grid!.x + grid!.width / 2 - width / 2)).toBeLessThan(1);
+        expect(Math.abs(stats!.x - grid!.x)).toBeLessThan(1);
+        expect(Math.abs(stats!.width - grid!.width)).toBeLessThan(1);
+        if (width > 950) {
+          const indicators = await page
+            .locator(".stat-card")
+            .evaluateAll((cards) =>
+              cards.map((card) => ({
+                x: card.getBoundingClientRect().x,
+                width: card.getBoundingClientRect().width,
+              })),
+            );
+          const columns = await page
+            .locator(".module-card")
+            .evaluateAll((cards) =>
+              cards.slice(0, 3).map((card) => ({
+                x: card.getBoundingClientRect().x,
+                width: card.getBoundingClientRect().width,
+              })),
+            );
+          for (let column = 0; column < 3; column++) {
+            expect(
+              Math.abs(indicators[column].x - columns[column].x),
+            ).toBeLessThan(1);
+            expect(
+              Math.abs(indicators[column].width - columns[column].width),
+            ).toBeLessThan(1);
+          }
+          const titleTops = await page
+            .locator(".module-copy h2")
+            .evaluateAll((titles) =>
+              titles.map((title) => title.getBoundingClientRect().top),
+            );
+          for (const row of [0, 3]) {
+            expect(
+              Math.max(...titleTops.slice(row, row + 3)) -
+                Math.min(...titleTops.slice(row, row + 3)),
+            ).toBeLessThan(1);
+          }
+        }
         const heights = await page
           .locator(".module-card")
           .evaluateAll((cards) =>
@@ -74,6 +131,7 @@ test("composición y capturas de todas las secciones en distintos tamaños", asy
         expect(new Set(heights).size).toBe(1);
       } else {
         await expect(page.locator(".resting-bunny")).toHaveCount(0);
+        await expect(page.locator(".reading-bunny")).toHaveCount(0);
       }
       const coveredText = await page
         .locator(".module-card")

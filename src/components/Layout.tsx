@@ -46,6 +46,9 @@ export function Layout() {
             <i />
             <i />
           </div>
+          {location.pathname === "/" && (
+            <img className="resting-bunny" src={assets.resting} alt="" />
+          )}
         </div>
       </div>
       <header className="site-header">

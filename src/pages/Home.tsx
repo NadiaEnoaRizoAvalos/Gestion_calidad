@@ -154,6 +154,18 @@ export function Home() {
         </button>
       </section>
       <section className="module-grid" aria-label="Tu biblioteca">
+        <img
+          className="grid-leaves leaves-upper-left"
+          src={assets.leaves}
+          alt=""
+          aria-hidden="true"
+        />
+        <img
+          className="grid-leaves leaves-lower-right"
+          src={assets.leaves}
+          alt=""
+          aria-hidden="true"
+        />
         {modules.map((module, index) => (
           <Link to={module.path} className="module-card" key={module.path}>
             <div className="module-topline">
@@ -202,7 +214,7 @@ export function Home() {
           </article>
         </section>
         <div className="bunny-nook" aria-hidden="true">
-          <img className="resting-bunny" src={assets.resting} alt="" />
+          <img className="reading-bunny" src={assets.reading} alt="" />
           <div className="desk-surface" />
         </div>
       </div>

@@ -30,15 +30,24 @@
   .stat-icon {
     width: 27px;
   }
-  .study-corner {
-    grid-template-columns: minmax(0, 1fr) 365px;
-    gap: 24px;
+  .library-home .site-header {
+    grid-template-columns: minmax(0, 1fr) 300px;
   }
-  .bunny-nook {
-    min-height: 220px;
+  .library-home .brand {
+    margin-right: 35px;
+  }
+  .library-home .room-decor {
+    width: 92%;
+  }
+  .library-home .room-corner {
+    width: 300px;
+    height: 210px;
   }
   .resting-bunny {
-    width: 395px;
+    width: 300px;
+  }
+  .grid-leaves {
+    display: none;
   }
   .route-card,
   .tip-card {
@@ -117,14 +126,35 @@
     font-size: 1.08rem;
   }
   .study-corner {
-    grid-template-columns: minmax(0, 1fr) 300px;
-    gap: 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
   }
-  .resting-bunny {
-    width: 325px;
+  .bottom-grid {
+    grid-column: 1;
   }
   .bunny-nook {
-    min-height: 200px;
+    grid-column: 2;
+  }
+  .library-home .site-header {
+    grid-template-columns: minmax(0, 1fr) 250px;
+    min-height: 222px;
+  }
+  .library-home .brand {
+    margin-right: 15px;
+    padding-top: 0;
+  }
+  .library-home .brand-title {
+    font-size: 2rem;
+  }
+  .library-home .room-decor {
+    width: calc(100% - 48px);
+  }
+  .library-home .room-corner {
+    width: 250px;
+    height: 195px;
+  }
+  .resting-bunny {
+    width: 250px;
   }
   .route-card {
     flex-wrap: wrap;
@@ -207,13 +237,6 @@
   .module-note {
     font-size: 0.75rem;
   }
-  .study-corner {
-    grid-template-columns: minmax(0, 1fr) 260px;
-    gap: 16px;
-  }
-  .resting-bunny {
-    width: 280px;
-  }
   .brand-title {
     font-size: 2rem;
   }
@@ -229,6 +252,35 @@
   .site-header {
     min-height: 152px;
     padding: 48px 0 17px;
+  }
+  .library-home .site-header {
+    display: flex;
+    align-items: flex-start;
+    min-height: 300px;
+    padding: 48px 0 0;
+  }
+  .library-home .brand {
+    margin: 0;
+  }
+  .library-home .brand-title {
+    font-size: clamp(1.75rem, 6.6vw, 2.1rem);
+  }
+  .library-home .room-decor {
+    width: calc(100% - 36px);
+    height: 300px;
+  }
+  .library-home .room-corner {
+    top: 136px;
+    width: 230px;
+    height: 145px;
+  }
+  .library-home .window {
+    width: 85px;
+    height: 120px;
+    right: 3px;
+  }
+  .resting-bunny {
+    width: 230px;
   }
   .brand {
     padding: 0;
@@ -389,13 +441,14 @@
     font-size: 0.78rem;
   }
   .bunny-nook {
+    grid-column: 1;
     min-height: 0;
     width: min(100%, 420px);
     justify-self: center;
     padding: 0 0 17px;
     margin-top: 1px;
   }
-  .resting-bunny {
+  .reading-bunny {
     width: 100%;
     max-width: 100%;
     margin-left: 0;
@@ -554,6 +607,12 @@
   .brand-title,
   .library-inner .brand-title {
     font-size: 1.65rem;
+  }
+  .library-home .brand-title {
+    font-size: 1.65rem;
+  }
+  .library-home .room-decor {
+    width: calc(100% - 24px);
   }
   .module-card {
     grid-template-columns: 106px minmax(0, 1fr);
