@@ -119,11 +119,11 @@ test("el simulacro no revela respuestas de ninguna pregunta hasta finalizar", as
   await expect(page.locator(".history-panel")).toContainText("2 respuestas guardadas para revisión manual");
 });
 
-test("las seis preguntas adicionales se estudian sin inventar las dieciséis preguntas de las fotografías pendientes", async ({ page }) => {
+test("las seis preguntas adicionales conservan búsqueda, guardado y práctica sin calificación", async ({ page }) => {
   await page.unroute("**/exams/catalog.json");
   await page.goto("/#/parciales");
   await expect(page.locator(".exam-paper")).toHaveCount(3);
-  await expect(page.getByText("Material pendiente de incorporar", { exact: true })).toHaveCount(2);
+  await expect(page.getByText("Material pendiente de incorporar", { exact: true })).toHaveCount(0);
   await page.getByRole("button", { name: "Ver parcial: Preguntas importantes", exact: true }).click();
   await expect(page.locator(".question-card")).toHaveCount(6);
   await expect(page.locator(".question-card h2").first()).toHaveText("1. ¿Qué es calidad?");
@@ -144,4 +144,82 @@ test("las seis preguntas adicionales se estudian sin inventar las dieciséis pre
   await expect(page.locator(".question-card")).toHaveCount(1);
   await page.setViewportSize({ width: 320, height: 900 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+
+
+test("los dos parciales reales muestran ocho preguntas, todas sus opciones y fotografías ampliables", async ({ page }) => {
+  await page.unroute("**/exams/catalog.json");
+  await page.unroute("**/exams/images/*.png");
+  await page.goto("/#/parciales");
+  await expect(page.locator(".exam-paper")).toHaveCount(3);
+  await expect(page.locator(".exam-paper > img")).toHaveCount(2);
+  const heights = await page.locator(".exam-paper").evaluateAll(cards => cards.map(card => card.getBoundingClientRect().height));
+  expect(new Set(heights).size).toBe(1);
+  await page.screenshot({ path: "test-results/biblioteca-parciales-reales.png" });
+  for (const tema of [1, 2]) {
+    await page.goto(`/#/parciales?parcial=parcial-tema-${tema}`);
+    const cards = page.locator(".question-card");
+    await expect(cards).toHaveCount(8);
+    for (let number = 1; number <= 8; number++) {
+      await expect(cards.nth(number - 1).getByRole("heading")).toHaveText(new RegExp(`^${number}\\. `));
+    }
+    await expect(page.getByText("Respuesta pendiente de revisión", { exact: true })).toHaveCount(8);
+    await expect(page.getByText(/Fotografía y transcripción pendientes/)).toHaveCount(0);
+    for (const button of await cards.getByRole("button", { name: "Ver respuesta", exact: true }).all()) await expect(button).toBeDisabled();
+    const options = (index: number) => cards.nth(index).getByRole("list", { name: "Opciones de la pregunta" }).getByRole("listitem");
+    if (tema === 1) {
+      await expect(options(6)).toHaveText([
+        "Explicación de los términos y definición de un SGC", "Requisitos para la mejora continua",
+        "Establece los requisitos para un SGC", "Requisitos para las auditorías internas",
+      ]);
+      await expect(options(7)).toHaveText(["VERDADERO", "FALSO"]);
+    } else {
+      await expect(options(5)).toHaveText([
+        "PREVENIR-ACCIONAR-VERIFICAR-HACER", "PLANEAR-HACER-VERIFICAR-ACTUAR", "HACER-ACTUAR-VERIFICAR-PLANEAR",
+      ]);
+      await expect(options(6)).toHaveText([
+        "No participar en el SGC , dejarlo todo a los responsables asignados", "Demostrar liderazgo y compromiso con respecto al SGC",
+        "Ser Jefe", "Difundir la política de calidad",
+      ]);
+    }
+    await expect(cards.getByRole("link", { name: "Ver fotografía original de esta pregunta" })).toHaveCount(8);
+    await page.getByRole("button", { name: "Ampliar fotografía 1" }).click();
+    const dialog = page.getByRole("dialog", { name: "Visor de fotografías" });
+    await expect(dialog).toBeVisible();
+    const image = dialog.locator(".photo-canvas img");
+    await expect.poll(() => image.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(400);
+    const size = await image.boundingBox();
+    await dialog.getByRole("button", { name: "Ampliar imagen", exact: true }).click();
+    expect((await image.boundingBox())!.width).toBeGreaterThan(size!.width);
+    await expect(dialog.getByRole("link", { name: "Abrir original" })).toHaveAttribute("href", `./exams/images/parcial-tema-${tema}.png`);
+    await page.keyboard.press("Escape");
+    await page.getByLabel("Buscar preguntas").fill(tema === 1 ? "10.2" : "8.4.3");
+    await expect(cards).toHaveCount(1);
+    await page.getByLabel("Buscar preguntas").fill("");
+    await page.getByLabel("Tema de pregunta").selectOption("ISO 9001:2015");
+    await expect(cards).toHaveCount(tema === 1 ? 3 : 2);
+    await page.getByLabel("Tema de pregunta").selectOption("todos");
+    await expect(cards).toHaveCount(8);
+    for (const width of [1440, 768, 390, 320]) {
+      await page.setViewportSize({ width, height: 900 });
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      await page.screenshot({ path: `test-results/parcial-real-tema-${tema}-${width}.png`, fullPage: true });
+      if (width === 390 || width === 1440) await cards.nth(6).screenshot({ path: `test-results/opciones-reales-tema-${tema}-${width}.png` });
+    }
+    await page.getByRole("button", { name: "Ampliar fotografía 1" }).click();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.screenshot({ path: `test-results/foto-real-tema-${tema}-movil.png` });
+    await page.keyboard.press("Escape");
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await cards.nth(6).getByLabel("Incluir en simulacro").check();
+    await page.getByRole("button", { name: "Comenzar simulacro" }).click();
+    await expect(page.getByRole("radio")).toHaveCount(4);
+    await page.getByRole("radio").last().check();
+    await page.getByRole("button", { name: "Finalizar simulacro" }).click();
+    await expect(page.locator(".practice-result")).toContainText("Sin calificación:");
+    await expect(page.locator(".practice-result")).toContainText("Respuesta pendiente de revisión");
+    await expect(page.locator(".result-score")).toHaveCount(0);
+    await page.getByRole("button", { name: "Volver a elegir preguntas", exact: true }).click();
+    await page.getByRole("button", { name: "Limpiar selección", exact: true }).click();
+  }
 });

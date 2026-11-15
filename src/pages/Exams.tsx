@@ -131,6 +131,11 @@ export function Exams() {
                 </div>
                 <p className="question-source">{question.origin}</p>
                 <h2>{question.number !== undefined && `${question.number}. `}{question.prompt}</h2>
+                {question.examId && question.options.length > 0 && (
+                  <ul className="question-original-options" aria-label="Opciones de la pregunta">
+                    {question.options.map(option => <li key={option}>{option}</li>)}
+                  </ul>
+                )}
                 {question.reviewNote && <p className="muted">Revisar transcripción: {question.reviewNote}</p>}
                 {question.examId && <p className="muted">{catalog.exams.find(paper => paper.id === question.examId)?.title} · {questionTypeLabels[question.type ?? "choice"]}</p>}
                 {question.photoId && <p className="muted"><a href={`${import.meta.env.BASE_URL}${catalog.exams.find(paper => paper.id === question.examId)?.photos.find(photo => photo.id === question.photoId)?.src}`} target="_blank" rel="noreferrer" aria-label="Ver fotografía original de esta pregunta">Referencia: {catalog.exams.find(paper => paper.id === question.examId)?.photos.find(photo => photo.id === question.photoId)?.alt}</a></p>}

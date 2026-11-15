@@ -5,17 +5,27 @@
       "id": "parcial-tema-1",
       "title": "Parcial Tema 1",
       "topic": "Tema 1",
-      "photos": [],
-      "kind": "exam",
-      "materialPending": true
+      "photos": [
+        {
+          "id": "parcial-tema-1-foto-1",
+          "src": "exams/images/parcial-tema-1.png",
+          "alt": "Fotografía original del Parcial Tema 1, preguntas 1 a 8"
+        }
+      ],
+      "kind": "exam"
     },
     {
       "id": "parcial-tema-2",
       "title": "Parcial Tema 2",
       "topic": "Tema 2",
-      "photos": [],
-      "kind": "exam",
-      "materialPending": true
+      "photos": [
+        {
+          "id": "parcial-tema-2-foto-1",
+          "src": "exams/images/parcial-tema-2.png",
+          "alt": "Fotografía original del Parcial Tema 2, preguntas 1 a 8"
+        }
+      ],
+      "kind": "exam"
     },
     {
       "id": "preguntas-importantes",
@@ -26,6 +36,295 @@
     }
   ],
   "questions": [
+    {
+      "id": "tema-1-pregunta-1",
+      "examId": "parcial-tema-1",
+      "number": 1,
+      "topic": "SGC",
+      "prompt": "¿Qué es Sistema de Gestión de la CALIDAD y cuáles son los beneficios que otorga? En qué tipo de organizaciones puede implementarse un SGC.",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Parcial anterior",
+      "tags": [
+        "SGC"
+      ],
+      "photoId": "parcial-tema-1-foto-1"
+    },
+    {
+      "id": "tema-1-pregunta-2",
+      "examId": "parcial-tema-1",
+      "number": 2,
+      "topic": "ISO 9001:2015",
+      "prompt": "Que establece la ISO en relación a NO CONFORMIDAD y ACCION CORRECTIVO (10.2)",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Parcial anterior",
+      "tags": [
+        "ISO 9001:2015"
+      ],
+      "photoId": "parcial-tema-1-foto-1"
+    },
+    {
+      "id": "tema-1-pregunta-3",
+      "examId": "parcial-tema-1",
+      "number": 3,
+      "topic": "Procesos",
+      "prompt": "Describa la diferencia entre Proceso y Procedimiento.",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Parcial anterior",
+      "tags": [
+        "Procesos"
+      ],
+      "photoId": "parcial-tema-1-foto-1"
+    },
+    {
+      "id": "tema-1-pregunta-4",
+      "examId": "parcial-tema-1",
+      "number": 4,
+      "topic": "Procesos",
+      "prompt": "De acuerdo al nivel de detalle en un mapa de proceso cuantos hay. Describa cada uno de ellos",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Parcial anterior",
+      "tags": [
+        "Procesos"
+      ],
+      "photoId": "parcial-tema-1-foto-1"
+    },
+    {
+      "id": "tema-1-pregunta-5",
+      "examId": "parcial-tema-1",
+      "number": 5,
+      "topic": "Principios de calidad",
+      "prompt": "Enuncie los 7 principios a la calidad y Describa los PRINCIPIOS DE LA CALIDAD (Enfoque en los procesos)",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Parcial anterior",
+      "tags": [
+        "Principios de calidad"
+      ],
+      "photoId": "parcial-tema-1-foto-1"
+    },
+    {
+      "id": "tema-1-pregunta-6",
+      "examId": "parcial-tema-1",
+      "number": 6,
+      "topic": "ISO 9001:2015",
+      "prompt": "Detalle los requisitos que establece la ISO 9001:2015 en relación a Auditoría Interna (9.2.1 y 9.2.2)",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Parcial anterior",
+      "tags": [
+        "ISO 9001:2015"
+      ],
+      "photoId": "parcial-tema-1-foto-1"
+    },
+    {
+      "id": "tema-1-pregunta-7",
+      "examId": "parcial-tema-1",
+      "number": 7,
+      "topic": "ISO 9001:2015",
+      "prompt": "¿ISO 9001 es la Norma qué?",
+      "type": "selection",
+      "options": [
+        "Explicación de los términos y definición de un SGC",
+        "Requisitos para la mejora continua",
+        "Establece los requisitos para un SGC",
+        "Requisitos para las auditorías internas"
+      ],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Parcial anterior",
+      "tags": [
+        "ISO 9001:2015"
+      ],
+      "photoId": "parcial-tema-1-foto-1"
+    },
+    {
+      "id": "tema-1-pregunta-8",
+      "examId": "parcial-tema-1",
+      "number": 8,
+      "topic": "Partes interesadas",
+      "prompt": "¿Las partes interesadas son aquellas personas u organizaciones que puede afectar o ser afectadas por la implementación de la Norma ISO 9001:2015?",
+      "type": "true-false",
+      "options": [
+        "VERDADERO",
+        "FALSO"
+      ],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Parcial anterior",
+      "tags": [
+        "Partes interesadas"
+      ],
+      "photoId": "parcial-tema-1-foto-1"
+    },
+    {
+      "id": "tema-2-pregunta-1",
+      "examId": "parcial-tema-2",
+      "number": 1,
+      "topic": "Principios de calidad",
+      "prompt": "Enuncie los 7 principios a la calidad y Describa los PRINCIPIOS DE LA CALIDAD (Enfoque en el cliente)",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Parcial anterior",
+      "tags": [
+        "Principios de calidad"
+      ],
+      "photoId": "parcial-tema-2-foto-1"
+    },
+    {
+      "id": "tema-2-pregunta-2",
+      "examId": "parcial-tema-2",
+      "number": 2,
+      "topic": "Partes interesadas",
+      "prompt": "Según el estándar ISO 9000:2015, que son las partes interesadas y que debe lograr la organización para tener una comprensión de las mismas.",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Parcial anterior",
+      "tags": [
+        "Partes interesadas"
+      ],
+      "photoId": "parcial-tema-2-foto-1"
+    },
+    {
+      "id": "tema-2-pregunta-3",
+      "examId": "parcial-tema-2",
+      "number": 3,
+      "topic": "ISO 9001:2015",
+      "prompt": "Detalle los requisitos que establece la ISO 9001:2015 en relación a REVISION POR LA DIRECCIÓN (9.3)",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Parcial anterior",
+      "tags": [
+        "ISO 9001:2015"
+      ],
+      "photoId": "parcial-tema-2-foto-1"
+    },
+    {
+      "id": "tema-2-pregunta-4",
+      "examId": "parcial-tema-2",
+      "number": 4,
+      "topic": "Procesos",
+      "prompt": "¿Describa los tipos de procesos que están involucrados en un mapa de procesos?",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Parcial anterior",
+      "tags": [
+        "Procesos"
+      ],
+      "photoId": "parcial-tema-2-foto-1"
+    },
+    {
+      "id": "tema-2-pregunta-5",
+      "examId": "parcial-tema-2",
+      "number": 5,
+      "topic": "Modelo de Calidad Estatal",
+      "prompt": "En relación a los estándares de la Calidad, Describa el objetivo y las características del Modelo de Calidad Estatal",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Parcial anterior",
+      "tags": [
+        "Modelo de Calidad Estatal"
+      ],
+      "photoId": "parcial-tema-2-foto-1"
+    },
+    {
+      "id": "tema-2-pregunta-6",
+      "examId": "parcial-tema-2",
+      "number": 6,
+      "topic": "Ciclo Deming",
+      "prompt": "¿La secuencia lógica o pasos del ciclo DEMING es?",
+      "type": "selection",
+      "options": [
+        "PREVENIR-ACCIONAR-VERIFICAR-HACER",
+        "PLANEAR-HACER-VERIFICAR-ACTUAR",
+        "HACER-ACTUAR-VERIFICAR-PLANEAR"
+      ],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Parcial anterior",
+      "tags": [
+        "Ciclo Deming"
+      ],
+      "photoId": "parcial-tema-2-foto-1"
+    },
+    {
+      "id": "tema-2-pregunta-7",
+      "examId": "parcial-tema-2",
+      "number": 7,
+      "topic": "Alta Dirección",
+      "prompt": "¿Qué respuesta es la más adecuada? La Alta Dirección debe...",
+      "type": "selection",
+      "options": [
+        "No participar en el SGC , dejarlo todo a los responsables asignados",
+        "Demostrar liderazgo y compromiso con respecto al SGC",
+        "Ser Jefe",
+        "Difundir la política de calidad"
+      ],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Parcial anterior",
+      "tags": [
+        "Alta Dirección"
+      ],
+      "photoId": "parcial-tema-2-foto-1"
+    },
+    {
+      "id": "tema-2-pregunta-8",
+      "examId": "parcial-tema-2",
+      "number": 8,
+      "topic": "ISO 9001:2015",
+      "prompt": "Indique los requisitos que la organización debe comunicar a los proveedores (8.4.3 Información para los proveedores externos)",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Parcial anterior",
+      "tags": [
+        "ISO 9001:2015"
+      ],
+      "photoId": "parcial-tema-2-foto-1"
+    },
     {
       "id": "importantes-calidad",
       "examId": "preguntas-importantes",

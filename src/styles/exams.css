@@ -20,6 +20,8 @@
 .written-practice label { display: grid; gap: 12px; margin-block: 20px; }
 .written-practice textarea { width: 100%; resize: vertical; }
 .exams-page .question-card { overflow-wrap: anywhere; }
+.exams-page .question-original-options { padding-left: 24px; margin-block: 16px; color: var(--muted); }
+.exams-page .question-original-options li + li { margin-top: 8px; }
 .exams-page .student-response { white-space: pre-wrap; overflow-wrap: anywhere; }
 @media (min-width: 1000px) { .exams-page .exam-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 650px) {

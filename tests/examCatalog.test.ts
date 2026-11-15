@@ -43,19 +43,19 @@ it("repasa preguntas reales y retira la recomendación tras un nuevo acierto", (
   expect(recommendTopics(state, [question], topics)).toHaveLength(0);
 });
 
-it("incorpora fielmente las seis preguntas recibidas y deja las fotografías ausentes pendientes", async () => {
+it("conserva fielmente las seis preguntas importantes sin atribuirlas a los parciales", async () => {
   const value: unknown = JSON.parse(await readFile("public/exams/catalog.json", "utf8"));
   validateExamCatalog(value);
   expect(value.exams.map(group => group.title)).toEqual(["Parcial Tema 1", "Parcial Tema 2", "Preguntas importantes"]);
-  expect(value.exams.slice(0, 2).every(group => group.materialPending && group.photos.length === 0)).toBe(true);
-  expect(value.questions).toHaveLength(6);
-  expect(value.questions.map(q => q.number)).toEqual([1, 2, 3, 4, 5, 6]);
-  expect(value.questions.map(q => q.prompt)).toEqual([
+  const additional = value.questions.filter(q => q.examId === "preguntas-importantes");
+  expect(additional).toHaveLength(6);
+  expect(additional.map(q => q.number)).toEqual([1, 2, 3, 4, 5, 6]);
+  expect(additional.map(q => q.prompt)).toEqual([
     "¿Qué es calidad?", "¿Qué es SGC (Sistema de Gestión de la Calidad)?",
     "¿Cuál es el objetivo de la Ley 27.506?", "¿Cómo se relaciona la Ley 27.506 con los Sistemas de Gestión de Calidad?",
     "¿Cuáles son los requisitos de la Ley 27.506?", "¿Qué beneficios concretos otorga la Ley 27.506?",
   ]);
-  for (const q of value.questions) {
+  for (const q of additional) {
     expect(q.examId).toBe("preguntas-importantes");
     expect(q.origin).toBe("Pregunta adicional recopilada para estudiar");
     expect(q.photoId).toBeUndefined(); expect(q.verified).toBe(false); expect(q.correct).toBeNull();
@@ -72,4 +72,53 @@ it("admite tipos y numeración original sin atribuir preguntas adicionales a un 
   expect(() => validateExamCatalog({ version: 1, exams: [collection], questions: [question] })).toThrow();
   expect(() => validateExamCatalog({ version: 1, exams: [paper], questions: [{ ...question, number: 1 }, { ...question, id: "duplicada", number: 1 }] })).toThrow();
   expect(() => validateExamCatalog({ version: 1, exams: [{ ...paper, photos: [], materialPending: true }], questions: [question] })).toThrow();
+});
+
+
+it("completa ambos parciales con ocho preguntas numeradas, fotos originales y respuestas pendientes", async () => {
+  const value: unknown = JSON.parse(await readFile("public/exams/catalog.json", "utf8"));
+  validateExamCatalog(value);
+  expect(value.exams).toHaveLength(3);
+  expect(value.questions).toHaveLength(22);
+  expect(new Set(value.questions.map(q => q.id)).size).toBe(22);
+  for (const id of ["parcial-tema-1", "parcial-tema-2"]) {
+    const exam = value.exams.find(exam => exam.id === id)!;
+    const questions = value.questions.filter(q => q.examId === id);
+    expect(exam.materialPending).not.toBe(true);
+    expect(exam.photos).toHaveLength(1);
+    expect(questions).toHaveLength(8);
+    expect(questions.map(q => q.number)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+    for (const q of questions) {
+      expect(q.photoId).toBe(exam.photos[0].id);
+      expect(q.origin).toBe("Parcial anterior");
+      expect(q.verified).toBe(false);
+      expect(q.correct).toBeNull();
+      expect(q.modelAnswer).toBeUndefined();
+      expect(q.explanation).toBe("");
+      expect(canAttemptQuestion(q)).toBe(true);
+      expect(canPractice(q)).toBe(false);
+      expect(questionAnswer(q)).toBe("");
+    }
+  }
+  const q = (tema: number, number: number) => value.questions.find(q => q.examId === `parcial-tema-${tema}` && q.number === number)!;
+  expect(q(1, 7).options).toEqual([
+    "Explicación de los términos y definición de un SGC", "Requisitos para la mejora continua",
+    "Establece los requisitos para un SGC", "Requisitos para las auditorías internas",
+  ]);
+  expect(q(1, 8).type).toBe("true-false");
+  expect(q(1, 8).options).toEqual(["VERDADERO", "FALSO"]);
+  expect(q(2, 6).options).toEqual([
+    "PREVENIR-ACCIONAR-VERIFICAR-HACER", "PLANEAR-HACER-VERIFICAR-ACTUAR", "HACER-ACTUAR-VERIFICAR-PLANEAR",
+  ]);
+  expect(q(2, 7).options).toEqual([
+    "No participar en el SGC , dejarlo todo a los responsables asignados", "Demostrar liderazgo y compromiso con respecto al SGC",
+    "Ser Jefe", "Difundir la política de calidad",
+  ]);
+  expect(q(1, 5).prompt).toContain("Enfoque en los procesos");
+  expect(q(2, 1).prompt).toContain("Enfoque en el cliente");
+  expect(q(2, 2).prompt).toContain("ISO 9000:2015");
+  expect(q(1, 2).prompt).toContain("ACCION CORRECTIVO (10.2)");
+  expect(q(1, 6).prompt).toContain("9.2.1 y 9.2.2");
+  expect(q(2, 3).prompt).toContain("DIRECCIÓN (9.3)");
+  expect(q(2, 8).prompt).toContain("8.4.3 Información para los proveedores externos");
 });
