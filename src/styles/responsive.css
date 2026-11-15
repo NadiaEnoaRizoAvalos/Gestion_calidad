@@ -490,6 +490,10 @@
     padding: 7px 11px;
     font-size: 0.8rem;
   }
+  .module-nav a:last-child {
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
   .page-heading {
     align-items: center;
     gap: 12px;

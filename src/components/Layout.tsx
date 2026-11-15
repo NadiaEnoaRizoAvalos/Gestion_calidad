@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import {
-  Heart, Home, Sparkles, BookOpen, Workflow, ClipboardList, Brain, Map,
+  Heart, Home, Sparkles, BookOpen, Workflow, ClipboardList, Brain, Map, CirclePlay,
 } from "lucide-react";
 import { assets } from "../data/assets";
 import { useStudy } from "../hooks/useStudy";
@@ -83,6 +83,14 @@ export function Layout() {
             <Icon size={16} aria-hidden="true" /><span>{label}</span>
           </NavLink>
         ))}
+        <a
+          href="https://www.youtube.com/playlist?list=PL6qDkLKyHoLCBkW1a4ZSx0PxCRjOqILZv"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Clases grabadas (se abre en una pestaña nueva)"
+        >
+          <CirclePlay size={16} aria-hidden="true" /><span>Clases grabadas</span>
+        </a>
       </nav>
       {storageError && (
         <p className="storage-alert" role="alert">

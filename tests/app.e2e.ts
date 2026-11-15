@@ -172,7 +172,7 @@ test("las secciones retiradas no conservan rutas ni accesos", async ({page}) => 
   for(const path of ["simulador","apuntes"]){
     await page.goto(`/#/${path}`);
     await expect(page.getByRole("heading",{name:"Esta página no está en la biblioteca"})).toBeVisible();
-    await expect(page.locator('.module-nav a')).toHaveCount(6);
+    await expect(page.locator('.module-nav a')).toHaveCount(7);
   }
 });
 
@@ -180,7 +180,7 @@ test("las secciones retiradas no conservan rutas ni accesos", async ({page}) => 
 test("navegación horizontal activa y accesible también en móvil", async ({ page }) => {
   await page.goto("/#/");
   const nav = page.getByRole("navigation", { name: "Secciones de estudio" });
-  await expect(nav.getByRole("link")).toHaveCount(6);
+  await expect(nav.getByRole("link")).toHaveCount(7);
   await expect(nav.getByRole("link", { name: "Inicio", exact: true })).toHaveAttribute("aria-current", "page");
   await nav.getByRole("link", { name: "Apoyo inteligente" }).click();
   await expect(page).toHaveURL(/#\/repaso$/);
@@ -199,4 +199,45 @@ test("navegación horizontal activa y accesible también en móvil", async ({ pa
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   await expect(page).toHaveURL(/#\/$/);
+});
+
+
+test("clases grabadas: enlace externo seguro, teclado y navegación centrada sin cortes", async ({page}) => {
+  const playlist = "https://www.youtube.com/playlist?list=PL6qDkLKyHoLCBkW1a4ZSx0PxCRjOqILZv";
+  await page.goto("/#/");
+  const nav = page.getByRole("navigation", {name:"Secciones de estudio"});
+  const classes = nav.getByRole("link", {name:"Clases grabadas",exact:true});
+  await expect(nav.getByRole("link")).toHaveText(["Inicio","Teoría","Procesos y BPMN","Parciales","Apoyo inteligente","Ruta de estudio","Clases grabadas"]);
+  await expect(classes).toHaveAttribute("href",playlist);
+  await expect(classes).toHaveAttribute("target","_blank");
+  await expect(classes).toHaveAttribute("rel","noopener noreferrer");
+  // Stub the external destination: verify the new tab without loading YouTube or its trackers.
+  await page.context().route("https://www.youtube.com/**",route=>route.fulfill({status:200,contentType:"text/html",body:"<title>Clases grabadas</title>"}));
+  await nav.getByRole("link",{name:"Ruta de estudio",exact:true}).focus();
+  await page.keyboard.press("Tab");await expect(classes).toBeFocused();
+  expect(await classes.evaluate(el=>getComputedStyle(el).outlineStyle)).not.toBe("none");
+  const [popup] = await Promise.all([page.waitForEvent("popup"),page.keyboard.press("Enter")]);
+  await popup.waitForLoadState();expect(popup.url()).toBe(playlist);expect(await popup.evaluate(()=>window.opener===null)).toBe(true);await popup.close();
+  await expect(page).toHaveURL(/#\/$/);
+  for(const width of [1440,1280,1024,768,390,320]) {
+    await page.setViewportSize({width,height:900});
+    const box=(await nav.boundingBox())!;
+    expect(Math.abs(box.x+box.width/2-width/2)).toBeLessThanOrEqual(1);
+    const links=await nav.getByRole("link").all();
+    const positions=[];
+    for(const link of links) {
+      await expect(link).toBeVisible();const rect=(await link.boundingBox())!;positions.push(rect);
+      expect(rect.x).toBeGreaterThanOrEqual(box.x);expect(rect.x+rect.width).toBeLessThanOrEqual(box.x+box.width);
+      expect(await link.evaluate(el=>el.scrollWidth<=el.clientWidth)).toBe(true);
+    }
+    for(const rowY of new Set(positions.map(rect=>Math.round(rect.y)))) {
+      const row=positions.filter(rect=>Math.round(rect.y)===rowY).sort((a,b)=>a.x-b.x);
+      expect(Math.abs((row[0].x+row.at(-1)!.x+row.at(-1)!.width)/2-width/2)).toBeLessThanOrEqual(1);
+      const gaps=row.slice(1).map((rect,i)=>rect.x-row[i].x-row[i].width);
+      if(gaps.length)expect(Math.max(...gaps)-Math.min(...gaps)).toBeLessThan(1);
+    }
+    if(width>=1280)expect(new Set(positions.map(rect=>Math.round(rect.y))).size).toBe(1);
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+    await nav.screenshot({path:`test-results/navegacion-clases-${width}.png`});
+  }
 });

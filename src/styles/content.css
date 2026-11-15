@@ -2,6 +2,7 @@
   display: flex;
   gap: 7px;
   justify-content: center;
+  align-items: stretch;
   flex-wrap: wrap;
   position: relative;
   z-index: 2;
@@ -22,10 +23,24 @@
     box-shadow 0.2s,
     transform 0.2s;
   font-size: 0.83rem;
-  padding: 7px 15px;
+  padding: 7px 12px;
+  min-height: 44px;
+  min-width: 0;
+  text-align: center;
   border-radius: 20px;
   background: #fffafc;
   border: 1px solid transparent;
+}
+.module-nav a svg {
+  flex-shrink: 0;
+}
+.module-nav a:hover {
+  box-shadow: 0 3px 7px #8b54a32b;
+  transform: translateY(-1px);
+}
+.module-nav a:focus-visible {
+  outline: 3px solid var(--purple);
+  outline-offset: 3px;
 }
 .module-nav a.active {
   color: #fff;
