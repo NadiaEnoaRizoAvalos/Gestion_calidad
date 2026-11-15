@@ -4,7 +4,6 @@ import {
   BarChart3,
   CalendarDays,
   ChevronRight,
-  Map,
   Lightbulb,
   Heart,
 } from "lucide-react";
@@ -37,7 +36,7 @@ const modules = [
     note: "Ponete a prueba",
   },
   {
-    title: "Repaso inteligente",
+    title: "Apoyo inteligente",
     description:
       "Preguntas organizadas según los temas que necesitás reforzar.",
     image: "review",
@@ -137,45 +136,31 @@ export function Home() {
           </Link>
         ))}
       </section>
-      <div className="study-corner">
-        <div className="bunny-nook" aria-hidden="true">
-          <img
-            className="reading-bunny"
-            src={assets.reading}
-            width={545}
-            height={484}
-            alt=""
-          />
-          <div className="desk-surface" />
-        </div>
-        <section className="bottom-grid" aria-label="Seguí aprendiendo">
-          <Link to="/ruta" className="route-card">
-            <div className="route-art">
-              <Map size={48} strokeWidth={1.2} />
-            </div>
-            <div>
-              <h2>Ruta de estudio</h2>
-              <p>
-                {next
-                  ? "Sigue un orden sugerido para avanzar de forma organizada y efectiva."
-                  : "¡Completaste tu recorrido! Volvé a tus temas cuando quieras."}
-              </p>
-            </div>
+      <section className="bottom-grid" aria-label="Seguí aprendiendo">
+        <Link to="/ruta" className="route-card">
+          <img className="reading-bunny" src={assets.reading} width={545} height={484} alt="" />
+          <div className="route-copy">
+            <h2>Ruta de estudio</h2>
+            <p>
+              {next
+                ? "Sigue un orden sugerido para avanzar de forma organizada y efectiva."
+                : "¡Completaste tu recorrido! Volvé a tus temas cuando quieras."}
+            </p>
             <span className="small-button">
               Ver ruta <ChevronRight size={13} />
             </span>
-          </Link>
-          <article className="tip-card">
-            <Lightbulb className="bulb" size={49} strokeWidth={1.3} />
-            <div>
-              <h2>Consejito del día</h2>
-              <p>
-                {tips[day % tips.length]} <Heart size={11} />
-              </p>
-            </div>
-          </article>
-        </section>
-      </div>
+          </div>
+        </Link>
+        <article className="tip-card">
+          <Lightbulb className="bulb" size={49} strokeWidth={1.3} />
+          <div>
+            <h2>Consejo del día</h2>
+            <p>
+              {tips[day % tips.length]} <Heart size={11} />
+            </p>
+          </div>
+        </article>
+      </section>
       <dialog ref={dialog} className="settings-dialog">
         <form
           onSubmit={(event) => {

@@ -73,16 +73,16 @@ test("tres columnas alineadas, portada compacta, índice dinámico y navegación
     await page.setViewportSize({ width, height: 900 });
     const metrics = await page.evaluate(() => {
       const rect = (s: string) => document.querySelector(s)!.getBoundingClientRect().toJSON();
-      return { container: rect(".theory-page"), toolbar: rect(".theory-page .toolbar"), library: rect(".topic-list"), lesson: rect(".lesson"), outline: rect(".document-outline"), cover: rect(".notion-cover") };
+      return { pane: rect(".library"), container: rect(".theory-page"), toolbar: rect(".theory-page .toolbar"), library: rect(".topic-list"), lesson: rect(".lesson"), outline: rect(".document-outline"), cover: rect(".notion-cover") };
     });
-    expect(Math.abs(metrics.container.x * 2 + metrics.container.width - width)).toBeLessThan(1);
+    expect(Math.abs(metrics.container.x * 2 + metrics.container.width - metrics.pane.x * 2 - metrics.pane.width)).toBeLessThan(1);
     expect(Math.abs(metrics.library.y - metrics.lesson.y)).toBeLessThan(1);
     expect(Math.abs(metrics.outline.y - metrics.lesson.y)).toBeLessThan(1);
     expect(Math.abs(metrics.toolbar.x - metrics.library.x)).toBeLessThan(1);
     expect(Math.abs(metrics.toolbar.right - metrics.outline.right)).toBeLessThan(1);
     expect(Math.abs(metrics.lesson.x - metrics.library.right - (metrics.outline.x - metrics.lesson.right))).toBeLessThan(1);
     expect(metrics.lesson.width).toBeGreaterThan(500);
-    if (width === 1440) expect(metrics.container.width).toBeGreaterThan(1200);
+    if (width === 1440) expect(metrics.container.width).toBeGreaterThan(1000);
     expect(metrics.cover.width).toBeLessThanOrEqual(96);
     expect(metrics.cover.height).toBeLessThanOrEqual(84);
     await page.screenshot({ path: `test-results/teoria-tres-columnas-${width}.png`, fullPage: true });

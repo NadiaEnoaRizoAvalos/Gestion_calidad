@@ -172,6 +172,32 @@ test("las secciones retiradas no conservan rutas ni accesos", async ({page}) => 
   for(const path of ["simulador","apuntes"]){
     await page.goto(`/#/${path}`);
     await expect(page.getByRole("heading",{name:"Esta página no está en la biblioteca"})).toBeVisible();
-    await expect(page.locator('.module-nav a')).toHaveCount(5);
+    await expect(page.locator('.sidebar-nav a')).toHaveCount(6);
   }
+});
+
+
+test("navegación lateral activa y menú compacto accesible", async ({ page }) => {
+  await page.goto("/#/");
+  const nav = page.getByRole("navigation", { name: "Secciones de estudio" });
+  await expect(nav.getByRole("link")).toHaveCount(6);
+  await expect(nav.getByRole("link", { name: "Inicio", exact: true })).toHaveAttribute("aria-current", "page");
+  await nav.getByRole("link", { name: "Apoyo inteligente" }).click();
+  await expect(page).toHaveURL(/#\/repaso$/);
+  await expect(nav.getByRole("link", { name: "Apoyo inteligente" })).toHaveAttribute("aria-current", "page");
+  await expect(page.locator("main")).toBeFocused();
+  await page.setViewportSize({ width: 390, height: 900 });
+  await expect(nav).not.toBeVisible();
+  await page.locator(".sidebar-menu summary").press("Enter");
+  await expect(nav).toBeVisible();
+  await nav.getByRole("link", { name: "Inicio", exact: true }).click();
+  await expect(page).toHaveURL(/#\/$/);
+  await expect(nav).not.toBeVisible();
+  await expect(page.locator(".module-card").filter({ hasText: "Apoyo inteligente" })).toHaveCount(1);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await expect(nav).toBeVisible();
+  await page.getByText("Saltar al contenido", { exact: true }).focus();
+  await page.keyboard.press("Enter");
+  await expect(page.locator("main")).toBeFocused();
+  await expect(page).toHaveURL(/#\/$/);
 });
