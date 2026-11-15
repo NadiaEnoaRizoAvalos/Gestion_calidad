@@ -2,8 +2,106 @@
   "version": 1,
   "documents": [
     {
+      "id": "notion-4191996d4e8f80458ceeeab322b3c445",
+      "title": "Unidad 3: Liderazgo para la Calidad",
+      "category": "General",
+      "cover": "notion-images/5e755084b26094a5b8a5b29b2a762bf2eecd870876b1a023e1b620ead85c35f5.png",
+      "blocks": [
+        {
+          "id": "4191996d-4e8f-801b-9675-de6ecd4bee20",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "UNIDAD TEMÁTICA 3: LIDERAZGO PARA LA CALIDAD\nComprender el rol crítico del liderazgo y la cultura organizacional en la implementación exitosa de Sistemas\nde Gestión de la Calidad.\n• Responsabilidad de la Dirección en la gestión de la Calidad. Compromiso y política de calidad.\n• Liderazgo: estilos, competencias y rol del líder en la gestión de la calidad.\n• Comunicación interna y cultura de la calidad en la organización.\n• Modelos de Calidad y Excelencia:\n◦ Premio Nacional a la Calidad (Argentina): criterios y proceso de postulación.\n◦ EFQM (Modelo Europeo de Gestión de la Calidad): criterios, subcriterios y autoevaluación.\n• Comparación y aplicabilidad de los modelos en organizaciones de software y servicios de TI.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "notion-4191996d4e8f80c2b4ffe7f3a913b64b",
+      "title": "Unidad 6: Calidad del Software.",
+      "category": "General",
+      "cover": "notion-images/83cb05680d0d2e5f97ed6349b032cfef67a6aac880a3fa1edb1a35cb7841bf6c.png",
+      "blocks": [
+        {
+          "id": "4191996d-4e8f-80bd-9144-d9b8d14c59f2",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "UNIDAD TEMÁTICA 6: CALIDAD DEL SOFTWARE\nConocer y aplicar los principales modelos, normas y estándares de calidad del software, integrando los\nfundamentos de la gestión de la calidad al ciclo de vida del desarrollo de software y a la gestión de servicios\nde TI.\n• Calidad del software: definición, factores de calidad, modelo de calidad de producto ISO/IEC 25010.\n• Gestión de Configuración del Software (SCM): objetivos, actividades y herramientas.\n• Normas y modelos vinculados a la calidad del software:\n◦ ISO 90003:2018: directrices para aplicar ISO 9001 al software.\n◦ CMMI (Capability Maturity Model Integration): niveles de madurez y áreas de proceso.\n◦ ITIL (Information Technology Infrastructure Library): gestión de servicios de TI, ciclo de vida del\nservicio.\n• Integración entre SGC e ISO 27001 en organizaciones productoras de software.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4191996d-4e8f-8042-89e7-dc97e2fe9907",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "notion-4191996d4e8f80eb87baf0bf472fa79c",
+      "title": "Unidad 5: Costos y Herramientas para la Calidad.",
+      "category": "General",
+      "cover": "notion-images/b33402fed84348784f9747da20a403745ae17c607b0e021421e86f435304eead.png",
+      "blocks": [
+        {
+          "id": "4191996d-4e8f-8014-9dad-fc463c4f79b6",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "UNIDAD TEMÁTICA 5: COSTOS Y HERRAMIENTAS PARA LA CALIDAD\nConocer y aplicar las principales herramientas de la calidad para el análisis, diagnóstico y resolución de\nproblemas, y comprender la estructura de costos asociada a la calidad.\n• Las Herramientas Clásicas de la Calidad:\n◦ Diagrama de Causa-Efecto (Ishikawa / Espina de Pescado).\n◦ Diagrama de Flujo: mapeo y análisis de procesos.\n◦ Diagrama de Pareto: análisis 80/20 para priorización de problemas.\n• Costos de la Calidad: concepto e importancia estratégica para la organización.\n• Costos directos e indirectos de la calidad.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "notion-4191996d4e8f80f6bd85fb7b3b02ad72",
+      "title": "Unidad 4: Medición, Análisis y Mejora Continua",
+      "category": "General",
+      "cover": "notion-images/dcdc3e99906f3a46acf044fb7244a4c2cfa7b6e6860dd3ccad3da3375f0522b3.png",
+      "blocks": [
+        {
+          "id": "4191996d-4e8f-80a9-b346-ca7fb7f9fe6c",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "UNIDAD TEMÁTICA 4: MEDICIÓN, ANÁLISIS Y MEJORA CONTINUA\nAplicar metodologías de medición y análisis de datos para la mejora continua del Sistema de Gestión de la\nCalidad y de los procesos organizacionales.\n• Satisfacción del cliente: métodos de medición, análisis e interpretación de resultados.\n• Auditoría de Sistemas de Gestión de la Calidad (SGC): concepto, tipos y fases. Norma ISO 19011:2018.\n• Seguimiento y medición de procesos: indicadores de proceso.\n• Seguimiento y medición de productos y servicios: conformidad y no conformidad.\n• Análisis de datos: herramientas estadísticas, indicadores clave de desempeño (KPI).\n• Acciones correctivas, preventivas y de mejora continua del SGC.\n• Ciclo PDCA (Plan-Do-Check-Act) aplicado a la mejora de procesos. Revisión por la Dirección.\n• Gestión de no conformidades y producto no conforme.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
       "id": "notion-cda1996d4e8f83abaff0012734875055",
-      "title": "mapa de procesos",
+      "title": "Unidad 1: Fundamentos de la Calidad",
       "category": "General",
       "cover": "notion-images/f648cb1702b685dfba0db8e043c65f8bcb59f943b77c4ea7fe676e32cd3f3b0e.png",
       "blocks": [
@@ -20,6 +118,33 @@
               "code": false
             }
           ],
+          "children": []
+        },
+        {
+          "id": "4191996d-4e8f-801c-ae9f-d0f664621a42",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "UNIDAD TEMÁTICA 1: FUNDAMENTOS DE LA CALIDAD\nComprender el origen, evolución y principios fundamentales de la calidad como disciplina de gestión y su\nrelevancia en el contexto de la Ingeniería en Sistemas de Información.\n• Definiciones básicas: Control de la Calidad, Aseguramiento de la Calidad, Sistema de Gestión de la\nCalidad, Administración de la Calidad Total (TQM). Función de la calidad.\n• Evolución histórica del concepto de calidad: etapas del control, aseguramiento y gestión total.\n• Los Principios de la Calidad según la familia ISO 9000:2015.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4191996d-4e8f-80ef-af84-d70905ae3c9f",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4191996d-4e8f-8093-ba1d-c55437f65856",
+          "type": "paragraph",
+          "text": [],
           "children": []
         },
         {
@@ -664,10 +789,26 @@
     },
     {
       "id": "notion-def1996d4e8f834cbd2181684a978511",
-      "title": "normas:",
+      "title": "Unidad 2: Sistema de Gestión de la Calidad (SGC)",
       "category": "General",
       "cover": "notion-images/001ecb3379aaa8f007cf60151dc78516f70fe24da2b97ea30bd7cfbe608ae4e5.png",
-      "blocks": []
+      "blocks": [
+        {
+          "id": "4191996d-4e8f-8066-a0aa-dedf700e4340",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "UNIDAD TEMÁTICA 2: SISTEMA DE GESTIÓN DE LA CALIDAD\nComprender la estructura, los requisitos y el enfoque por procesos del Sistema de Gestión de la Calidad\nconforme a la norma ISO 9001:2015.\n• Sistema de Gestión de la Calidad: concepto, alcance y propósito.\n• Enfoque basado en procesos: mapa de procesos, interacción y control. Ciclo PDCA.\n• Pensamiento basado en riesgos y oportunidades.\n• Relación del SGC con otros sistemas de gestión (ambiental, seguridad de la información, TI).\n• Requisitos de la documentación del SGC: manual de calidad, procedimientos, instrucciones y registros.\n• Gestión de los recursos: humanos, infraestructura, ambiente de trabajo, conocimientos organizacionales.\n• Planificación y control operacional. Diseño y desarrollo de productos y servicios.\n• Norma ISO 9001:2015: estructura de alto nivel (Anexo SL), requisitos y aplicación práctica.\n• Proceso de certificación: etapas, auditorías de certificación y mantenimiento del certificado.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        }
+      ]
     }
   ]
 }
