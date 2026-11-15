@@ -11,9 +11,10 @@ export function ExamLibrary({ papers, selectedId, onSelect, loading, error }: { 
   if (selectedId && !selected) return <section className="panel"><p>{loading ? "Cargando parcial…" : "No encontramos ese parcial en la biblioteca."}</p><button className="secondary" onClick={() => onSelect(null)}>Volver a biblioteca</button></section>;
   if (selected) return <section className="panel exam-detail" aria-label="Parcial seleccionado">
     <button className="text-button" onClick={() => onSelect(null)}>← Volver a biblioteca</button>
-    <h2>{selected.title}</h2><p className="muted">{selected.topic}{selected.date ? ` · ${new Date(`${selected.date}T12:00:00`).toLocaleDateString("es-AR")}` : " · Fecha no indicada"}</p>
-    <ExamPhotos key={selected.id} photos={selected.photos} />
-    <p className="muted">Las preguntas asociadas aparecen debajo. Las respuestas pendientes de verificación no se califican.</p>
+    <h2>{selected.title}</h2><p className="muted">{selected.topic}{selected.date ? ` · ${new Date(`${selected.date}T12:00:00`).toLocaleDateString("es-AR")}` : selected.kind === "collection" ? " · Preguntas adicionales" : " · Fecha no indicada"}</p>
+    {selected.materialPending && <p className="tag">Fotografía y transcripción pendientes de incorporar.</p>}
+    {selected.kind === "collection" ? <p className="muted">Preguntas adicionales recopiladas para estudiar; no forman parte de los parciales fotografiados.</p> : <ExamPhotos key={selected.id} photos={selected.photos} />}
+    <p className="muted">Las preguntas asociadas aparecen debajo. Las respuestas pendientes de revisión no se califican.</p>
   </section>;
   const filtered = papers.filter(paper => (!topic || paper.topic === topic) && `${paper.title} ${paper.topic} ${paper.date ?? ""}`.toLocaleLowerCase("es").includes(search.toLocaleLowerCase("es")));
   return <section className="exam-library" aria-label="Biblioteca de parciales">
@@ -25,7 +26,9 @@ export function ExamLibrary({ papers, selectedId, onSelect, loading, error }: { 
       </div>
       <div className="exam-grid">{filtered.map(paper => <article className="panel exam-paper" key={paper.id}>
         {paper.photos[0] ? <img src={`${import.meta.env.BASE_URL}${paper.photos[0].src}`} alt={paper.photos[0].alt} /> : <Image size={30} aria-hidden="true" />}
-        <h3>{paper.title}</h3><p className="muted">{paper.topic} · {paper.date ? new Date(`${paper.date}T12:00:00`).toLocaleDateString("es-AR") : "Fecha no indicada"}</p>
+        <h3>{paper.title}</h3><p className="muted">{paper.topic} · {paper.date ? new Date(`${paper.date}T12:00:00`).toLocaleDateString("es-AR") : paper.kind === "collection" ? "Recopilación para estudiar" : "Fecha no indicada"}</p>
+        {paper.materialPending && <p className="tag">Material pendiente de incorporar</p>}
+        {paper.kind === "collection" && <p className="tag">Preguntas adicionales para estudiar</p>}
         <button className="secondary" onClick={() => onSelect(paper.id)}>Ver parcial: {paper.title}</button>
       </article>)}</div>
       {!filtered.length && <p className="panel">No hay parciales que coincidan con los filtros.</p>}

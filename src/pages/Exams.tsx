@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Bookmark, Check, Search } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { useExamCatalog } from "../hooks/useExamCatalog";
-import { canPractice, questionAnswer } from "../data/examCatalog";
+import { canAttemptQuestion, canPractice, questionAnswer, questionTypeLabels } from "../data/examCatalog";
 import { ExamLibrary } from "../components/ExamLibrary";
 import "../styles/exams.css";
 import { PageHeading } from "../components/PageHeading";
@@ -15,6 +15,7 @@ export function Exams() {
   const { catalog, questions, questionTopics, loading, error } = useExamCatalog();
   const [params, setParams] = useSearchParams();
   const examId = params.get("parcial");
+  const selectedGroup = catalog.exams.find(group => group.id === examId);
   const [search, setSearch] = useState("");
   const [topic, setTopic] = useState("todos");
   const [onlySaved, setOnlySaved] = useState(false);
@@ -40,7 +41,7 @@ export function Exams() {
       {!practice && <ExamLibrary papers={catalog.exams} selectedId={examId} loading={loading} error={error} onSelect={id => {
         setParams(id ? { parcial: id } : {}); setSelected([]); setRevealed([]); setTopic("todos"); setSearch("");
       }} />}
-      <h2 className="section-title">Preguntas {examId ? "de este parcial" : "de práctica"}</h2>
+      <h2 className="section-title">Preguntas {examId ? selectedGroup?.kind === "collection" ? "de este grupo" : "de este parcial" : "de práctica"}</h2>
       <p className="example-label">Las preguntas identificadas como generadas con IA son ejemplos de práctica; no pertenecen a exámenes reales.</p>
       {practice ? (
         <Practice
@@ -91,12 +92,12 @@ export function Exams() {
             <div className="actions">
               <button
                 className="secondary"
-                disabled={!filtered.some(canPractice)}
+                disabled={!filtered.some(canAttemptQuestion)}
                 onClick={() =>
                   setSelected([
                     ...new Set([
                       ...selected,
-                      ...filtered.filter(canPractice).map((question) => question.id),
+                      ...filtered.filter(canAttemptQuestion).map((question) => question.id),
                     ]),
                   ])
                 }
@@ -129,10 +130,11 @@ export function Exams() {
                   <span>{question.difficulty}</span>
                 </div>
                 <p className="question-source">{question.origin}</p>
-                <h2>{question.prompt}</h2>
-                {question.examId && <p className="muted">{catalog.exams.find(paper => paper.id === question.examId)?.title} · {question.type === "written" ? "Respuesta escrita" : "Opción múltiple"}</p>}
+                <h2>{question.number !== undefined && `${question.number}. `}{question.prompt}</h2>
+                {question.reviewNote && <p className="muted">Revisar transcripción: {question.reviewNote}</p>}
+                {question.examId && <p className="muted">{catalog.exams.find(paper => paper.id === question.examId)?.title} · {questionTypeLabels[question.type ?? "choice"]}</p>}
                 {question.photoId && <p className="muted"><a href={`${import.meta.env.BASE_URL}${catalog.exams.find(paper => paper.id === question.examId)?.photos.find(photo => photo.id === question.photoId)?.src}`} target="_blank" rel="noreferrer" aria-label="Ver fotografía original de esta pregunta">Referencia: {catalog.exams.find(paper => paper.id === question.examId)?.photos.find(photo => photo.id === question.photoId)?.alt}</a></p>}
-                {!canPractice(question) && <p className="tag">Respuesta pendiente de verificación</p>}
+                {!canPractice(question) && <p className="tag">Respuesta pendiente de revisión</p>}
                 <div className="tags">
                   {question.tags.map((tag) => (
                     <span className="tag" key={tag}>
@@ -144,7 +146,7 @@ export function Exams() {
                   <label className="checkbox-label">
                     <input
                       type="checkbox"
-                      disabled={!canPractice(question)}
+                      disabled={!canAttemptQuestion(question)}
                       checked={selected.includes(question.id)}
                       onChange={(event) =>
                         setSelected(

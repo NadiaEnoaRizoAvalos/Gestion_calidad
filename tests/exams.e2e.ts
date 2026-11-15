@@ -31,8 +31,8 @@ test("biblioteca, filtros, fotos ampliables y preguntas pendientes", async ({ pa
   await expect(page.locator(".question-card")).toHaveCount(3);
   const pending = page.locator(".question-card").filter({ hasText: "Pregunta pendiente de prueba" });
   await expect(pending.getByRole("link", { name: "Ver fotografía original de esta pregunta" })).toHaveAttribute("href", "./exams/images/prueba-b.png");
-  await expect(pending.getByText("Respuesta pendiente de verificación")).toBeVisible();
-  await expect(pending.getByLabel("Incluir en simulacro")).toBeDisabled();
+  await expect(pending.getByText("Respuesta pendiente de revisión")).toBeVisible();
+  await expect(pending.getByLabel("Incluir en simulacro")).toBeEnabled();
   await expect(pending.getByRole("button", { name: "Ver respuesta" })).toBeDisabled();
   await page.getByRole("button", { name: "Ampliar fotografía 1" }).click();
   const dialog = page.getByRole("dialog", { name: "Visor de fotografías" });
@@ -58,7 +58,7 @@ test("biblioteca, filtros, fotos ampliables y preguntas pendientes", async ({ pa
   await page.screenshot({ path: "test-results/visor-parcial-prueba-movil.png" });
 });
 
-test("preguntas de parciales alimentan el repaso y admiten autoevaluación escrita", async ({ page }) => {
+test("preguntas de parciales alimentan el repaso y guardan desarrollo sin corrección automática", async ({ page }) => {
   await page.goto("/#/parciales?parcial=prueba");
   const choice = page.locator(".question-card").filter({ hasText: "Opción múltiple de prueba" });
   await choice.getByRole("button", { name: "Ver respuesta" }).click();
@@ -67,8 +67,8 @@ test("preguntas de parciales alimentan el repaso y admiten autoevaluación escri
   await choice.getByLabel("Incluir en simulacro").check();
   await page.getByRole("button", { name: "Comenzar simulacro" }).click();
   await page.getByRole("radio").first().check();
-  await page.getByRole("button", { name: "Comprobar respuesta" }).click();
-  await page.getByRole("button", { name: "Guardar y ver resultado" }).click();
+  await expect(page.getByText("Explicación exclusiva de prueba", { exact: true })).toHaveCount(0);
+  await page.getByRole("button", { name: "Finalizar simulacro" }).click();
   await page.goto("/#/repaso");
   await expect(page.locator(".recommendation-list")).toContainText("Tema de prueba");
   await page.locator(".recommendation-list button").click();
@@ -80,14 +80,13 @@ test("preguntas de parciales alimentan el repaso y admiten autoevaluación escri
   await written.getByLabel("Incluir en simulacro").check();
   await page.getByRole("button", { name: "Comenzar simulacro" }).click();
   await page.getByLabel("Tu respuesta").fill("Mi respuesta de prueba");
-  await page.getByRole("button", { name: "Comparar con respuesta modelo" }).click();
+  await expect(page.getByText("Modelo exclusivo de prueba", { exact: true })).toHaveCount(0);
+  await page.getByRole("button", { name: "Finalizar simulacro" }).click();
   await expect(page.getByText("Modelo exclusivo de prueba", { exact: true })).toBeVisible();
-  await page.getByRole("button", { name: "Necesito repasar" }).click();
-  await page.getByRole("button", { name: "Guardar y ver resultado" }).click();
-  await expect(page.getByText("Resultado autoevaluado con respuesta modelo")).toBeVisible();
-  await expect(page.locator(".history-panel")).toContainText("respuestas autoevaluadas");
+  await expect(page.getByText("Tu respuesta: Mi respuesta de prueba", { exact: true })).toBeVisible();
+  await expect(page.locator(".history-panel")).toContainText("respuesta guardada para revisión manual");
   await page.reload();
-  await expect(page.locator(".history-panel")).toContainText("respuestas autoevaluadas");
+  await expect(page.locator(".history-panel")).toContainText("respuesta guardada para revisión manual");
 });
 
 test("no inventa parciales si el catálogo está vacío o falla", async ({ page }) => {
@@ -99,4 +98,50 @@ test("no inventa parciales si el catálogo está vacío o falla", async ({ page 
   await page.reload();
   await expect(page.getByRole("alert")).toContainText("No pudimos cargar la biblioteca");
   await expect(page.locator(".question-card")).toHaveCount(8);
+});
+
+test("el simulacro no revela respuestas de ninguna pregunta hasta finalizar", async ({ page }) => {
+  await page.goto("/#/parciales?parcial=prueba");
+  await page.getByRole("button", { name: "Seleccionar visibles", exact: true }).click();
+  await expect(page.getByText("3 preguntas seleccionadas")).toBeVisible();
+  await page.getByRole("button", { name: "Comenzar simulacro" }).click();
+  await page.getByRole("radio").last().check();
+  await page.getByRole("button", { name: "Guardar respuesta y continuar" }).click();
+  await expect(page.getByText("Explicación exclusiva de prueba", { exact: true })).toHaveCount(0);
+  await page.getByLabel("Tu respuesta").fill("Respuesta pendiente de prueba");
+  await page.getByRole("button", { name: "Guardar respuesta y continuar" }).click();
+  await page.getByLabel("Tu respuesta").fill("Desarrollo de prueba");
+  await expect(page.getByText("Modelo exclusivo de prueba", { exact: true })).toHaveCount(0);
+  await page.getByRole("button", { name: "Finalizar simulacro" }).click();
+  await expect(page.locator(".result-score")).toContainText("1 / 1");
+  await expect(page.getByText("Modelo exclusivo de prueba", { exact: true })).toBeVisible();
+  await expect(page.locator(".practice-result").getByText("Respuesta pendiente de revisión", { exact: true })).toHaveCount(1);
+  await expect(page.locator(".history-panel")).toContainText("2 respuestas guardadas para revisión manual");
+});
+
+test("las seis preguntas adicionales se estudian sin inventar las dieciséis preguntas de las fotografías pendientes", async ({ page }) => {
+  await page.unroute("**/exams/catalog.json");
+  await page.goto("/#/parciales");
+  await expect(page.locator(".exam-paper")).toHaveCount(3);
+  await expect(page.getByText("Material pendiente de incorporar", { exact: true })).toHaveCount(2);
+  await page.getByRole("button", { name: "Ver parcial: Preguntas importantes", exact: true }).click();
+  await expect(page.locator(".question-card")).toHaveCount(6);
+  await expect(page.locator(".question-card h2").first()).toHaveText("1. ¿Qué es calidad?");
+  await expect(page.locator(".question-card h2").last()).toHaveText("6. ¿Qué beneficios concretos otorga la Ley 27.506?");
+  await page.getByLabel("Buscar preguntas").fill("beneficios");
+  await expect(page.locator(".question-card")).toHaveCount(1);
+  await page.getByRole("button", { name: "Guardar para repasar", exact: true }).click();
+  await page.getByLabel("Incluir en simulacro").check();
+  await page.getByRole("button", { name: "Comenzar simulacro" }).click();
+  await page.getByLabel("Tu respuesta").fill("Respuesta de prueba, sin verificar.");
+  await page.getByRole("button", { name: "Finalizar simulacro" }).click();
+  await expect(page.locator(".practice-result")).toContainText("Sin calificación:");
+  await expect(page.locator(".practice-result")).toContainText("Respuesta pendiente de revisión");
+  await expect(page.locator(".result-score")).toHaveCount(0);
+  await page.reload();
+  await expect(page.locator(".history-panel")).toContainText("1 respuesta guardada para revisión manual");
+  await page.getByLabel("Solo guardadas").check();
+  await expect(page.locator(".question-card")).toHaveCount(1);
+  await page.setViewportSize({ width: 320, height: 900 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });

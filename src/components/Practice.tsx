@@ -5,8 +5,13 @@ import { useStudy } from "../hooks/useStudy";
 import { topics } from "../data/topics";
 import { questionAnswer } from "../data/examCatalog";
 import { Link } from "react-router-dom";
+import { ExamSimulation } from "./ExamSimulation";
 
-export function Practice({
+export function Practice(props: Parameters<typeof ReviewPractice>[0]) {
+  return props.mode === "parcial" ? <ExamSimulation questions={props.questions} onClose={props.onClose} /> : <ReviewPractice {...props} />;
+}
+
+function ReviewPractice({
   questions,
   mode,
   onClose,

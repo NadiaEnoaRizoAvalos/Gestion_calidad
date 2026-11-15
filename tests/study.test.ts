@@ -12,6 +12,18 @@ import { recommendTopics } from "../src/data/recommendations";
 import type { StudyState } from "../src/types";
 
 describe("Persistencia y progreso", () => {
+  it("conserva respuestas sin calificar sin convertirlas en errores ni perder intentos anteriores", () => {
+    const state = parseStudyState(JSON.stringify({
+      attempts: [
+        { id: "previo", date: "2026-11-14", mode: "parcial", answers: [{ questionId: "q-phva", correct: true }] },
+        { id: "pendiente", date: "2026-11-14", mode: "parcial", answers: [], pendingAnswers: [{ questionId: "importantes-calidad", response: "Mi respuesta" }] },
+        { id: "inválido", date: "2026-11-14", mode: "parcial", answers: [], pendingAnswers: [{ questionId: "x", response: " " }] },
+      ]
+    }));
+    expect(state.attempts).toHaveLength(2);
+    expect(state.attempts[1].pendingAnswers?.[0].response).toBe("Mi respuesta");
+    expect(state.attempts.flatMap(attempt => attempt.answers).filter(answer => !answer.correct)).toHaveLength(0);
+  });
   it("recupera un estado inicial ante datos dañados", () => {
     for (const value of [
       null,

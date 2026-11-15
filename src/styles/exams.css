@@ -1,5 +1,5 @@
 .exams-page .exam-library, .exams-page .exam-detail { margin-bottom: 24px; }
-.exams-page .exam-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.exams-page .exam-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 20px; }
 .exams-page .empty-exams { display: flex; align-items: center; gap: 20px; }
 .exams-page .empty-exams > svg { flex-shrink: 0; color: var(--purple); }
 .exams-page .empty-exams p { margin: 0; }
@@ -20,6 +20,8 @@
 .written-practice label { display: grid; gap: 12px; margin-block: 20px; }
 .written-practice textarea { width: 100%; resize: vertical; }
 .exams-page .question-card { overflow-wrap: anywhere; }
+.exams-page .student-response { white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (min-width: 1000px) { .exams-page .exam-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 650px) {
   .exams-page .exam-grid { grid-template-columns: minmax(0, 1fr); }
   .exams-page .empty-exams { align-items: flex-start; }

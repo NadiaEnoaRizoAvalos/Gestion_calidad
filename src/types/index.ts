@@ -13,9 +13,11 @@ export interface Question {
   id: string;
   topic: string;
   prompt: string;
+  number?: number;
+  reviewNote?: string;
   options: string[];
   correct: number | null;
-  type?: "choice" | "written";
+  type?: "choice" | "written" | "true-false" | "selection";
   examId?: string;
   photoId?: string;
   modelAnswer?: string;
@@ -26,7 +28,8 @@ export interface Question {
     | "Parcial anterior"
     | "Pregunta del profesor"
     | "Apunte de clase"
-    | "Pregunta de práctica generada con IA";
+    | "Pregunta de práctica generada con IA"
+    | "Pregunta adicional recopilada para estudiar";
   tags: string[];
 }
 
@@ -35,6 +38,7 @@ export interface Attempt {
   date: string;
   mode: "parcial" | "repaso";
   answers: { questionId: string; correct: boolean; selfAssessed?: boolean }[];
+  pendingAnswers?: { questionId: string; response: string }[];
 }
 
 export interface StudyState {

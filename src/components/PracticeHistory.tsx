@@ -3,6 +3,7 @@ import { useStudy } from "../hooks/useStudy";
 export function PracticeHistory() {
   const { state } = useStudy();
   const answers = state.attempts.flatMap((attempt) => attempt.answers);
+  const pending = state.attempts.reduce((total, attempt) => total + (attempt.pendingAnswers?.length ?? 0), 0);
   return (
     <section className="panel history-panel">
       <h2>Tu aprendizaje en números</h2>
@@ -24,6 +25,7 @@ export function PracticeHistory() {
           <span>Errores para aprender</span>
         </div>
       </div>
+      {!!pending && <p className="muted">{pending} {pending === 1 ? "respuesta guardada" : "respuestas guardadas"} para revisión manual; no se cuentan como aciertos ni errores.</p>}
       {answers.some(answer => answer.selfAssessed) && <p className="muted">Incluye {answers.filter(answer => answer.selfAssessed).length} respuestas autoevaluadas con un modelo; no fueron corregidas automáticamente.</p>}
       {state.attempts.length > 0 ? (
         <details>
@@ -39,8 +41,7 @@ export function PracticeHistory() {
                     {attempt.mode === "parcial" ? "Simulacro" : "Repaso"}
                   </span>
                   <strong>
-                    {attempt.answers.filter((answer) => answer.correct).length}/
-                    {attempt.answers.length} aciertos
+                    {attempt.answers.length ? `${attempt.answers.filter((answer) => answer.correct).length}/${attempt.answers.length} aciertos` : "Sin calificar"}
                   </strong>
                 </li>
               ))}

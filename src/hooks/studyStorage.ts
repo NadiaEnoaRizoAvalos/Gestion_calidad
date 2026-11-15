@@ -31,13 +31,18 @@ export function parseStudyState(value: string | null): StudyState {
         ? data.attempts.filter((attempt: unknown) => {
           if (!attempt || typeof attempt !== "object") return false;
           const a = attempt as Record<string, unknown>;
+          const pending = a.pendingAnswers;
+          const validPending = pending === undefined || (Array.isArray(pending) && pending.every(answer =>
+            !!answer && typeof answer === "object" && typeof answer.questionId === "string" && typeof answer.response === "string" && !!answer.response.trim(),
+          ));
           return (
             typeof a.id === "string" &&
             typeof a.date === "string" &&
             Number.isFinite(Date.parse(a.date)) &&
             (a.mode === "parcial" || a.mode === "repaso") &&
             Array.isArray(a.answers) &&
-            a.answers.length > 0 &&
+            (a.answers.length > 0 || (Array.isArray(pending) && pending.length > 0)) &&
+            validPending &&
             a.answers.every(
               (answer: unknown) =>
                 !!answer &&

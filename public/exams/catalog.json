@@ -1,5 +1,128 @@
 {
   "version": 1,
-  "exams": [],
-  "questions": []
+  "exams": [
+    {
+      "id": "parcial-tema-1",
+      "title": "Parcial Tema 1",
+      "topic": "Tema 1",
+      "photos": [],
+      "kind": "exam",
+      "materialPending": true
+    },
+    {
+      "id": "parcial-tema-2",
+      "title": "Parcial Tema 2",
+      "topic": "Tema 2",
+      "photos": [],
+      "kind": "exam",
+      "materialPending": true
+    },
+    {
+      "id": "preguntas-importantes",
+      "title": "Preguntas importantes",
+      "topic": "Calidad, SGC y Ley 27.506",
+      "photos": [],
+      "kind": "collection"
+    }
+  ],
+  "questions": [
+    {
+      "id": "importantes-calidad",
+      "examId": "preguntas-importantes",
+      "number": 1,
+      "topic": "Calidad y SGC",
+      "prompt": "¿Qué es calidad?",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Pregunta adicional recopilada para estudiar",
+      "tags": [
+        "Calidad",
+        "SGC"
+      ]
+    },
+    {
+      "id": "importantes-sgc",
+      "examId": "preguntas-importantes",
+      "number": 2,
+      "topic": "Calidad y SGC",
+      "prompt": "¿Qué es SGC (Sistema de Gestión de la Calidad)?",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Pregunta adicional recopilada para estudiar",
+      "tags": [
+        "Calidad",
+        "SGC"
+      ]
+    },
+    {
+      "id": "importantes-objetivo-ley-27506",
+      "examId": "preguntas-importantes",
+      "number": 3,
+      "topic": "Ley 27.506",
+      "prompt": "¿Cuál es el objetivo de la Ley 27.506?",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Pregunta adicional recopilada para estudiar",
+      "tags": [
+        "Ley 27.506"
+      ]
+    },
+    {
+      "id": "importantes-ley-27506-y-sgc",
+      "examId": "preguntas-importantes",
+      "number": 4,
+      "topic": "Ley 27.506",
+      "prompt": "¿Cómo se relaciona la Ley 27.506 con los Sistemas de Gestión de Calidad?",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Pregunta adicional recopilada para estudiar",
+      "tags": [
+        "Ley 27.506"
+      ]
+    },
+    {
+      "id": "importantes-requisitos-ley-27506",
+      "examId": "preguntas-importantes",
+      "number": 5,
+      "topic": "Ley 27.506",
+      "prompt": "¿Cuáles son los requisitos de la Ley 27.506?",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Pregunta adicional recopilada para estudiar",
+      "tags": [
+        "Ley 27.506"
+      ]
+    },
+    {
+      "id": "importantes-beneficios-ley-27506",
+      "examId": "preguntas-importantes",
+      "number": 6,
+      "topic": "Ley 27.506",
+      "prompt": "¿Qué beneficios concretos otorga la Ley 27.506?",
+      "type": "written",
+      "options": [],
+      "correct": null,
+      "verified": false,
+      "explanation": "",
+      "origin": "Pregunta adicional recopilada para estudiar",
+      "tags": [
+        "Ley 27.506"
+      ]
+    }
+  ]
 }

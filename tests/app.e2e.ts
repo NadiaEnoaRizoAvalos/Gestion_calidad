@@ -102,9 +102,7 @@ test("simulacro, errores, recomendaciones y nuevo acierto", async ({
   await page.getByLabel("Incluir en simulacro").check();
   await page.getByRole("button", { name: "Comenzar simulacro" }).click();
   await page.getByRole("radio").nth(0).check();
-  await page.getByRole("button", { name: "Comprobar respuesta" }).click();
-  await expect(page.getByRole("status")).toContainText("Vamos a repasar");
-  await page.getByRole("button", { name: "Guardar y ver resultado" }).click();
+  await page.getByRole("button", { name: "Finalizar simulacro" }).click();
   await expect(page.locator(".result-score")).toContainText("0 / 1");
   await page.goto("/#/repaso");
   await expect(page.locator(".recommendation-list")).toContainText(
