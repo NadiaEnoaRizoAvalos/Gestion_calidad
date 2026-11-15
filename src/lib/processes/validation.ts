@@ -61,6 +61,31 @@ export function validateBpmn(
     add(
       "Falta un evento de fin. Indicá el resultado que termina el recorrido.",
     );
+  for (const pool of new Set(flows.map((node) => node.pool))) {
+    const scoped = flows.filter((node) => node.pool === pool);
+    if (
+      starts.length &&
+      !scoped.some((node) => node.type === "bpmn:StartEvent")
+    )
+      add(
+        "Un participante con actividades no tiene inicio explícito; revisá dónde comienza su proceso.",
+        "recommendation",
+      );
+    if (ends.length && !scoped.some((node) => node.type === "bpmn:EndEvent"))
+      add(
+        "Un participante con actividades no tiene fin explícito; revisá cómo termina su proceso.",
+        "recommendation",
+      );
+  }
+  for (const node of nodes.filter((node) =>
+    ["bpmn:DataObjectReference", "bpmn:TextAnnotation"].includes(node.type),
+  )) {
+    if (!edges.some((edge) => edge.from === node.id || edge.to === node.id))
+      add(
+        `${node.name || node.id}: símbolo aislado; vinculalo con la actividad que documenta.`,
+        "recommendation",
+      );
+  }
   const reachable = (seeds: string[], reverse = false) => {
     const visited = new Set(seeds);
     let changed = true;
@@ -88,6 +113,11 @@ export function validateBpmn(
     if (!incoming.length && !outgoing.length)
       add(
         `${node.name || node.id}: elemento aislado; conectalo con el recorrido.`,
+      );
+    if (/Task$/.test(node.type) && (!incoming.length || !outgoing.length))
+      add(
+        `${node.name || node.id}: la tarea necesita entrada y salida de secuencia; un mensaje no reemplaza el recorrido del proceso.`,
+        "recommendation",
       );
     if (node.type === "bpmn:StartEvent" && incoming.length)
       add(`${node.name}: un inicio no recibe flujo de secuencia.`);

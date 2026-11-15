@@ -518,3 +518,315 @@ test("participantes, carriles y eliminaciones mediante controles accesibles", as
   ).toContainText("Proveedor");
   await expect(page.getByRole("alert")).toHaveCount(0);
 });
+
+test("subtipos BPMN: XML, duración, edición, iconos y recuperación sin pérdida", async ({
+  page,
+}) => {
+  test.setTimeout(60000);
+  await page
+    .getByRole("button", { name: "Laboratorio práctico", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Nuevo BPMN", exact: true }).click();
+  const types = [
+    "bpmn:StartEvent",
+    "start-message",
+    "bpmn:IntermediateThrowEvent",
+    "intermediate-message",
+    "intermediate-timer",
+    "bpmn:EndEvent",
+    "end-message",
+    "bpmn:Task",
+    "bpmn:ManualTask",
+    "bpmn:UserTask",
+    "bpmn:ServiceTask",
+    "bpmn:SendTask",
+    "bpmn:ReceiveTask",
+    "bpmn:InclusiveGateway",
+    "bpmn:DataObjectReference",
+    "bpmn:TextAnnotation",
+  ];
+  let timerId = "";
+  for (const type of types) {
+    await page
+      .getByRole("combobox", { name: "Símbolo", exact: true })
+      .selectOption(type);
+    await page
+      .getByRole("button", { name: "Agregar símbolo", exact: true })
+      .click();
+    if (type === "intermediate-timer") {
+      timerId = await page
+        .getByRole("combobox", { name: "Seleccionar elemento", exact: true })
+        .inputValue();
+      await expect(page.locator(".lab-element-info")).toContainText(
+        "Temporizador",
+      );
+      await page
+        .getByLabel("Duración del temporizador (ISO 8601)", { exact: true })
+        .fill("30 minutos");
+      await page
+        .getByRole("button", { name: "Aplicar duración", exact: true })
+        .click();
+      await expect(page.getByRole("alert")).toContainText(
+        "Usá una duración ISO 8601",
+      );
+      await page
+        .getByLabel("Duración del temporizador (ISO 8601)", { exact: true })
+        .fill("PT30M");
+      await page
+        .getByRole("button", { name: "Aplicar duración", exact: true })
+        .click();
+    }
+  }
+  await page
+    .getByLabel("Etiqueta del elemento", { exact: true })
+    .fill("Nota de estudio");
+  await page
+    .getByRole("button", { name: "Aplicar etiqueta", exact: true })
+    .click();
+  await expect(
+    page.getByRole("combobox", { name: "Seleccionar elemento", exact: true }),
+  ).toContainText("Nota de estudio");
+  await page
+    .getByLabel("Nombre del trabajo", { exact: true })
+    .fill("Subtipos completos");
+  await page
+    .getByRole("button", { name: "Guardar trabajo", exact: true })
+    .click();
+  const [download] = await Promise.all([
+    page.waitForEvent("download"),
+    page
+      .getByRole("button", { name: "Exportar BPMN 2.0 XML", exact: true })
+      .click(),
+  ]);
+  const xml = await readFile((await download.path())!, "utf8");
+  const definitions = await page.evaluate((xml) => {
+    const doc = new DOMParser().parseFromString(xml, "application/xml");
+    return Array.from(
+      doc.getElementsByTagNameNS(
+        "http://www.omg.org/spec/BPMN/20100524/MODEL",
+        "*",
+      ),
+    ).map((el) => ({
+      type: el.localName,
+      id: el.id,
+      children: Array.from(el.children).map((child) => child.localName),
+      text: el.textContent,
+    }));
+  }, xml);
+  for (const type of [
+    "manualTask",
+    "userTask",
+    "serviceTask",
+    "sendTask",
+    "receiveTask",
+    "inclusiveGateway",
+    "dataObjectReference",
+    "textAnnotation",
+  ])
+    expect(definitions.some((el) => el.type === type)).toBe(true);
+  for (const [type, definition] of [
+    ["startEvent", "messageEventDefinition"],
+    ["intermediateCatchEvent", "messageEventDefinition"],
+    ["intermediateCatchEvent", "timerEventDefinition"],
+    ["endEvent", "messageEventDefinition"],
+  ])
+    expect(
+      definitions.some(
+        (el) => el.type === type && el.children.includes(definition),
+      ),
+    ).toBe(true);
+  expect(xml).toContain("PT30M");
+  expect(xml).toContain("Nota de estudio");
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Laboratorio práctico", exact: true })
+    .click();
+  await page
+    .getByRole("combobox", { name: "Trabajos guardados", exact: true })
+    .selectOption({ label: "Subtipos completos · BPMN" });
+  await page
+    .getByRole("button", { name: "Recuperar trabajo", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Agregar símbolo", exact: true }),
+  ).toBeEnabled();
+  await page
+    .getByRole("combobox", { name: "Seleccionar elemento", exact: true })
+    .selectOption(timerId);
+  await expect(
+    page.getByLabel("Duración del temporizador (ISO 8601)", { exact: true }),
+  ).toHaveValue("PT30M");
+  for (const type of [
+    "manualTask",
+    "userTask",
+    "serviceTask",
+    "sendTask",
+    "receiveTask",
+  ]) {
+    const id = definitions.find((el) => el.type === type)!.id;
+    const visual = page.locator(
+      `.lab-bpmn-canvas [data-element-id="${id}"].djs-shape > .djs-visual`,
+    );
+    expect(await visual.locator("path").count()).toBeGreaterThan(0);
+    // Native task markers must remain in the upper-left corner after XML import.
+    const marker = await visual
+      .locator("path")
+      .first()
+      .evaluate((node) => {
+        const box = (node as SVGGraphicsElement).getBBox();
+        return { x: box.x, y: box.y, width: box.width, height: box.height };
+      });
+    expect(marker.x).toBeLessThan(40);
+    expect(marker.y).toBeLessThan(40);
+    expect(marker.width).toBeLessThan(40);
+  }
+  const manualId = definitions.find((el) => el.type === "manualTask")!.id;
+  await page
+    .getByRole("combobox", { name: "Seleccionar elemento", exact: true })
+    .selectOption(manualId);
+  await expect(page.locator(".lab-element-info")).toContainText("Tarea manual");
+  const before = await page
+    .locator(`.djs-shape[data-element-id="${manualId}"]`)
+    .getAttribute("transform");
+  await page.getByRole("button", { name: "Derecha", exact: true }).click();
+  expect(
+    await page
+      .locator(`.djs-shape[data-element-id="${manualId}"]`)
+      .getAttribute("transform"),
+  ).not.toBe(before);
+  await page
+    .getByRole("button", { name: "Eliminar elemento o conexión", exact: true })
+    .click();
+  await expect(
+    page.locator(`.djs-shape[data-element-id="${manualId}"]`),
+  ).toHaveCount(0);
+  await page.getByRole("button", { name: "Deshacer", exact: true }).click();
+  await expect(
+    page.locator(`.djs-shape[data-element-id="${manualId}"]`),
+  ).toHaveCount(1);
+  await page
+    .getByRole("button", { name: "Ajustar vista", exact: true })
+    .click();
+  await page
+    .locator(".lab-bpmn-layout")
+    .screenshot({ path: "test-results/bpmn-subtipos-1440.png" });
+  await page.setViewportSize({ width: 320, height: 900 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page
+    .locator(".lab-bpmn-layout")
+    .screenshot({ path: "test-results/bpmn-subtipos-320.png" });
+  await expect(page.getByRole("alert")).toHaveCount(0);
+});
+
+test("paleta agrupada: arrastre, inserción por teclado y conexiones en el lienzo", async ({
+  page,
+}) => {
+  await page
+    .getByRole("button", { name: "Laboratorio práctico", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Nuevo BPMN", exact: true }).click();
+  const manual = page.getByRole("button", {
+    name: "Insertar: Tarea manual",
+    exact: true,
+  });
+  await expect(manual).toBeEnabled();
+  await manual.scrollIntoViewIfNeeded();
+  const source = (await manual.boundingBox())!;
+  const canvas = (await page.locator(".lab-bpmn-canvas").boundingBox())!;
+  await page.mouse.move(
+    source.x + source.width / 2,
+    source.y + source.height / 2,
+  );
+  await page.mouse.down();
+  await page.mouse.move(canvas.x + canvas.width / 2, canvas.y + 180, {
+    steps: 15,
+  });
+  await page.mouse.up();
+  // bpmn-js suppresses ghost clicks for 400 ms after a drag finishes.
+  await page.waitForTimeout(450);
+  const selected = page.getByRole("combobox", {
+    name: "Seleccionar elemento",
+    exact: true,
+  });
+  await expect(selected).toContainText("ManualTask");
+  await page
+    .getByRole("button", { name: "Insertar: Fin por mensaje", exact: true })
+    .press("Enter");
+  await expect(selected).toContainText("Fin por mensaje");
+  const taskId = await selected
+    .locator("option")
+    .filter({ hasText: /ManualTask/ })
+    .getAttribute("value");
+  const endId = await selected.inputValue();
+  await page
+    .getByRole("button", { name: "Ajustar vista", exact: true })
+    .click();
+  await page
+    .locator(".lab-bpmn-palette")
+    .getByRole("button", { name: "Flujo de secuencia", exact: true })
+    .click();
+  await page
+    .locator(`.djs-shape[data-element-id="${taskId}"] .djs-hit`)
+    .click();
+  await page.locator(`.djs-shape[data-element-id="${endId}"] .djs-hit`).click();
+  await expect(selected).toContainText("SequenceFlow");
+  await expect(page.getByRole("alert")).toHaveCount(0);
+});
+
+test("simbología ampliada: grupos equilibrados, marcadores y explicaciones", async ({
+  page,
+}) => {
+  await page.getByRole("button", { name: "BPMN", exact: true }).click();
+  const filters = page.getByRole("group", { name: "Categorías de simbología" });
+  for (const [group, count] of [
+    ["Eventos", 7],
+    ["Actividades", 7],
+    ["Compuertas", 3],
+    ["Conexiones", 3],
+    ["Participantes", 2],
+    ["Datos", 2],
+  ] as const) {
+    await filters.getByRole("button", { name: group, exact: true }).click();
+    await expect(page.locator(".lab-symbol-grid button")).toHaveCount(count);
+  }
+  await filters.getByRole("button", { name: "Eventos", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Intermedio temporizador", exact: true })
+    .click();
+  await expect(
+    page.locator(".lab-symbol-grid [data-marker=timer]"),
+  ).toHaveCount(1);
+  await expect(
+    page.getByText(/Es una espera temporal, no una compuerta/),
+  ).toBeVisible();
+  await filters
+    .getByRole("button", { name: "Actividades", exact: true })
+    .click();
+  for (const marker of ["manual", "user", "service", "send", "receive"])
+    await expect(
+      page.locator(`.lab-symbol-grid [data-marker=${marker}]`),
+    ).toHaveCount(1);
+  await filters.getByRole("button", { name: "Todos", exact: true }).click();
+  await page
+    .locator(".lab-symbol-grid")
+    .screenshot({ path: "test-results/bpmn-simbolos-1440.png" });
+  await page.setViewportSize({ width: 768, height: 900 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.setViewportSize({ width: 320, height: 900 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page
+    .locator(".lab-symbol-grid")
+    .screenshot({ path: "test-results/bpmn-simbolos-320.png" });
+});

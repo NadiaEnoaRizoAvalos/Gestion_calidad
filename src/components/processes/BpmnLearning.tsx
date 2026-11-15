@@ -5,7 +5,11 @@ import {
   exampleSteps,
   exampleXml,
 } from "../../data/processes/bpmnExamples";
-import { symbols } from "../../data/processes/symbols";
+import {
+  symbols,
+  symbolGroups,
+  type SymbolGroup,
+} from "../../data/processes/symbols";
 import { omgUrl } from "../../data/processes/content";
 import type { BpmnDocument } from "../../types/processLab";
 import { BpmnSymbol } from "./BpmnSymbol";
@@ -17,6 +21,9 @@ export function BpmnLearning({
   active: boolean;
   onUse: (doc: BpmnDocument) => void;
 }) {
+  const [symbolGroup, setSymbolGroup] = useState<SymbolGroup | "Todos">(
+    "Todos",
+  );
   const [symbol, setSymbol] = useState(symbols[0]);
   const [exampleIndex, setExampleIndex] = useState(0);
   const [current, setCurrent] = useState("Start");
@@ -82,18 +89,40 @@ export function BpmnLearning({
       </article>
       <section className="panel">
         <h2>Simbología para explorar</h2>
-        <div className="lab-symbol-grid">
-          {symbols.map((item) => (
+        <div
+          className="lab-symbol-filters"
+          role="group"
+          aria-label="Categorías de simbología"
+        >
+          {(["Todos", ...symbolGroups] as const).map((group) => (
             <button
-              key={item.id}
+              key={group}
               className="secondary"
-              aria-pressed={symbol.id === item.id}
-              onClick={() => setSymbol(item)}
+              aria-pressed={symbolGroup === group}
+              onClick={() => setSymbolGroup(group)}
             >
-              <BpmnSymbol type={item.id} />
-              <span>{item.name}</span>
+              {group}
             </button>
           ))}
+        </div>
+        <div className="lab-symbol-grid">
+          {symbols
+            .filter(
+              (item) => symbolGroup === "Todos" || item.group === symbolGroup,
+            )
+            .map((item) => (
+              <button
+                key={item.id}
+                aria-label={item.name}
+                className="secondary"
+                aria-pressed={symbol.id === item.id}
+                onClick={() => setSymbol(item)}
+              >
+                <BpmnSymbol type={item.id} />
+                <span>{item.name}</span>
+                <small>{item.group}</small>
+              </button>
+            ))}
         </div>
         <article className="example-box" aria-live="polite">
           <h3>{symbol.name}</h3>
@@ -105,7 +134,7 @@ export function BpmnLearning({
             <strong>Ejemplo:</strong> {symbol.example}
           </p>
           <p>
-            <strong>Error frecuente:</strong> {symbol.error}
+            <strong>Diferencias y errores frecuentes:</strong> {symbol.error}
           </p>
         </article>
       </section>

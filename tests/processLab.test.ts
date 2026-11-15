@@ -269,3 +269,119 @@ it("los seis ejemplos generan documentos BPMN con namespace y DI, no JSON renomb
     });
   }
 });
+
+import {
+  bpmnElements,
+  describeBpmnElement,
+  validTimerDuration,
+} from "../src/data/processes/bpmnElements";
+import { symbols, symbolGroups } from "../src/data/processes/symbols";
+it("cada elemento insertable tiene una explicación y los grupos contienen la notación ampliada", () => {
+  expect(new Set(bpmnElements.map((spec) => spec.id)).size).toBe(
+    bpmnElements.length,
+  );
+  expect(
+    symbolGroups.map(
+      (group) => symbols.filter((symbol) => symbol.group === group).length,
+    ),
+  ).toEqual([7, 7, 3, 3, 2, 2]);
+  for (const spec of bpmnElements) {
+    const info = describeBpmnElement(
+      spec.type,
+      spec.eventDefinitionType ? [spec.eventDefinitionType] : [],
+    );
+    expect(info.spec?.id).toBe(spec.id);
+    expect(info.help?.use).toBeTruthy();
+    expect(info.help?.example).toBeTruthy();
+    expect(info.help?.error).toBeTruthy();
+  }
+  expect(
+    describeBpmnElement("bpmn:StartEvent", ["bpmn:MessageEventDefinition"]),
+  ).toMatchObject({ kind: "Evento", subtype: "Inicio", definition: "Mensaje" });
+  expect(
+    describeBpmnElement("bpmn:IntermediateCatchEvent", [
+      "bpmn:TimerEventDefinition",
+    ]),
+  ).toMatchObject({
+    kind: "Evento",
+    subtype: "Intermedio",
+    definition: "Temporizador",
+  });
+  expect(describeBpmnElement("bpmn:ServiceTask")).toMatchObject({
+    kind: "Tarea",
+    definition: "Ninguno",
+  });
+  expect(
+    describeBpmnElement("bpmn:StartEvent", ["bpmn:SignalEventDefinition"]).spec,
+  ).toBeUndefined();
+});
+it("acepta duraciones ISO 8601 y rechaza plazos vacíos o ambiguos", () => {
+  for (const duration of ["PT1H", "PT30M", "P1D", "P1DT2H30M", "PT0.5S"])
+    expect(validTimerDuration(duration)).toBe(true);
+  for (const duration of [
+    "",
+    "P",
+    "PT",
+    "1 hora",
+    "30",
+    "P1DT",
+    "PT-1H",
+    "PT1H basura",
+  ])
+    expect(validTimerDuration(duration)).toBe(false);
+});
+it("las tareas especializadas necesitan secuencia, incluso si reciben mensajes", () => {
+  for (const type of [
+    "ManualTask",
+    "UserTask",
+    "ServiceTask",
+    "SendTask",
+    "ReceiveTask",
+  ]) {
+    const specialized = [
+      ...nodes.map((n) => ({ ...n })),
+      node("especializada", `bpmn:${type}`),
+    ];
+    expect(
+      validateBpmn(specialized, [
+        ...edges,
+        edge("inicio", "especializada", "bpmn:MessageFlow"),
+      ]).some((issue) =>
+        issue.text.includes("tarea necesita entrada y salida"),
+      ),
+    ).toBe(true);
+    expect(
+      validateBpmn([nodes[0], node("tarea", `bpmn:${type}`), nodes[2]], edges),
+    ).toEqual([]);
+  }
+});
+it("advierte sobre datos aislados y participantes con actividades sin inicio ni fin", () => {
+  const issues = validateBpmn(
+    [
+      ...nodes,
+      node("dato", "bpmn:DataObjectReference"),
+      node("nota", "bpmn:TextAnnotation"),
+      node("externa", "bpmn:ServiceTask", "proveedor"),
+    ],
+    edges,
+  );
+  expect(
+    issues.filter((issue) => issue.text.includes("símbolo aislado")),
+  ).toHaveLength(2);
+  expect(
+    issues.some((issue) =>
+      issue.text.includes("participante con actividades no tiene inicio"),
+    ),
+  ).toBe(true);
+  expect(
+    issues.some((issue) =>
+      issue.text.includes("participante con actividades no tiene fin"),
+    ),
+  ).toBe(true);
+  expect(
+    validateBpmn(
+      [...nodes, node("nota", "bpmn:TextAnnotation")],
+      [...edges, edge("tarea", "nota", "bpmn:Association")],
+    ).some((issue) => issue.text.includes("símbolo aislado")),
+  ).toBe(false);
+});

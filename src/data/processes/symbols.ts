@@ -1,4 +1,4 @@
-export const symbols = [
+const basicSymbols = [
   {
     id: "start",
     name: "Evento de inicio",
@@ -106,3 +106,121 @@ export const symbols = [
     error: "No cambia por sí misma el recorrido.",
   },
 ];
+
+export const symbolGroups = [
+  "Eventos",
+  "Actividades",
+  "Compuertas",
+  "Conexiones",
+  "Participantes",
+  "Datos",
+] as const;
+export type SymbolGroup = (typeof symbolGroups)[number];
+const additions = [
+  {
+    id: "start-message",
+    name: "Inicio por mensaje",
+    use: "Inicia un proceso al recibir un mensaje de otro participante. Se usa cuando esa recepción dispara un nuevo caso.",
+    example: "Llega una solicitud de compra.",
+    error:
+      "El sobre es hueco: captura un mensaje. El evento representa la recepción; el flujo de mensaje representa la comunicación entre participantes.",
+  },
+  {
+    id: "intermediate-message",
+    name: "Intermedio por mensaje",
+    use: "Espera un mensaje durante un proceso que ya comenzó. El doble borde indica que es intermedio y el sobre hueco indica captura.",
+    example: "Esperar la confirmación del proveedor.",
+    error:
+      "No inicia una instancia nueva ni sustituye el flujo de mensaje que llega desde otro participante.",
+  },
+  {
+    id: "intermediate-timer",
+    name: "Intermedio temporizador",
+    use: "Espera una fecha, duración o ciclo. Aquí se practica una duración; el reloj y el doble borde lo distinguen de otros eventos.",
+    example: "Esperar una hora antes de recordar un pedido.",
+    error:
+      "Es una espera temporal, no una compuerta que elige caminos. El editor modela el plazo; no ejecuta una cuenta regresiva.",
+  },
+  {
+    id: "end-message",
+    name: "Fin por mensaje",
+    use: "Envía un mensaje al terminar el recorrido. El borde grueso indica fin y el sobre relleno indica lanzamiento.",
+    example: "Enviar la confirmación final de un pedido.",
+    error:
+      "No recibe mensajes ni tiene salida de secuencia. El flujo de mensaje comunica con el receptor de otro participante.",
+  },
+  {
+    id: "manual-task",
+    name: "Tarea manual",
+    use: "Trabajo de una persona sin asistencia de un motor de procesos ni de una aplicación. La mano identifica el tipo.",
+    example: "Embalar físicamente un pedido.",
+    error:
+      "Una tarea de usuario también es humana, pero se realiza con asistencia de software; una tarea de servicio es automatizada.",
+  },
+  {
+    id: "user-task",
+    name: "Tarea de usuario",
+    use: "Trabajo humano realizado con asistencia de una aplicación; el marcador de persona aparece arriba a la izquierda.",
+    example: "Una persona revisa una solicitud en el sistema.",
+    error:
+      "No equivale a una tarea manual sin asistencia de software ni a una tarea automática de servicio.",
+  },
+  {
+    id: "service-task",
+    name: "Tarea de servicio / sistema",
+    use: "Trabajo realizado automáticamente por una aplicación o servicio. Los engranajes distinguen este tipo de tarea.",
+    example: "Consultar automáticamente el stock.",
+    error:
+      "El engranaje no representa una persona. Dibujarlo no configura ni ejecuta una conexión real con un sistema.",
+  },
+  {
+    id: "send-task",
+    name: "Tarea de envío",
+    use: "Actividad que envía un mensaje a otro participante; el sobre relleno se ubica en la esquina superior izquierda.",
+    example: "Enviar una orden al proveedor.",
+    error:
+      "Es una actividad, no un evento. Se diferencia de recepción por el sobre relleno; la comunicación usa un flujo de mensaje.",
+  },
+  {
+    id: "receive-task",
+    name: "Tarea de recepción",
+    use: "Actividad que espera un mensaje de otro participante. Su sobre hueco distingue recepción de envío.",
+    example: "Recibir la confirmación de despacho.",
+    error:
+      "No es una tarea de envío ni un evento de captura: la recepción se modela aquí como actividad con su propio alcance.",
+  },
+];
+export const symbols = [...basicSymbols, ...additions]
+  .map((symbol) => ({
+    ...symbol,
+    group: ([
+      "start",
+      "intermediate",
+      "end",
+      "start-message",
+      "intermediate-message",
+      "intermediate-timer",
+      "end-message",
+    ].includes(symbol.id)
+      ? "Eventos"
+      : [
+            "task",
+            "subprocess",
+            "manual-task",
+            "user-task",
+            "service-task",
+            "send-task",
+            "receive-task",
+          ].includes(symbol.id)
+        ? "Actividades"
+        : ["xor", "and", "or"].includes(symbol.id)
+          ? "Compuertas"
+          : ["sequence", "message", "association"].includes(symbol.id)
+            ? "Conexiones"
+            : ["pool", "lane"].includes(symbol.id)
+              ? "Participantes"
+              : "Datos") as SymbolGroup,
+  }))
+  .sort(
+    (a, b) => symbolGroups.indexOf(a.group) - symbolGroups.indexOf(b.group),
+  );

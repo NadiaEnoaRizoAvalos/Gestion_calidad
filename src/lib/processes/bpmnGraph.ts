@@ -16,7 +16,7 @@ export function bpmnGraph(elements: Element[]): {
     .filter((e) => !e.labelTarget && !e.waypoints)
     .map((e) => ({
       id: e.id,
-      name: String(e.businessObject?.name ?? e.id),
+      name: String(e.businessObject?.text ?? e.businessObject?.name ?? e.id),
       type: e.type,
       pool: pool(e),
       incoming: (e.incoming ?? []).map((c) => c.id),

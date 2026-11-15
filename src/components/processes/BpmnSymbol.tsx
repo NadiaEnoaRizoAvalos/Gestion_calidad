@@ -1,5 +1,26 @@
 import { useId } from "react";
+import PathMap from "bpmn-js/lib/draw/PathMap";
+const paths = new PathMap();
 export function BpmnSymbol({ type }: { type: string }) {
+  const event = [
+    "start",
+    "start-message",
+    "intermediate",
+    "intermediate-message",
+    "intermediate-timer",
+    "end",
+    "end-message",
+  ].includes(type);
+  const intermediate = type.startsWith("intermediate");
+  const task = [
+    "task",
+    "subprocess",
+    "manual-task",
+    "user-task",
+    "service-task",
+    "send-task",
+    "receive-task",
+  ].includes(type);
   const marker = useId().replace(/:/g, "");
   return (
     <svg
@@ -27,20 +48,107 @@ export function BpmnSymbol({ type }: { type: string }) {
         </marker>
       </defs>
       <g fill="#fffdfa" stroke="#745189" strokeWidth="2">
-        {["start", "intermediate", "end"].includes(type) && (
+        {event && (
           <>
             <circle
               cx="64"
               cy="36"
               r="23"
-              strokeWidth={type === "end" ? 5 : 2}
+              strokeWidth={type.startsWith("end") ? 5 : 2}
             />
-            {type === "intermediate" && <circle cx="64" cy="36" r="18" />}
+            {intermediate && <circle cx="64" cy="36" r="18" />}
+            {type.endsWith("message") && (
+              <g data-marker="message" strokeWidth="1.4">
+                <rect
+                  x="53"
+                  y="29"
+                  width="22"
+                  height="14"
+                  fill={type === "end-message" ? "#745189" : "#fffdfa"}
+                />
+                <path
+                  d="M53 29L64 37L75 29"
+                  fill="none"
+                  stroke={type === "end-message" ? "#fffdfa" : "#745189"}
+                />
+              </g>
+            )}
+            {type === "intermediate-timer" && (
+              <g data-marker="timer" strokeWidth="1.2" fill="none">
+                <circle cx="64" cy="36" r="12" />
+                {Array.from({ length: 12 }, (_, i) => (
+                  <path
+                    key={i}
+                    d="M64 24V27"
+                    transform={`rotate(${i * 30} 64 36)`}
+                  />
+                ))}
+                <path d="M64 29V36L70 39" strokeWidth="1.8" />
+              </g>
+            )}
           </>
         )}
-        {["task", "subprocess"].includes(type) && (
+        {task && (
           <>
             <rect x="18" y="12" width="92" height="48" rx="8" />
+            {type === "manual-task" && (
+              <path
+                data-marker="manual"
+                d={paths.getScaledPath("TASK_TYPE_MANUAL", {
+                  abspos: { x: 35, y: 28 },
+                })}
+                strokeWidth=".8"
+              />
+            )}
+            {type === "user-task" && (
+              <g data-marker="user" strokeWidth=".8">
+                {[
+                  "TASK_TYPE_USER_1",
+                  "TASK_TYPE_USER_2",
+                  "TASK_TYPE_USER_3",
+                ].map((name) => (
+                  <path
+                    key={name}
+                    d={paths.getScaledPath(name, { abspos: { x: 36, y: 25 } })}
+                  />
+                ))}
+              </g>
+            )}
+            {type === "service-task" && (
+              <g data-marker="service" strokeWidth=".9">
+                {[
+                  [30, 29],
+                  [37, 35],
+                ].map(([x, y]) => (
+                  <path
+                    key={x}
+                    d={paths.getScaledPath("TASK_TYPE_SERVICE", {
+                      abspos: { x, y },
+                    })}
+                  />
+                ))}
+              </g>
+            )}
+            {["send-task", "receive-task"].includes(type) && (
+              <g
+                data-marker={type === "send-task" ? "send" : "receive"}
+                strokeWidth="1.2"
+              >
+                <rect
+                  x="26"
+                  y="20"
+                  width="21"
+                  height="14"
+                  fill={type === "send-task" ? "#745189" : "#fffdfa"}
+                />
+                <path
+                  d="M26 20L36.5 27L47 20"
+                  fill="none"
+                  stroke={type === "send-task" ? "#fffdfa" : "#745189"}
+                />
+              </g>
+            )}
+
             {type === "subprocess" && (
               <>
                 <rect x="58" y="43" width="12" height="12" />

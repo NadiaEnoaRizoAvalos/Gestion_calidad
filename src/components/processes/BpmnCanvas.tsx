@@ -6,7 +6,21 @@ import type Canvas from "diagram-js/lib/core/Canvas";
 import type ElementRegistry from "diagram-js/lib/core/ElementRegistry";
 import type Modeling from "bpmn-js/lib/features/modeling/Modeling";
 import type ElementFactory from "bpmn-js/lib/features/modeling/ElementFactory";
-import type BpmnRules from "bpmn-js/lib/features/rules/BpmnRules";
+import type Create from "diagram-js/lib/features/create/Create";
+import type HandTool from "diagram-js/lib/features/hand-tool/HandTool";
+import type BpmnFactory from "bpmn-js/lib/features/modeling/BpmnFactory";
+import {
+  bpmnElements,
+  describeBpmnElement,
+  validTimerDuration,
+  type BpmnElementSpec,
+} from "../../data/processes/bpmnElements";
+import {
+  createBpmnShape,
+  connectBpmn,
+  elementLabel,
+} from "../../lib/processes/bpmnTools";
+import { BpmnPalette } from "./BpmnPalette";
 import type CommandStack from "diagram-js/lib/command/CommandStack";
 import type {
   Element,
@@ -22,15 +36,6 @@ import { downloadFile } from "../../lib/processes/storage";
 import "bpmn-js/dist/assets/diagram-js.css";
 import "bpmn-js/dist/assets/bpmn-js.css";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
-const nodeTypes = [
-  ["bpmn:StartEvent", "Inicio"],
-  ["bpmn:Task", "Tarea"],
-  ["bpmn:EndEvent", "Fin"],
-  ["bpmn:ExclusiveGateway", "Compuerta XOR"],
-  ["bpmn:ParallelGateway", "Compuerta AND"],
-  ["bpmn:IntermediateThrowEvent", "Evento intermedio"],
-  ["bpmn:SubProcess", "Subproceso"],
-];
 export default function BpmnCanvas({
   initial,
   onReady,
@@ -50,6 +55,10 @@ export default function BpmnCanvas({
 }) {
   const container = useRef<HTMLDivElement>(null);
   const instance = useRef<BaseViewer | null>(null);
+  const connectionTool = useRef<{ type: string; from: Element | null } | null>(
+    null,
+  );
+  const [duration, setDuration] = useState("PT1H");
   const [elements, setElements] = useState<Element[]>([]);
   const [selected, setSelected] = useState("");
   const [label, setLabel] = useState("");
@@ -102,7 +111,33 @@ export default function BpmnCanvas({
       if (disposed) return;
       const clicked = (event.element.labelTarget ?? event.element) as Element;
       setSelected(clicked.id);
-      setLabel(String(clicked.businessObject?.name ?? ""));
+      setLabel(elementLabel(clicked));
+      setDuration(
+        String(
+          clicked.businessObject?.eventDefinitions?.find(
+            (d: { $type: string }) => d.$type === "bpmn:TimerEventDefinition",
+          )?.timeDuration?.body ?? "",
+        ),
+      );
+      const tool = connectionTool.current;
+      if (tool) {
+        if (!tool.from) {
+          tool.from = clicked;
+          setMessage(
+            "Seleccioná el destino de la conexión. Escape cancela la herramienta.",
+          );
+        } else {
+          try {
+            connectBpmn(engine, tool.from, clicked, tool.type);
+            setMessage("");
+          } catch {
+            setMessage(
+              "Conexión no permitida. La secuencia une pasos del mismo proceso; los mensajes comunican participantes diferentes.",
+            );
+          }
+          connectionTool.current = null;
+        }
+      }
     });
     engine.on("commandStack.changed", () => {
       if (imported && !disposed) {
@@ -148,6 +183,7 @@ export default function BpmnCanvas({
     return () => {
       disposed = true;
       instance.current = null;
+      connectionTool.current = null;
       engine.destroy();
     };
   }, [initial, readOnly, onReady, onChange, onBusy]);
@@ -173,28 +209,28 @@ export default function BpmnCanvas({
     instance.current!.get<ElementRegistry>("elementRegistry");
   const modeling = () => instance.current!.get<Modeling>("modeling");
   const current = elements.find((e) => e.id === selected);
-  const symbolForType: Record<string, string> = {
-    "bpmn:StartEvent": "start",
-    "bpmn:EndEvent": "end",
-    "bpmn:IntermediateThrowEvent": "intermediate",
-    "bpmn:Task": "task",
-    "bpmn:SubProcess": "subprocess",
-    "bpmn:ExclusiveGateway": "xor",
-    "bpmn:ParallelGateway": "and",
-    "bpmn:InclusiveGateway": "or",
+  const selectedInfo = current
+    ? describeBpmnElement(
+        current.type,
+        (current.businessObject?.eventDefinitions ?? []).map(
+          (d: { $type: string }) => d.$type,
+        ),
+      )
+    : undefined;
+  const fallbackSymbols: Record<string, string> = {
     "bpmn:Participant": "pool",
     "bpmn:Lane": "lane",
     "bpmn:SequenceFlow": "sequence",
     "bpmn:MessageFlow": "message",
     "bpmn:Association": "association",
   };
-  const selectedHelp = current
-    ? symbols.find((item) => item.id === symbolForType[current.type])
-    : undefined;
+  const selectedHelp =
+    selectedInfo?.help ??
+    symbols.find((item) => item.id === fallbackSymbols[current?.type ?? ""]);
   const run = (action: () => void) => {
     try {
-      action();
       setMessage("");
+      action();
     } catch {
       setMessage(
         "Operación no permitida. Revisá el tipo de elemento, su participante y las reglas de conexión; usá Deshacer si necesitás volver al paso anterior.",
@@ -286,6 +322,81 @@ export default function BpmnCanvas({
         y: Math.min(maxY, Math.max(minY, shape.y + dy)) - shape.y,
       });
     });
+  const insert = (spec: BpmnElementSpec, event?: MouseEvent) =>
+    run(() => {
+      connectionTool.current = null;
+      const engine = instance.current!;
+      const shape = createBpmnShape(engine, spec);
+      if (event) {
+        shape.businessObject.set(
+          spec.type === "bpmn:TextAnnotation" ? "text" : "name",
+          spec.label,
+        );
+        engine.get<Create>("create").start(event, shape);
+        return;
+      }
+      const parent = chooseParent();
+      const added = modeling().createShape(shape, position(parent), parent);
+      modeling().updateLabel(added, spec.label);
+      setSelected(added.id);
+      setLabel(elementLabel(added));
+      setDuration(
+        spec.eventDefinitionType === "bpmn:TimerEventDefinition" ? "PT1H" : "",
+      );
+    });
+  const addParticipant = () =>
+    run(() => {
+      const root = instance
+        .current!.get<Canvas>("canvas")
+        .getRootElement() as Parent;
+      const wrapping = root.type === "bpmn:Process";
+      const shapes = elements.filter((e) => !e.waypoints) as Shape[];
+      const left = wrapping
+        ? Math.min(100, ...shapes.map((e) => e.x)) - 60
+        : 200;
+      const top = wrapping ? Math.min(60, ...shapes.map((e) => e.y)) - 30 : 0;
+      const width = wrapping
+        ? Math.max(700, ...shapes.map((e) => e.x + e.width)) + 50 - left
+        : 600;
+      const height = wrapping
+        ? Math.max(360, ...shapes.map((e) => e.y + e.height)) + 30 - top
+        : 250;
+      const shape = instance
+        .current!.get<ElementFactory>("elementFactory")
+        .create("shape", {
+          type: "bpmn:Participant",
+          isExpanded: true,
+          width,
+          height,
+        });
+      const pools = elements.filter(
+        (e) => e.type === "bpmn:Participant",
+      ) as Shape[];
+      const added = modeling().createShape(
+        shape,
+        {
+          x: wrapping ? left + width / 2 : 500,
+          y: wrapping
+            ? top + height / 2
+            : Math.max(0, ...pools.map((p) => p.y + p.height)) + 180,
+        },
+        root,
+      );
+      const name = wrapping
+        ? "Mi organización"
+        : `Participante ${pools.length + 1}`;
+      modeling().updateLabel(added, name);
+      setSelected(added.id);
+      setLabel(name);
+    });
+  const addLane = () =>
+    run(() => {
+      const lane = modeling().addLane(current as Shape, "bottom");
+      const name = `Carril ${elements.filter((e) => e.type === "bpmn:Lane").length + 1}`;
+      modeling().updateLabel(lane, name);
+      setSelected(lane.id);
+      setLabel(name);
+    });
   return (
     <section
       className="lab-bpmn-widget"
@@ -295,9 +406,15 @@ export default function BpmnCanvas({
         <button
           className="secondary"
           disabled={!ready}
-          onClick={() =>
-            instance.current?.get<Canvas>("canvas").zoom("fit-viewport")
-          }
+          onClick={() => {
+            const canvas = instance.current!.get<Canvas>("canvas");
+            canvas.resized();
+            canvas.zoom("fit-viewport", {
+              x: canvas.getSize().width / 2,
+              y: canvas.getSize().height / 2,
+            });
+            canvas.zoom(canvas.zoom() * 0.94);
+          }}
         >
           Ajustar vista
         </button>
@@ -369,7 +486,41 @@ export default function BpmnCanvas({
           ? "Seleccioná los elementos o usá el recorrido guiado. Podés acercar y desplazar el diagrama."
           : "Usá la paleta para arrastrar símbolos o los controles accesibles de abajo. El área se desplaza y tiene zoom; no es un motor de ejecución."}
       </p>
-      <div className="lab-bpmn-canvas" ref={container} />
+      <div
+        className={`lab-bpmn-layout ${readOnly ? "lab-viewer" : "lab-modeler"}`}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") {
+            connectionTool.current = null;
+            setMessage("");
+          }
+        }}
+      >
+        {!readOnly && (
+          <BpmnPalette
+            disabled={!ready || elements.length > 200}
+            canAddLane={
+              !!current &&
+              ["bpmn:Participant", "bpmn:Lane"].includes(current.type)
+            }
+            onInsert={(spec) => insert(spec)}
+            onDrag={(spec, event) => insert(spec, event)}
+            onParticipant={addParticipant}
+            onLane={addLane}
+            onConnection={(type) => {
+              connectionTool.current = { type, from: null };
+              setMessage(
+                "Seleccioná el origen y luego el destino en el lienzo. Escape cancela la herramienta.",
+              );
+            }}
+            onPan={(event) =>
+              run(() =>
+                instance.current!.get<HandTool>("handTool").activateHand(event),
+              )
+            }
+          />
+        )}
+        <div className="lab-bpmn-canvas" ref={container} />
+      </div>
       {message && (
         <p role="alert" className="lab-notice">
           {message}
@@ -404,10 +555,18 @@ export default function BpmnCanvas({
               <label>
                 Símbolo
                 <select value={type} onChange={(e) => setType(e.target.value)}>
-                  {nodeTypes.map(([id, name]) => (
-                    <option key={id} value={id}>
-                      {name}
-                    </option>
+                  {(
+                    ["Eventos", "Actividades", "Compuertas", "Datos"] as const
+                  ).map((group) => (
+                    <optgroup key={group} label={group}>
+                      {bpmnElements
+                        .filter((spec) => spec.group === group)
+                        .map((spec) => (
+                          <option key={spec.id} value={spec.id}>
+                            {spec.label}
+                          </option>
+                        ))}
+                    </optgroup>
                   ))}
                 </select>
               </label>
@@ -415,23 +574,7 @@ export default function BpmnCanvas({
                 className="primary"
                 disabled={!ready || elements.length > 200}
                 onClick={() =>
-                  run(() => {
-                    const parent = chooseParent();
-                    const shape = instance
-                      .current!.get<ElementFactory>("elementFactory")
-                      .create("shape", { type, isExpanded: false });
-                    const added = modeling().createShape(
-                      shape,
-                      position(parent),
-                      parent,
-                    );
-                    modeling().updateLabel(
-                      added,
-                      nodeTypes.find(([id]) => id === type)?.[1] ?? "Elemento",
-                    );
-                    setSelected(added.id);
-                    setLabel(String(added.businessObject.name ?? ""));
-                  })
+                  insert(bpmnElements.find((spec) => spec.id === type)!)
                 }
               >
                 Agregar símbolo
@@ -439,61 +582,7 @@ export default function BpmnCanvas({
               <button
                 className="secondary"
                 disabled={!ready}
-                onClick={() =>
-                  run(() => {
-                    const root = instance
-                      .current!.get<Canvas>("canvas")
-                      .getRootElement() as Parent;
-                    const wrapping = root.type === "bpmn:Process";
-                    const shapes = elements.filter(
-                      (e) => !e.waypoints,
-                    ) as Shape[];
-                    const left = wrapping
-                      ? Math.min(100, ...shapes.map((e) => e.x)) - 60
-                      : 200;
-                    const top = wrapping
-                      ? Math.min(60, ...shapes.map((e) => e.y)) - 30
-                      : 0;
-                    const width = wrapping
-                      ? Math.max(700, ...shapes.map((e) => e.x + e.width)) +
-                        50 -
-                        left
-                      : 600;
-                    const height = wrapping
-                      ? Math.max(360, ...shapes.map((e) => e.y + e.height)) +
-                        30 -
-                        top
-                      : 250;
-                    const shape = instance
-                      .current!.get<ElementFactory>("elementFactory")
-                      .create("shape", {
-                        type: "bpmn:Participant",
-                        isExpanded: true,
-                        width,
-                        height,
-                      });
-                    const pools = elements.filter(
-                      (e) => e.type === "bpmn:Participant",
-                    ) as Shape[];
-                    const added = modeling().createShape(
-                      shape,
-                      {
-                        x: wrapping ? left + width / 2 : 500,
-                        y: wrapping
-                          ? top + height / 2
-                          : Math.max(0, ...pools.map((p) => p.y + p.height)) +
-                            180,
-                      },
-                      root,
-                    );
-                    const name = wrapping
-                      ? "Mi organización"
-                      : `Participante ${pools.length + 1}`;
-                    modeling().updateLabel(added, name);
-                    setSelected(added.id);
-                    setLabel(name);
-                  })
-                }
+                onClick={addParticipant}
               >
                 Agregar participante
               </button>
@@ -504,31 +593,101 @@ export default function BpmnCanvas({
                   !current ||
                   !["bpmn:Participant", "bpmn:Lane"].includes(current.type)
                 }
-                onClick={() =>
-                  run(() => {
-                    const lane = modeling().addLane(current as Shape, "bottom");
-                    const name = `Carril ${elements.filter((e) => e.type === "bpmn:Lane").length + 1}`;
-                    modeling().updateLabel(lane, name);
-                    setSelected(lane.id);
-                    setLabel(name);
-                  })
-                }
+                onClick={addLane}
               >
                 Agregar carril al seleccionado
               </button>
             </section>
             <section>
               <h3>Elemento seleccionado</h3>
+              {selectedInfo && (
+                <div className="lab-element-info">
+                  <dl>
+                    <dt>Tipo de elemento</dt>
+                    <dd>{selectedInfo.kind}</dd>
+                    <dt>Subtipo</dt>
+                    <dd>{selectedInfo.subtype}</dd>
+                    {selectedInfo.kind === "Evento" && (
+                      <>
+                        <dt>Disparador o definición</dt>
+                        <dd>{selectedInfo.definition}</dd>
+                      </>
+                    )}
+                  </dl>
+                  {selectedHelp && (
+                    <>
+                      <p>{selectedHelp.use}</p>
+                      <p>
+                        <strong>Para recordar:</strong> {selectedHelp.error}
+                      </p>
+                    </>
+                  )}
+                </div>
+              )}
+              {selectedInfo?.definition === "Temporizador" && (
+                <div>
+                  <label>
+                    Duración del temporizador (ISO 8601)
+                    <input
+                      value={duration}
+                      maxLength={80}
+                      onChange={(e) => setDuration(e.target.value)}
+                    />
+                  </label>
+                  <button
+                    className="secondary"
+                    onClick={() =>
+                      run(() => {
+                        if (!validTimerDuration(duration)) {
+                          setMessage(
+                            "Usá una duración ISO 8601, por ejemplo PT30M, PT1H o P1D.",
+                          );
+                          return;
+                        }
+                        const definition =
+                          current!.businessObject.eventDefinitions.find(
+                            (d: { $type: string }) =>
+                              d.$type === "bpmn:TimerEventDefinition",
+                          );
+                        const expression = instance
+                          .current!.get<BpmnFactory>("bpmnFactory")
+                          .create("bpmn:FormalExpression", { body: duration });
+                        modeling().updateModdleProperties(
+                          current!,
+                          definition,
+                          {
+                            timeDate: undefined,
+                            timeCycle: undefined,
+                            timeDuration: expression,
+                          },
+                        );
+                      })
+                    }
+                  >
+                    Aplicar duración
+                  </button>
+                  <p className="muted">
+                    Representa una espera; este laboratorio no ejecuta
+                    temporizadores.
+                  </p>
+                </div>
+              )}
               <label>
                 Seleccionar elemento
                 <select
                   value={selected}
                   onChange={(e) => {
                     setSelected(e.target.value);
-                    setLabel(
+                    const element = elements.find(
+                      (n) => n.id === e.target.value,
+                    );
+                    setLabel(element ? elementLabel(element) : "");
+                    setDuration(
                       String(
-                        elements.find((n) => n.id === e.target.value)
-                          ?.businessObject?.name ?? "",
+                        element?.businessObject?.eventDefinitions?.find(
+                          (d: { $type: string }) =>
+                            d.$type === "bpmn:TimerEventDefinition",
+                        )?.timeDuration?.body ?? "",
                       ),
                     );
                   }}
@@ -536,8 +695,7 @@ export default function BpmnCanvas({
                   <option value="">Elegir</option>
                   {elements.map((e) => (
                     <option key={e.id} value={e.id}>
-                      {String(e.businessObject?.name || e.id)} ·{" "}
-                      {e.type.replace("bpmn:", "")}
+                      {elementLabel(e) || e.id} · {e.type.replace("bpmn:", "")}
                     </option>
                   ))}
                 </select>
@@ -607,7 +765,7 @@ export default function BpmnCanvas({
                     .filter((e) => e.type === "bpmn:Lane")
                     .map((e) => (
                       <option key={e.id} value={e.id}>
-                        {String(e.businessObject.name || e.id)}
+                        {elementLabel(e) || e.id}
                       </option>
                     ))}
                 </select>
@@ -637,19 +795,13 @@ export default function BpmnCanvas({
                 const source = registry().get(from) as Element,
                   target = registry().get(to) as Element;
                 if (!source || !target || from === to) throw new Error();
-                const rules = instance.current!.get<BpmnRules>("bpmnRules");
-                const allowed =
-                  edgeType === "bpmn:SequenceFlow"
-                    ? rules.canConnectSequenceFlow(source, target)
-                    : edgeType === "bpmn:MessageFlow"
-                      ? rules.canConnectMessageFlow(source, target)
-                      : rules.canConnectAssociation(source, target);
-                if (!allowed) throw new Error();
-                const connection = modeling().connect(source, target, {
-                  type: edgeType,
-                });
-                if (connectionLabel)
-                  modeling().updateLabel(connection, connectionLabel);
+                connectBpmn(
+                  instance.current!,
+                  source,
+                  target,
+                  edgeType,
+                  connectionLabel,
+                );
               });
             }}
           >
@@ -661,7 +813,7 @@ export default function BpmnCanvas({
                   .filter((e) => !e.waypoints && e.type !== "bpmn:Lane")
                   .map((e) => (
                     <option key={e.id} value={e.id}>
-                      {String(e.businessObject.name || e.id)}
+                      {elementLabel(e) || e.id}
                     </option>
                   ))}
               </select>
@@ -674,7 +826,7 @@ export default function BpmnCanvas({
                   .filter((e) => !e.waypoints && e.type !== "bpmn:Lane")
                   .map((e) => (
                     <option key={e.id} value={e.id}>
-                      {String(e.businessObject.name || e.id)}
+                      {elementLabel(e) || e.id}
                     </option>
                   ))}
               </select>
