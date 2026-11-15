@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Check, Clock, Search } from "lucide-react";
+import { BookOpen, Check, Clock, Library, Search } from "lucide-react";
 import { blockText, validateTheory } from "../types/theory";
 import type { TheoryDocument } from "../types/theory";
+import { DocumentOutline } from "../components/DocumentOutline";
+import { normalizeSearch } from "../components/theoryHeadings";
 import { NotionContent } from "../components/NotionContent";
 import "../styles/notion.css";
 
@@ -33,9 +35,7 @@ export function Theory() {
   const filtered = topics.filter(
     (item) =>
       (category === "Todos" || item.category === category) &&
-      `${item.title} ${item.category} ${blockText(item.blocks)}`
-        .toLocaleLowerCase("es")
-        .includes(search.toLocaleLowerCase("es")),
+      normalizeSearch(`${item.title} ${item.category} ${blockText(item.blocks)}`).includes(normalizeSearch(search)),
   );
   return (
     <section className="content-page theory-page">
@@ -73,47 +73,64 @@ export function Theory() {
       </div>
       <div className="reading-layout">
         <aside className="panel topic-list" aria-label="Temas de teoría">
-          <h2 className="topic-list-title">Índice de temas</h2>
-          {filtered.map((item) => (
-            <button
-              key={item.id}
-              className={item.id === topic?.id ? "selected" : ""}
-              aria-current={item.id === topic?.id ? "page" : undefined}
-              onClick={() => setParams({ tema: item.id })}
-            >
-              <span>
-                {item.title}
-                <small>
-                  {item.category} · {readingMinutes(item)} min
-                </small>
-              </span>
-              {state.completed[item.id] && (
-                <Check size={17} aria-label="Estudiado" />
-              )}
-            </button>
-          ))}
+          <h2 className="topic-list-title"><Library size={17} /> Biblioteca</h2>
+          <label className="mobile-library">
+            <select aria-label="Elegir resumen" value={filtered.some(item => item.id === topic?.id) ? topic?.id : ""} onChange={event => setParams({ tema: event.target.value })}>
+              {!!filtered.length && !filtered.some(item => item.id === topic?.id) && <option value="" disabled>Elegir resumen</option>}
+              {filtered.map(item => <option key={item.id} value={item.id}>{item.title}</option>)}
+              {!filtered.length && <option value="">No hay resúmenes para esta búsqueda</option>}
+            </select>
+          </label>
+          <div className="library-documents">
+            {filtered.map((item) => (
+              <button
+                key={item.id}
+                className={item.id === topic?.id ? "selected" : ""}
+                aria-current={item.id === topic?.id ? "page" : undefined}
+                onClick={() => setParams({ tema: item.id })}
+              >
+                <span>
+                  {item.title}
+                  <small>
+                    {item.category} · {readingMinutes(item)} min
+                  </small>
+                </span>
+                {state.completed[item.id] && (
+                  <Check size={17} aria-label="Estudiado" />
+                )}
+              </button>
+            ))}
+          </div>
           {!filtered.length && <p>No hay temas para esa búsqueda.</p>}
         </aside>
-        <article className="panel lesson">
+        {topic && <DocumentOutline key={topic.id} blocks={topic.blocks} />}
+        <article className="panel lesson" aria-label="Resumen seleccionado">
           {topic ? <>
-          <div className="lesson-meta">
-            <span className="tag">{topic.category}</span>
-            <span><Clock size={14} /> {readingMinutes(topic)} min de lectura</span>
-          </div>
-          <h2>{topic.title}</h2>
-          {topic.cover && <img className="notion-cover" src={`${import.meta.env.BASE_URL}${topic.cover}`} alt="" />}
-          <div className="notion-content">
-            {topic.blocks.length ? <NotionContent blocks={topic.blocks} /> : <p>Este documento todavía no tiene contenido.</p>}
-          </div>
-          <button
-            className={state.completed[topic.id] ? "secondary" : "primary"}
-            onClick={() => toggleComplete(topic.id)}
-          >
-            <Check size={16} />
-            {state.completed[topic.id]
-              ? "Estudiado · Marcar como pendiente"
-              : "Marcar como estudiado"}
-          </button>
+            <header className="document-heading">
+              {topic.cover ? <a className="cover-link" href={`${import.meta.env.BASE_URL}${topic.cover}`} target="_blank" rel="noreferrer" aria-label="Abrir portada completa">
+                <img className="notion-cover" src={`${import.meta.env.BASE_URL}${topic.cover}`} alt="" />
+              </a> : <span className="document-book" aria-hidden="true"><BookOpen size={30} /></span>}
+              <div>
+                <h2 className="document-title">{topic.title}</h2>
+                <div className="lesson-meta">
+                  <span className="tag">{topic.category}</span>
+                  <span><Clock size={14} /> {readingMinutes(topic)} min de lectura</span>
+                  {state.completed[topic.id] && <span><Check size={14} /> Estudiado</span>}
+                </div>
+              </div>
+            </header>
+            <div className="notion-content">
+              {topic.blocks.length ? <NotionContent blocks={topic.blocks} /> : <p>Este documento todavía no tiene contenido.</p>}
+            </div>
+            <button
+              className={state.completed[topic.id] ? "secondary" : "primary"}
+              onClick={() => toggleComplete(topic.id)}
+            >
+              <Check size={16} />
+              {state.completed[topic.id]
+                ? "Estudiado · Marcar como pendiente"
+                : "Marcar como estudiado"}
+            </button>
           </> : <><h2>{loading ? "Cargando resúmenes…" : loadError ? "No pudimos cargar tus resúmenes" : "Tus resúmenes, en un solo lugar"}</h2><p>{loadError ? "Volvé a intentar recargando la página." : !loading && "Cuando publiques tus resúmenes en Notion y se sincronicen, aparecerán acá para acompañar tu estudio."}</p></>}
         </article>
       </div>
