@@ -37,6 +37,11 @@ test("portada, navegación, imágenes y preferencias", async ({ page }) => {
   await expect(page.locator(".schedule-card")).toContainText("20");
   await expect(page.locator(".schedule-card")).toContainText("Faltan 6 días");
   await expect(page.locator(".stat-card")).toHaveCount(2);
+  await expect(page.locator(".settings-dialog")).not.toBeVisible();
+  await expect(page.locator(".schedule-card")).not.toContainText("actividades");
+  await expect(page.locator(".stats-grid .stat-card").first()).toContainText(`${activities.length} pendientes`);
+  const heights = await page.locator(".stat-card").evaluateAll(cards => cards.map(card => card.getBoundingClientRect().height));
+  expect(new Set(heights).size).toBe(1);
   await expect(page.getByText("Meta semanal", {exact:true})).toHaveCount(0);
   for (const path of [
     "/teoria",
@@ -67,7 +72,7 @@ test("estudio persistente, búsqueda y ruta", async ({ page }) => {
     "aria-valuenow",
     String(Math.round(100 / activities.length)),
   );
-  await expect(page.locator(".schedule-card")).toContainText(`1 de ${activities.length} actividades completadas`);
+  await expect(page.locator(".stats-grid .stat-card").first()).toContainText(`1 de ${activities.length} actividades completadas`);
 });
 
 test("mapa interactivo", async ({ page }) => {
@@ -172,12 +177,12 @@ test("las secciones retiradas no conservan rutas ni accesos", async ({page}) => 
   for(const path of ["simulador","apuntes"]){
     await page.goto(`/#/${path}`);
     await expect(page.getByRole("heading",{name:"Esta página no está en la biblioteca"})).toBeVisible();
-    await expect(page.locator('.sidebar-nav a')).toHaveCount(6);
+    await expect(page.locator('.module-nav a')).toHaveCount(6);
   }
 });
 
 
-test("navegación lateral activa y menú compacto accesible", async ({ page }) => {
+test("navegación horizontal activa y accesible también en móvil", async ({ page }) => {
   await page.goto("/#/");
   const nav = page.getByRole("navigation", { name: "Secciones de estudio" });
   await expect(nav.getByRole("link")).toHaveCount(6);
@@ -187,12 +192,11 @@ test("navegación lateral activa y menú compacto accesible", async ({ page }) =
   await expect(nav.getByRole("link", { name: "Apoyo inteligente" })).toHaveAttribute("aria-current", "page");
   await expect(page.locator("main")).toBeFocused();
   await page.setViewportSize({ width: 390, height: 900 });
-  await expect(nav).not.toBeVisible();
-  await page.locator(".sidebar-menu summary").press("Enter");
   await expect(nav).toBeVisible();
+  await expect(page.locator(".sidebar, .sidebar-menu")).toHaveCount(0);
   await nav.getByRole("link", { name: "Inicio", exact: true }).click();
   await expect(page).toHaveURL(/#\/$/);
-  await expect(nav).not.toBeVisible();
+  await expect(nav).toBeVisible();
   await expect(page.locator(".module-card").filter({ hasText: "Apoyo inteligente" })).toHaveCount(1);
   await page.setViewportSize({ width: 1440, height: 900 });
   await expect(nav).toBeVisible();

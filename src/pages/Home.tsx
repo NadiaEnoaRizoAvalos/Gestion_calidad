@@ -5,7 +5,6 @@ import {
   CalendarDays,
   ChevronRight,
   Lightbulb,
-  Heart,
 } from "lucide-react";
 import { assets } from "../data/assets";
 import { useStudy } from "../hooks/useStudy";
@@ -95,7 +94,8 @@ export function Home() {
             </div>
             <small>
               {completed} de {activities.length}{" "}
-              actividades
+              actividades completadas
+              {completed < activities.length && <span> · {activities.length - completed} pendientes</span>}
             </small>
           </div>
         </Link>
@@ -109,10 +109,9 @@ export function Home() {
           <CalendarDays className="stat-icon" />
           <div>
             <h2>Fecha del parcial</h2>
-            <p>{state.examDate ? new Date(`${state.examDate}T12:00:00`).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }) : "Configurá la fecha de tu próximo parcial"}</p>
+            <p>{state.examDate ? new Date(`${state.examDate}T12:00:00`).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }) : "Configurar fecha"}</p>
             {days !== null && <p>{days > 0 ? `Faltan ${days} ${days === 1 ? "día" : "días"}` : days === 0 ? "El parcial es hoy" : `La fecha pasó hace ${-days} ${days === -1 ? "día" : "días"}`}</p>}
-            <small>{completed} de {activities.length} actividades completadas · {percent}%</small>
-            <small>{activities.length - completed} pendientes</small>
+            {state.examDate && <span className="date-edit">Modificar fecha <ChevronRight size={12} aria-hidden="true" /></span>}
           </div>
         </button>
       </section>
@@ -151,15 +150,10 @@ export function Home() {
             </span>
           </div>
         </Link>
-        <article className="tip-card">
-          <Lightbulb className="bulb" size={49} strokeWidth={1.3} />
-          <div>
-            <h2>Consejo del día</h2>
-            <p>
-              {tips[day % tips.length]} <Heart size={11} />
-            </p>
-          </div>
-        </article>
+        <p className="daily-tip">
+          <Lightbulb size={16} aria-hidden="true" />
+          <span><strong>Consejo del día</strong> · {tips[day % tips.length]}</span>
+        </p>
       </section>
       <dialog ref={dialog} className="settings-dialog">
         <form

@@ -82,7 +82,7 @@ test("tres columnas alineadas, portada compacta, índice dinámico y navegación
     expect(Math.abs(metrics.toolbar.right - metrics.outline.right)).toBeLessThan(1);
     expect(Math.abs(metrics.lesson.x - metrics.library.right - (metrics.outline.x - metrics.lesson.right))).toBeLessThan(1);
     expect(metrics.lesson.width).toBeGreaterThan(500);
-    if (width === 1440) expect(metrics.container.width).toBeGreaterThan(1000);
+    if (width === 1440) expect(metrics.container.width).toBeGreaterThan(1200);
     expect(metrics.cover.width).toBeLessThanOrEqual(96);
     expect(metrics.cover.height).toBeLessThanOrEqual(84);
     await page.screenshot({ path: `test-results/teoria-tres-columnas-${width}.png`, fullPage: true });

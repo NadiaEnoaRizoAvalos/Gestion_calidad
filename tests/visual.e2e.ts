@@ -71,15 +71,26 @@ test("composición y capturas de todas las secciones en distintos tamaños", asy
         const brand = await page.locator(".brand").boundingBox();
         const lower = await page.locator(".bottom-grid").boundingBox();
         const route = await page.locator(".route-card").boundingBox();
-        const tip = await page.locator(".tip-card").boundingBox();
+        const tip = await page.locator(".daily-tip").boundingBox();
         const routeCopy = await page.locator(".route-copy").boundingBox();
-        const pane = await page.locator(".library").boundingBox();
-        const sidebar = await page.locator(".sidebar").boundingBox();
+        const header = await page.locator(".site-header").boundingBox();
+        const nav = await page.locator(".module-nav").boundingBox();
+        const window = await page.locator(".home-room .window").boundingBox();
+        await expect(page.locator(".sidebar, .sidebar-menu, .tip-card, .site-footer")).toHaveCount(0);
+        await expect(page.getByText("Un poquito cada día, un gran paso en tu aprendizaje.", { exact: true })).toHaveCount(0);
+        expect(Math.abs(brand!.x + brand!.width / 2 - width / 2)).toBeLessThan(1);
+        for (const block of [header, nav, stats, route, tip]) {
+          expect(Math.abs(block!.x - grid!.x)).toBeLessThan(1);
+          expect(Math.abs(block!.width - grid!.width)).toBeLessThan(1);
+        }
+        expect(Math.abs(grid!.x + grid!.width / 2 - width / 2)).toBeLessThan(1);
+        expect(window!.y).toBeLessThan(bunny!.y);
+        expect(window!.x).toBeLessThan(bunny!.x + bunny!.width);
+        expect(window!.x + window!.width).toBeGreaterThan(bunny!.x);
+        await expect(page.locator(".daily-tip")).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+        await expect(page.locator(".daily-tip")).toHaveCSS("box-shadow", "none");
         expect(Math.abs(lower!.x - grid!.x)).toBeLessThan(1);
         expect(Math.abs(lower!.width - grid!.width)).toBeLessThan(1);
-        expect(Math.abs(grid!.x + grid!.width / 2 - pane!.x - pane!.width / 2)).toBeLessThan(1);
-        if (width > 1100) expect(sidebar!.x + sidebar!.width).toBeLessThan(pane!.x);
-        else expect(sidebar!.y + sidebar!.height).toBeLessThan(pane!.y);
         expect(reading!.x).toBeGreaterThanOrEqual(route!.x);
         expect(reading!.x + reading!.width).toBeLessThanOrEqual(route!.x + route!.width);
         expect(reading!.y).toBeGreaterThan(route!.y);
@@ -88,11 +99,7 @@ test("composición y capturas de todas las secciones en distintos tamaños", asy
           reading!.x + reading!.width <= routeCopy!.x ||
           reading!.y + reading!.height <= routeCopy!.y,
         ).toBeTruthy();
-        if (width > 650) {
-          expect(route!.x + route!.width).toBeLessThan(tip!.x);
-          expect(route!.y).toBe(tip!.y);
-          expect(route!.height).toBe(tip!.height);
-        } else expect(route!.y + route!.height).toBeLessThan(tip!.y);
+        expect(route!.y + route!.height).toBeLessThan(tip!.y);
         for (const selector of [".leaves-upper-left", ".leaves-lower-right"]) {
           const leaf = await page.locator(selector).boundingBox();
           expect(leaf!.width).toBeGreaterThan(130);
@@ -108,9 +115,9 @@ test("composición y capturas de todas las secciones en distintos tamaños", asy
         expect(
           reading && grid && reading.y >= grid.y + grid.height,
         ).toBeTruthy();
-        expect(bunny!.width).toBeGreaterThanOrEqual(width > 650 ? 300 : 230);
+        expect(bunny!.width).toBeGreaterThanOrEqual(230);
         expect(reading!.width).toBeGreaterThanOrEqual(
-          width > 950 ? 200 : width > 650 ? 160 : 230,
+          width > 950 ? 200 : width > 650 ? 160 : width > 360 ? 112 : 96,
         );
         expect(
           brand &&
@@ -129,21 +136,10 @@ test("composición y capturas de todas las secciones en distintos tamaños", asy
                 width: card.getBoundingClientRect().width,
               })),
             );
-          const columns = await page
-            .locator(".module-card")
-            .evaluateAll((cards) =>
-              cards.slice(0, 2).map((card) => ({
-                x: card.getBoundingClientRect().x,
-                width: card.getBoundingClientRect().width,
-              })),
-            );
-          for (let column = 0; column < 2; column++) {
-            expect(
-              Math.abs(indicators[column].x - columns[column].x),
-            ).toBeLessThan(1);
-            expect(
-              Math.abs(indicators[column].width - columns[column].width),
-            ).toBeLessThan(1);
+          expect(indicators[1].width).toBeGreaterThanOrEqual(220);
+          expect(indicators[0].width).toBeGreaterThan(indicators[1].width);
+          if (width > 950) {
+            expect(indicators[0].width / (indicators[0].width + indicators[1].width)).toBeCloseTo(.75, 2);
           }
           const titleTops = await page
             .locator(".module-copy h2")
