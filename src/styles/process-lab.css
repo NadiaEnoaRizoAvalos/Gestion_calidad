@@ -1,0 +1,311 @@
+.process-lab {
+  color-scheme: only light;
+  color: #604178;
+}
+.process-lab [hidden] {
+  display: none !important;
+}
+.process-lab .lab-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.process-lab .lab-tabs button {
+  flex: 1;
+  min-height: 44px;
+}
+.process-lab button[aria-pressed="true"] {
+  background: #e8d8f3;
+  border-color: #b998cf;
+  color: #65417e;
+}
+.process-lab .lab-stack {
+  display: grid;
+  gap: 20px;
+}
+.process-lab .panel {
+  min-width: 0;
+  background: #fffdfd;
+}
+.process-lab .lab-source {
+  color: #876c99;
+  font-size: 0.82rem;
+}
+.process-lab .lab-source a,
+.process-lab a.text-button {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.process-lab summary {
+  font-weight: 800;
+  cursor: pointer;
+  min-height: 44px;
+  padding-block: 10px;
+  line-height: 1.5;
+}
+.process-lab details[open] > summary {
+  margin-bottom: 12px;
+}
+.process-lab .lab-lesson p {
+  max-width: 82ch;
+  line-height: 1.85;
+}
+.process-lab .lab-input-output {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-block: 20px;
+}
+.process-lab .lab-notice {
+  background: #fff8e9;
+  border: 1px solid #eadbbd;
+  border-radius: 12px;
+  padding: 14px;
+  line-height: 1.6;
+}
+.process-lab label:not(.lab-radio):not(.lab-file) {
+  display: grid;
+  gap: 7px;
+  margin-block: 12px;
+  min-width: 0;
+  font-size: 0.88rem;
+}
+.process-lab
+  input:not([type="radio"]):not([type="checkbox"]):not([type="file"]),
+.process-lab select,
+.process-lab textarea {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  border: 1px solid #dfcce8;
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #604178;
+  background: #fffdfd;
+}
+.process-lab textarea {
+  resize: vertical;
+}
+.process-lab .lab-two-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.process-lab .lab-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+  margin-block: 18px;
+}
+.process-lab .lab-form-row > label {
+  flex: 1 1 180px;
+  margin: 0;
+}
+.process-lab .lab-form-row button {
+  margin-bottom: 0;
+}
+.process-lab .actions {
+  flex-wrap: wrap;
+}
+.process-lab .lab-editor-grid {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr) 230px;
+  align-items: start;
+  gap: 14px;
+  margin-block: 20px;
+}
+.process-lab .lab-editor-grid .panel {
+  padding: 16px;
+}
+.process-lab .lab-tools button {
+  width: 100%;
+  text-align: left;
+  font-size: 0.8rem;
+}
+.process-lab .lab-tools small {
+  display: block;
+  margin: 8px 0 20px;
+  color: #7b648a;
+}
+.process-lab .lab-diagram {
+  min-width: 0;
+}
+.process-lab .lab-diagram-scroll {
+  overflow: auto;
+  max-width: 100%;
+  max-height: 640px;
+  border: 1px solid #e5d7ec;
+  border-radius: 14px;
+  background: #fffdfa;
+  overscroll-behavior: contain;
+}
+.process-lab .lab-diagram-scroll > svg {
+  display: block;
+  max-width: none;
+}
+.process-lab .lab-diagram-scroll g[role="button"]:focus-visible {
+  outline: none;
+}
+.process-lab .lab-diagram-scroll g[role="button"]:focus-visible rect {
+  stroke: #8652a5;
+  stroke-width: 4px;
+}
+.process-lab .lab-diagram .muted,
+.process-lab .lab-relations {
+  font-size: 0.8rem;
+}
+.process-lab .lab-relations ul,
+.process-lab .lab-process-detail {
+  overflow-wrap: anywhere;
+}
+.process-lab dl {
+  margin: 0;
+}
+.process-lab dl > div {
+  border-bottom: 1px solid #eee2f3;
+  padding-block: 10px;
+}
+.process-lab dt {
+  font-weight: 800;
+}
+.process-lab dd {
+  margin: 5px 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.process-lab .lab-file {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  max-width: 100%;
+}
+.process-lab .lab-file input {
+  max-width: 220px;
+  font-size: 0.8rem;
+}
+.process-lab .lab-symbol-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: 12px;
+}
+.process-lab .lab-symbol-grid button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+}
+.process-lab .lab-symbol {
+  display: block;
+  flex-shrink: 0;
+}
+.process-lab .lab-bpmn-widget {
+  min-width: 0;
+}
+.process-lab .lab-bpmn-canvas {
+  height: 520px;
+  position: relative;
+  border: 1px solid #dfcce8;
+  border-radius: 14px;
+  background: #fffdfa;
+  overflow: hidden;
+  margin-block: 16px;
+}
+.process-lab .djs-palette,
+.process-lab .djs-context-pad .entry {
+  background: #fffdfd;
+  color: #604178;
+}
+.process-lab .djs-palette {
+  border-color: #dfcce8;
+}
+.process-lab .djs-element.lab-current .djs-visual > :first-child {
+  stroke: #9b61b3 !important;
+  stroke-width: 4px !important;
+  fill: #ead8f6 !important;
+}
+.process-lab .lab-bpmn-tools .actions {
+  gap: 6px;
+}
+.process-lab .lab-bpmn-tools .actions button {
+  padding: 8px;
+}
+.process-lab .lab-bpmn-tools {
+  margin-top: 20px;
+}
+.process-lab .lab-exercise {
+  margin-block: 20px;
+}
+.process-lab .lab-exercise fieldset {
+  border: 1px solid #dfcce8;
+  border-radius: 12px;
+  padding: 16px;
+  margin-block: 16px;
+}
+.process-lab .lab-radio {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-block: 12px;
+}
+.process-lab .lab-radio input {
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+.process-lab .lab-exercise > button {
+  margin: 10px 10px 10px 0;
+}
+.process-lab .lab-exercise ol > li {
+  margin-block: 12px;
+}
+.process-lab .lab-completion {
+  margin-top: 24px;
+}
+@media (max-width: 1100px) {
+  .process-lab .lab-editor-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .process-lab .lab-tools > div {
+    display: inline-block;
+    vertical-align: top;
+    width: min(100%, 240px);
+    padding-right: 12px;
+  }
+}
+@media (max-width: 650px) {
+  .process-lab .lab-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .process-lab .lab-tabs button {
+    font-size: 0.82rem;
+    padding: 10px 8px;
+  }
+  .process-lab .lab-two-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .process-lab .lab-input-output {
+    gap: 6px;
+  }
+  .process-lab .lab-input-output button {
+    padding: 10px 6px;
+  }
+  .process-lab .lab-bpmn-canvas {
+    height: 440px;
+  }
+  .process-lab .lab-symbol-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .process-lab .lab-file input {
+    max-width: 100%;
+  }
+  .process-lab .lab-tools > div {
+    width: 100%;
+  }
+}

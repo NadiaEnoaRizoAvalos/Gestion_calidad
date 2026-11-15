@@ -77,16 +77,11 @@ test("estudio persistente, búsqueda y ruta", async ({ page }) => {
 
 test("mapa interactivo", async ({ page }) => {
   await page.goto("/#/procesos");
-  await page.getByRole("button", { name: "Compras", exact: true }).click();
-  await expect(page.locator(".map-panel .example-box")).toContainText(
-    "Evaluar opciones",
-  );
-  await page
-    .getByRole("button", { name: "Sin disponibilidad", exact: true })
-    .click();
-  await expect(
-    page.getByRole("button", { name: "Sin disponibilidad", exact: true }),
-  ).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "Mapas de procesos", exact: true }).click();
+  await page.getByLabel("Organización del caso").selectOption("comercial");
+  await page.getByRole("button", { name: "Proceso: Compras", exact: true }).click();
+  await expect(page.locator(".lab-process-detail")).toContainText("Compras");
+  await expect(page.locator(".lab-process-detail")).toContainText("Operativos");
   await page
     .getByRole("button", { name: "Marcar exploración como completada" })
     .click();
