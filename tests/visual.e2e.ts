@@ -15,6 +15,8 @@ test("el tema permanece claro aunque el dispositivo prefiera oscuro", async ({
   for (const section of sections) {
     await page.emulateMedia({ colorScheme: "light" });
     await page.goto(`/#/${section}`);
+    await page.waitForLoadState("networkidle");
+    await expect(page.getByText(/^(Cargando parciales…|Cargando resúmenes…)$/)).toHaveCount(0);
     const surfaces = page.locator(
       "html, body, .library, .panel, .stat-card, .module-card, input, select",
     );
