@@ -14,7 +14,7 @@ interface StudyContextValue {
   toggleComplete: (id: string) => void;
   complete: (id: string) => void;
   toggleBookmark: (id: string) => void;
-  setSchedule: (date: string, goal: number) => void;
+  setExamDate: (date: string) => void;
   saveAttempt: (attempt: Attempt) => void;
 }
 
@@ -73,8 +73,8 @@ export function StudyProvider({ children }: { children: ReactNode }) {
         : [...previous.bookmarked, id],
     }));
   }
-  function setSchedule(nextStudy: string, weeklyGoal: number) {
-    setState((previous) => ({ ...previous, nextStudy, weeklyGoal }));
+  function setExamDate(examDate: string) {
+    setState((previous) => ({ ...previous, examDate }));
   }
   function saveAttempt(attempt: Attempt) {
     setState((previous) => ({
@@ -94,7 +94,7 @@ export function StudyProvider({ children }: { children: ReactNode }) {
         toggleComplete,
         complete,
         toggleBookmark,
-        setSchedule,
+        setExamDate,
         saveAttempt,
       }}
     >

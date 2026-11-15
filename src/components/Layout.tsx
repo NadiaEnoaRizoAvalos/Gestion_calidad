@@ -6,10 +6,8 @@ import { useStudy } from "../hooks/useStudy";
 
 const navigation = [
   ["/teoria", "Teoría"],
-  ["/simulador", "Simulador"],
   ["/procesos", "Procesos"],
   ["/parciales", "Parciales"],
-  ["/apuntes", "Apuntes"],
   ["/repaso", "Repaso"],
   ["/ruta", "Mi ruta"],
 ];

@@ -1,0 +1,54 @@
+import type { Question } from "../types";
+
+export interface ExamPhoto { id: string; src: string; alt: string }
+export interface ExamPaper { id: string; title: string; date?: string; topic: string; photos: ExamPhoto[] }
+export interface ExamCatalog { version: 1; exams: ExamPaper[]; questions: Question[] }
+export const emptyExamCatalog: ExamCatalog = { version: 1, exams: [], questions: [] };
+
+export function canPractice(question: Question): boolean {
+  if (question.verified === false) return false;
+  if (question.type === "written") return question.verified === true && !!question.modelAnswer?.trim();
+  return Number.isInteger(question.correct) && question.correct !== null && question.correct >= 0 && question.correct < question.options.length;
+}
+
+export function questionAnswer(question: Question): string {
+  if (!canPractice(question)) return "";
+  return question.type === "written" ? question.modelAnswer ?? "" : question.correct === null ? "" : question.options[question.correct] ?? "";
+}
+
+export function validateExamCatalog(value: unknown): asserts value is ExamCatalog {
+  const invalid = () => { throw new Error("El catálogo de parciales es inválido"); };
+  const record = (v: unknown): Record<string, unknown> => {
+    if (!v || typeof v !== "object" || Array.isArray(v)) return invalid();
+    return v as Record<string, unknown>;
+  };
+  const text = (v: unknown) => { if (typeof v !== "string" || !v.trim()) invalid(); };
+  const catalog = record(value);
+  if (catalog.version !== 1 || !Array.isArray(catalog.exams) || !Array.isArray(catalog.questions)) return invalid();
+  const papers = new Map<string, Set<string>>();
+  for (const item of catalog.exams) {
+    const paper = record(item); text(paper.id); text(paper.title); text(paper.topic);
+    if (papers.has(paper.id as string) || !Array.isArray(paper.photos)) return invalid();
+    if (paper.date !== undefined && (typeof paper.date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(paper.date) || !Number.isFinite(Date.parse(`${paper.date}T12:00:00`)) || new Date(`${paper.date}T12:00:00`).toLocaleDateString("sv-SE") !== paper.date)) invalid();
+    const photos = new Set<string>();
+    for (const item of paper.photos) {
+      const photo = record(item); text(photo.id); text(photo.alt);
+      if (typeof photo.src !== "string" || !/^exams\/images\/[a-zA-Z0-9][a-zA-Z0-9_-]*\.(png|jpe?g|webp)$/i.test(photo.src) || photos.has(photo.id as string)) invalid();
+      photos.add(photo.id as string);
+    }
+    papers.set(paper.id as string, photos);
+  }
+  const ids = new Set<string>();
+  for (const item of catalog.questions) {
+    const q = record(item); text(q.id); text(q.examId); text(q.topic); text(q.prompt);
+    if (ids.has(q.id as string) || !papers.has(q.examId as string) || q.origin !== "Parcial anterior" || typeof q.verified !== "boolean" || !["choice", "written"].includes(q.type as string)) invalid();
+    ids.add(q.id as string);
+    if (!Array.isArray(q.options) || !q.options.every(option => typeof option === "string" && option.trim()) || !Array.isArray(q.tags) || !q.tags.every(tag => typeof tag === "string") || typeof q.explanation !== "string") invalid();
+    if (q.correct !== null && (!Number.isInteger(q.correct) || (q.correct as number) < 0 || (q.correct as number) >= (q.options as unknown[]).length)) invalid();
+    if (q.type === "written" && (q.correct !== null || (q.options as unknown[]).length !== 0)) invalid();
+    if (q.modelAnswer !== undefined && typeof q.modelAnswer !== "string") invalid();
+    if (q.difficulty !== undefined && !["Inicial", "Intermedio", "Avanzado"].includes(q.difficulty as string)) invalid();
+    if (q.photoId !== undefined && !papers.get(q.examId as string)?.has(q.photoId as string)) invalid();
+    if (q.verified === true && !canPractice(q as unknown as Question)) invalid();
+  }
+}

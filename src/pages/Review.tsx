@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { questions } from "../data/questions";
-import { topics } from "../data/topics";
+import { useExamCatalog } from "../hooks/useExamCatalog";
+import { canPractice } from "../data/examCatalog";
 import { recommendTopics } from "../data/recommendations";
 import { PageHeading } from "../components/PageHeading";
 import { Practice } from "../components/Practice";
@@ -10,13 +9,14 @@ import { useStudy } from "../hooks/useStudy";
 
 export function Review() {
   const { state } = useStudy();
-  const recommendations = recommendTopics(state);
+  const { questions, questionTopics: topics, error } = useExamCatalog();
+  const recommendations = recommendTopics(state, questions, topics);
   const [selected, setSelected] = useState<string[]>(() =>
     recommendations.length ? recommendations.map((item) => item.topic.id) : [],
   );
   const [practice, setPractice] = useState<string[] | null>(null);
   const available = questions.filter((question) =>
-    selected.includes(question.topic),
+    selected.includes(question.topic) && canPractice(question),
   );
   return (
     <section className="content-page">
@@ -26,9 +26,9 @@ export function Review() {
         image="review"
       />
       <p className="example-label">
-        Preguntas de demostración generadas con IA · Recomendaciones con reglas
-        locales, sin servicios de IA
+        Preguntas de práctica y de parciales incorporados · Recomendaciones basadas en tus resultados locales
       </p>
+      {error && <p role="alert" className="panel">No se pudo cargar el catálogo de parciales. Las preguntas de demostración siguen disponibles.</p>}
       {practice ? (
         <Practice
           questions={questions.filter((question) =>
@@ -49,9 +49,9 @@ export function Review() {
                 </p>
                 <div className="recommendation-list">
                   {recommendations.map((item) => (
-                    <Link
+                    <button
                       key={item.topic.id}
-                      to={`/teoria?tema=${item.topic.id}`}
+                      onClick={() => setSelected([item.topic.id])}
                     >
                       <span>{item.topic.title}</span>
                       <small>
@@ -61,7 +61,7 @@ export function Review() {
                           : "preguntas para revisar"}{" "}
                         →
                       </small>
-                    </Link>
+                    </button>
                   ))}
                 </div>
                 <button

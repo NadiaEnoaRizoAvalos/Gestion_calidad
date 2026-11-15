@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Bookmark, Check, Search } from "lucide-react";
-import { questions } from "../data/questions";
-import { topics } from "../data/topics";
+import { useSearchParams } from "react-router-dom";
+import { useExamCatalog } from "../hooks/useExamCatalog";
+import { canPractice, questionAnswer } from "../data/examCatalog";
+import { ExamLibrary } from "../components/ExamLibrary";
+import "../styles/exams.css";
 import { PageHeading } from "../components/PageHeading";
 import { useStudy } from "../hooks/useStudy";
 import { Practice } from "../components/Practice";
@@ -9,6 +12,9 @@ import { PracticeHistory } from "../components/PracticeHistory";
 
 export function Exams() {
   const { state, toggleBookmark } = useStudy();
+  const { catalog, questions, questionTopics, loading, error } = useExamCatalog();
+  const [params, setParams] = useSearchParams();
+  const examId = params.get("parcial");
   const [search, setSearch] = useState("");
   const [topic, setTopic] = useState("todos");
   const [onlySaved, setOnlySaved] = useState(false);
@@ -17,6 +23,7 @@ export function Exams() {
   const [practice, setPractice] = useState<string[] | null>(null);
   const filtered = questions.filter(
     (question) =>
+      (!examId || question.examId === examId) &&
       (topic === "todos" || question.topic === topic) &&
       (!onlySaved || state.bookmarked.includes(question.id)) &&
       `${question.prompt} ${question.tags.join(" ")}`
@@ -24,16 +31,17 @@ export function Exams() {
         .includes(search.toLocaleLowerCase("es")),
   );
   return (
-    <section className="content-page">
+    <section className="content-page exams-page">
       <PageHeading
         title="Un ensayo antes del parcial"
-        description="Explorá preguntas, guardá las que querés repasar y armá tu propia práctica."
+        description="Consultá parciales anteriores, ampliá sus fotos y armá tu propia práctica."
         image="exams"
       />
-      <p className="example-label">
-        Todas las preguntas actuales son ejemplos generados con IA. No son
-        preguntas de exámenes reales.
-      </p>
+      {!practice && <ExamLibrary papers={catalog.exams} selectedId={examId} loading={loading} error={error} onSelect={id => {
+        setParams(id ? { parcial: id } : {}); setSelected([]); setRevealed([]); setTopic("todos"); setSearch("");
+      }} />}
+      <h2 className="section-title">Preguntas {examId ? "de este parcial" : "de práctica"}</h2>
+      <p className="example-label">Las preguntas identificadas como generadas con IA son ejemplos de práctica; no pertenecen a exámenes reales.</p>
       {practice ? (
         <Practice
           questions={questions.filter((question) =>
@@ -57,11 +65,12 @@ export function Exams() {
             <label>
               Tema
               <select
+                aria-label="Tema de pregunta"
                 value={topic}
                 onChange={(event) => setTopic(event.target.value)}
               >
                 <option value="todos">Todos los temas</option>
-                {topics.map((item) => (
+                {questionTopics.map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.title}
                   </option>
@@ -82,12 +91,12 @@ export function Exams() {
             <div className="actions">
               <button
                 className="secondary"
-                disabled={!filtered.length}
+                disabled={!filtered.some(canPractice)}
                 onClick={() =>
                   setSelected([
                     ...new Set([
                       ...selected,
-                      ...filtered.map((question) => question.id),
+                      ...filtered.filter(canPractice).map((question) => question.id),
                     ]),
                   ])
                 }
@@ -115,12 +124,15 @@ export function Exams() {
               <article className="panel question-card" key={question.id}>
                 <div className="lesson-meta">
                   <span className="tag">
-                    {topics.find((item) => item.id === question.topic)?.title}
+                    {questionTopics.find((item) => item.id === question.topic)?.title}
                   </span>
                   <span>{question.difficulty}</span>
                 </div>
                 <p className="question-source">{question.origin}</p>
                 <h2>{question.prompt}</h2>
+                {question.examId && <p className="muted">{catalog.exams.find(paper => paper.id === question.examId)?.title} · {question.type === "written" ? "Respuesta escrita" : "Opción múltiple"}</p>}
+                {question.photoId && <p className="muted"><a href={`${import.meta.env.BASE_URL}${catalog.exams.find(paper => paper.id === question.examId)?.photos.find(photo => photo.id === question.photoId)?.src}`} target="_blank" rel="noreferrer" aria-label="Ver fotografía original de esta pregunta">Referencia: {catalog.exams.find(paper => paper.id === question.examId)?.photos.find(photo => photo.id === question.photoId)?.alt}</a></p>}
+                {!canPractice(question) && <p className="tag">Respuesta pendiente de verificación</p>}
                 <div className="tags">
                   {question.tags.map((tag) => (
                     <span className="tag" key={tag}>
@@ -132,6 +144,7 @@ export function Exams() {
                   <label className="checkbox-label">
                     <input
                       type="checkbox"
+                      disabled={!canPractice(question)}
                       checked={selected.includes(question.id)}
                       onChange={(event) =>
                         setSelected(
@@ -162,6 +175,7 @@ export function Exams() {
                   </button>
                   <button
                     className="secondary"
+                    disabled={!canPractice(question)}
                     aria-expanded={revealed.includes(question.id)}
                     onClick={() =>
                       setRevealed(
@@ -179,7 +193,7 @@ export function Exams() {
                 {revealed.includes(question.id) && (
                   <div className="example-box">
                     <h3>
-                      <Check size={16} /> {question.options[question.correct]}
+                      <Check size={16} /> {questionAnswer(question)}
                     </h3>
                     <p>{question.explanation}</p>
                   </div>

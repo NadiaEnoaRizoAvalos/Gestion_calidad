@@ -1,14 +1,16 @@
 import { test, expect } from "@playwright/test";
+import { activities } from "../src/data/topics";
 
 test("portada, navegación, imágenes y preferencias", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
+  await page.clock.setFixedTime(new Date(2026, 10, 14, 12));
   await page.goto("/");
   await expect(page.getByRole("progressbar")).toHaveAttribute(
     "aria-valuenow",
     "0",
   );
-  await expect(page.locator(".module-card")).toHaveCount(6);
+  await expect(page.locator(".module-card")).toHaveCount(4);
   await page.locator(".module-card img").first().waitFor();
   await expect
     .poll(() =>
@@ -28,19 +30,18 @@ test("portada, navegación, imágenes y preferencias", async ({ page }) => {
     path: "test-results/inicio-escritorio.png",
     fullPage: true,
   });
-  await page.getByRole("button", { name: /Próximo estudio/ }).click();
-  await page.getByLabel("Próximo día de estudio").fill("2026-11-20");
-  await page.getByLabel("Actividades por semana").fill("4");
-  await page.getByRole("button", { name: "Guardar preferencias" }).click();
+  await page.getByRole("button", { name: /Fecha del parcial/ }).click();
+  await page.getByLabel("Fecha del próximo parcial").fill("2026-11-20");
+  await page.getByRole("button", { name: "Guardar fecha" }).click();
   await page.reload();
   await expect(page.locator(".schedule-card")).toContainText("20");
-  await expect(page.locator(".goal-card")).toContainText("0 de 4");
+  await expect(page.locator(".schedule-card")).toContainText("Faltan 6 días");
+  await expect(page.locator(".stat-card")).toHaveCount(2);
+  await expect(page.getByText("Meta semanal", {exact:true})).toHaveCount(0);
   for (const path of [
     "/teoria",
-    "/simulador",
     "/procesos",
     "/parciales",
-    "/apuntes",
     "/repaso",
     "/ruta",
   ]) {
@@ -52,40 +53,24 @@ test("portada, navegación, imágenes y preferencias", async ({ page }) => {
 
 test("estudio persistente, búsqueda y ruta", async ({ page }) => {
   await page.goto("/#/ruta");
-  await page.getByRole("button", { name: "Completar: Ciclo PHVA", exact: true }).click();
+  await page.getByRole("button", { name: `Completar: ${activities[0].title}`, exact: true }).click();
   await page.reload();
   await page.goto("/#/ruta");
   await expect(
     page.getByRole("button", {
-      name: "Marcar pendiente: Ciclo PHVA",
+      name: `Marcar pendiente: ${activities[0].title}`,
       exact: true,
     }),
   ).toHaveAttribute("aria-pressed", "true");
   await page.goto("/");
   await expect(page.getByRole("progressbar")).toHaveAttribute(
     "aria-valuenow",
-    "9",
+    String(Math.round(100 / activities.length)),
   );
-  await expect(page.locator(".goal-card")).toContainText("1 de 3");
+  await expect(page.locator(".schedule-card")).toContainText(`1 de ${activities.length} actividades completadas`);
 });
 
-test("simulador completo y mapa interactivo", async ({ page }) => {
-  await page.goto("/#/simulador");
-  for (const answer of [
-    "Registrar y analizar errores",
-    "Probar en un turno",
-    "El resultado inicial es favorable",
-    "Ajustar las etiquetas",
-  ]) {
-    await page.getByRole("button", { name: new RegExp(answer) }).click();
-    await expect(page.getByRole("status")).toBeVisible();
-    await page
-      .getByRole("button", { name: /Siguiente etapa|Ver mi recorrido/ })
-      .click();
-  }
-  await expect(page.locator(".simulation-result")).toContainText(
-    "4 de las 4 etapas",
-  );
+test("mapa interactivo", async ({ page }) => {
   await page.goto("/#/procesos");
   await page.getByRole("button", { name: "Compras", exact: true }).click();
   await expect(page.locator(".map-panel .example-box")).toContainText(
@@ -110,7 +95,7 @@ test("simulacro, errores, recomendaciones y nuevo acierto", async ({
   page,
 }) => {
   await page.goto("/#/parciales");
-  await page.getByRole("combobox").selectOption("phva");
+  await page.getByLabel("Tema de pregunta").selectOption("phva");
   await page
     .getByRole("button", { name: "Guardar para repasar", exact: true })
     .click();
@@ -148,10 +133,8 @@ test("móvil sin desbordes en todas las secciones", async ({ page }) => {
   for (const path of [
     "/",
     "/teoria",
-    "/simulador",
     "/procesos",
     "/parciales",
-    "/apuntes",
     "/repaso",
     "/ruta",
   ]) {
@@ -182,4 +165,15 @@ test("avisa cuando el navegador bloquea el almacenamiento", async ({
   });
   await page.goto("/");
   await expect(page.getByRole("alert")).toContainText("No se pudo guardar");
+});
+
+test("las secciones retiradas no conservan rutas ni accesos", async ({page}) => {
+  await page.goto("/");
+  await expect(page.locator('.module-card')).toHaveCount(4);
+  await expect(page.locator('a[href="#/simulador"], a[href="#/apuntes"]')).toHaveCount(0);
+  for(const path of ["simulador","apuntes"]){
+    await page.goto(`/#/${path}`);
+    await expect(page.getByRole("heading",{name:"Esta página no está en la biblioteca"})).toBeVisible();
+    await expect(page.locator('.module-nav a')).toHaveCount(5);
+  }
 });

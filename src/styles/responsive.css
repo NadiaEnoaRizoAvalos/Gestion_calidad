@@ -47,7 +47,8 @@
     width: 300px;
   }
   .grid-leaves {
-    display: none;
+    width: 170px;
+    opacity: 0.5;
   }
   .route-card,
   .tip-card {
@@ -130,10 +131,10 @@
     gap: 18px;
   }
   .bottom-grid {
-    grid-column: 1;
+    grid-column: 2;
   }
   .bunny-nook {
-    grid-column: 2;
+    grid-column: 1;
   }
   .library-home .site-header {
     grid-template-columns: minmax(0, 1fr) 250px;
@@ -362,9 +363,6 @@
     width: 25px;
     height: 26px;
   }
-  .goal-boxes {
-    margin-top: 4px;
-  }
   .module-grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 16px;
@@ -415,6 +413,7 @@
     margin-top: 22px;
   }
   .bottom-grid {
+    grid-column: 1;
     gap: 14px;
   }
   .route-card,
@@ -447,6 +446,18 @@
     justify-self: center;
     padding: 0 0 17px;
     margin-top: 1px;
+  }
+  .grid-leaves {
+    width: 145px;
+    opacity: 0.45;
+  }
+  .leaves-upper-left {
+    left: calc((100vw - 100%) / -2 - 65px);
+    top: 200px;
+  }
+  .leaves-lower-right {
+    right: calc((100vw - 100%) / -2 - 65px);
+    bottom: 0;
   }
   .reading-bunny {
     width: 100%;

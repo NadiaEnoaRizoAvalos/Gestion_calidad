@@ -24,6 +24,7 @@ export function PracticeHistory() {
           <span>Errores para aprender</span>
         </div>
       </div>
+      {answers.some(answer => answer.selfAssessed) && <p className="muted">Incluye {answers.filter(answer => answer.selfAssessed).length} respuestas autoevaluadas con un modelo; no fueron corregidas automáticamente.</p>}
       {state.attempts.length > 0 ? (
         <details>
           <summary>Ver últimos resultados</summary>

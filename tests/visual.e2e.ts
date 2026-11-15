@@ -3,10 +3,8 @@ import { test, expect } from "@playwright/test";
 const sections = [
   "",
   "teoria",
-  "simulador",
   "procesos",
   "parciales",
-  "apuntes",
   "repaso",
   "ruta",
 ];
@@ -52,6 +50,10 @@ test("composición y capturas de todas las secciones en distintos tamaños", asy
     await page.setViewportSize({ width, height: 900 });
     for (const section of sections) {
       await page.goto(`/#/${section}`);
+      await page.evaluate(async () => {
+        await document.fonts.ready;
+        await Promise.all([...document.images].map((image) => image.decode()));
+      });
       await expect
         .poll(() =>
           page.evaluate(
@@ -65,6 +67,28 @@ test("composición y capturas de todas las secciones en distintos tamaños", asy
         const grid = await page.locator(".module-grid").boundingBox();
         const stats = await page.locator(".stats-grid").boundingBox();
         const brand = await page.locator(".brand").boundingBox();
+        const nook = await page.locator(".bunny-nook").boundingBox();
+        const cards = await page.locator(".bottom-grid").boundingBox();
+        const lower = await page.locator(".study-corner").boundingBox();
+        expect(Math.abs(lower!.x - grid!.x)).toBeLessThan(1);
+        expect(Math.abs(lower!.width - grid!.width)).toBeLessThan(1);
+        if (width > 650) {
+          expect(nook!.x + nook!.width).toBeLessThan(cards!.x);
+          expect(
+            Math.abs(nook!.y + nook!.height / 2 - cards!.y - cards!.height / 2),
+          ).toBeLessThan(1);
+        } else {
+          expect(nook!.y + nook!.height).toBeLessThan(cards!.y);
+        }
+        for (const selector of [".leaves-upper-left", ".leaves-lower-right"]) {
+          const leaf = await page.locator(selector).boundingBox();
+          expect(leaf!.width).toBeGreaterThan(130);
+          expect(leaf!.x < 0 || leaf!.x + leaf!.width > width).toBeTruthy();
+          await expect(page.locator(selector)).toHaveCSS(
+            "pointer-events",
+            "none",
+          );
+        }
         expect(
           bunny && stats && bunny.y + bunny.height <= stats.y,
         ).toBeTruthy();
@@ -96,12 +120,12 @@ test("composición y capturas de todas las secciones en distintos tamaños", asy
           const columns = await page
             .locator(".module-card")
             .evaluateAll((cards) =>
-              cards.slice(0, 3).map((card) => ({
+              cards.slice(0, 2).map((card) => ({
                 x: card.getBoundingClientRect().x,
                 width: card.getBoundingClientRect().width,
               })),
             );
-          for (let column = 0; column < 3; column++) {
+          for (let column = 0; column < 2; column++) {
             expect(
               Math.abs(indicators[column].x - columns[column].x),
             ).toBeLessThan(1);
@@ -114,12 +138,23 @@ test("composición y capturas de todas las secciones en distintos tamaños", asy
             .evaluateAll((titles) =>
               titles.map((title) => title.getBoundingClientRect().top),
             );
-          for (const row of [0, 3]) {
+          for (const row of [0, 2]) {
             expect(
-              Math.max(...titleTops.slice(row, row + 3)) -
-                Math.min(...titleTops.slice(row, row + 3)),
+              Math.max(...titleTops.slice(row, row + 2)) -
+                Math.min(...titleTops.slice(row, row + 2)),
             ).toBeLessThan(1);
           }
+        }
+        const statsHeights = await page.locator(".stat-card").evaluateAll(cards=>cards.map(card=>Math.round(card.getBoundingClientRect().height)));
+        expect(new Set(statsHeights).size).toBe(1);
+        const moduleRects = await page.locator(".module-card").evaluateAll(cards=>cards.map(card=>card.getBoundingClientRect().toJSON()));
+        expect(moduleRects).toHaveLength(4);
+        if(width>650){
+          expect(moduleRects[0].y).toBe(moduleRects[1].y);
+          expect(moduleRects[2].y).toBe(moduleRects[3].y);
+          expect(moduleRects[0].x).toBe(moduleRects[2].x);
+        }else{
+          expect(new Set(moduleRects.map(rect=>rect.x)).size).toBe(1);
         }
         const heights = await page
           .locator(".module-card")

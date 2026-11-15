@@ -1,3 +1,5 @@
+import snapshot from "../../public/notion-theory.json" with { type: "json" };
+import type { TheoryDocument } from "../types/theory";
 import type { Topic } from "../types";
 
 // Material introductorio de ejemplo; no corresponde a apuntes de la cátedra.
@@ -111,7 +113,6 @@ export const topics: Topic[] = [
 ];
 
 export const extraActivities = [
-  { id: "simulador", title: "Recorrer el simulador PHVA", path: "/simulador" },
   { id: "mapa", title: "Explorar el mapa de procesos", path: "/procesos" },
   {
     id: "practica",
@@ -120,8 +121,9 @@ export const extraActivities = [
   },
 ];
 
+const publishedDocuments: Pick<TheoryDocument, "id" | "title">[] = snapshot.documents;
 export const activities = [
-  ...topics.map((topic) => ({
+  ...publishedDocuments.map((topic) => ({
     id: topic.id,
     title: topic.title,
     path: `/teoria?tema=${topic.id}`,

@@ -3,6 +3,7 @@ import { Check, ChevronRight, X } from "lucide-react";
 import type { Attempt, Question } from "../types";
 import { useStudy } from "../hooks/useStudy";
 import { topics } from "../data/topics";
+import { questionAnswer } from "../data/examCatalog";
 import { Link } from "react-router-dom";
 
 export function Practice({
@@ -19,6 +20,8 @@ export function Practice({
   const [choice, setChoice] = useState<number | null>(null);
   const [answers, setAnswers] = useState<Attempt["answers"]>([]);
   const [finished, setFinished] = useState(false);
+  const [draft, setDraft] = useState("");
+  const [modelShown, setModelShown] = useState(false);
   const current = questions[index];
   const revealed = answers.length > index;
   const correct = answers.filter((answer) => answer.correct).length;
@@ -34,6 +37,7 @@ export function Practice({
     } else {
       setIndex(index + 1);
       setChoice(null);
+      setDraft(""); setModelShown(false);
     }
   }
   if (finished)
@@ -59,13 +63,14 @@ export function Practice({
               {answer.correct ? <Check size={18} /> : <X size={18} />}
               <div>
                 <h3>{questions[i].prompt}</h3>
-                <p>Respuesta: {questions[i].options[questions[i].correct]}</p>
+                {answer.selfAssessed && <small>Resultado autoevaluado con respuesta modelo</small>}
+                <p>Respuesta: {questionAnswer(questions[i])}</p>
                 {!answer.correct && (
-                  <Link to={`/teoria?tema=${questions[i].topic}`}>
+                  <Link to="/repaso">
                     Repasar{" "}
                     {
                       topics.find((topic) => topic.id === questions[i].topic)
-                        ?.title
+                        ?.title ?? questions[i].topic
                     }{" "}
                     →
                   </Link>
@@ -90,7 +95,12 @@ export function Practice({
       </div>
       <p className="question-source">{current.origin}</p>
       <h2>{current.prompt}</h2>
-      <fieldset className="answer-options">
+      {current.type === "written" ? <div className="written-practice">
+        <label>Tu respuesta<textarea aria-label="Tu respuesta" rows={6} value={draft} disabled={modelShown} onChange={event => setDraft(event.target.value)} /></label>
+        {!modelShown ? <button className="primary" disabled={!draft.trim()} onClick={() => setModelShown(true)}>Comparar con respuesta modelo</button> : <div className="example-box"><h3>Respuesta modelo</h3><p>{questionAnswer(current)}</p><p className="muted">Compará tu respuesta y registrá tu autoevaluación. La aplicación no corrige automáticamente el texto.</p>
+          {!revealed && <div className="actions">{[true, false].map(correct => <button key={String(correct)} className="secondary" onClick={() => setAnswers([...answers, { questionId: current.id, correct, selfAssessed: true }])}>{correct ? "Coincide con el modelo" : "Necesito repasar"}</button>)}</div>}
+        </div>}
+      </div> : <fieldset className="answer-options">
         <legend className="sr-only">Elegí una respuesta</legend>
         {current.options.map((option, optionIndex) => (
           <label
@@ -108,7 +118,7 @@ export function Practice({
             {option}
           </label>
         ))}
-      </fieldset>
+      </fieldset>}
       {revealed ? (
         <div
           className={`feedback ${answers[index].correct ? "success" : ""}`}
@@ -116,7 +126,7 @@ export function Practice({
         >
           <h3>
             {answers[index].correct
-              ? "¡Muy bien!"
+              ? answers[index].selfAssessed ? "Autoevaluación registrada" : "¡Muy bien!"
               : "Vamos a repasar esta idea"}
           </h3>
           <p>{current.explanation}</p>
@@ -127,7 +137,7 @@ export function Practice({
             <ChevronRight size={16} />
           </button>
         </div>
-      ) : (
+      ) : current.type !== "written" ? (
         <button
           className="primary"
           disabled={choice === null}
@@ -140,7 +150,7 @@ export function Practice({
         >
           Comprobar respuesta
         </button>
-      )}
+      ) : null}
       <div className="practice-exit">
         <button className="text-button" onClick={onClose}>
           Salir sin guardar este intento

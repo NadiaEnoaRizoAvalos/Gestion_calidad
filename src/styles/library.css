@@ -389,20 +389,20 @@ a.module-card:hover {
 }
 .grid-leaves {
   position: absolute;
-  width: 62px;
+  width: 220px;
   height: auto;
-  z-index: 3;
+  z-index: -1;
   pointer-events: none;
-  opacity: 0.8;
+  opacity: 0.65;
 }
 .leaves-upper-left {
-  left: -65px;
-  top: -17px;
-  transform: rotate(-24deg);
+  left: calc((100vw - 100%) / -2 - 90px);
+  top: 110px;
+  transform: rotate(-18deg);
 }
 .leaves-lower-right {
-  right: -65px;
-  bottom: -20px;
+  right: calc((100vw - 100%) / -2 - 90px);
+  bottom: 25px;
   transform: rotate(155deg);
 }
 .library-inner::after {
@@ -417,6 +417,7 @@ main {
 }
 .dashboard {
   position: relative;
+  isolation: isolate;
 }
 .stats-grid {
   display: grid;
@@ -486,25 +487,6 @@ main {
   background: #b590cb;
   border-radius: 20px;
   transition: width 0.4s;
-}
-.goal-boxes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 0 0 4px;
-}
-.goal-boxes > span {
-  border: 1px solid #c8add9;
-  border-radius: 5px;
-  width: 18px;
-  height: 18px;
-  background: #fbf5fd;
-  display: grid;
-  place-items: center;
-}
-.goal-boxes .checked {
-  background: #dfc8ee;
-  color: #7d5498;
 }
 .module-grid {
   position: relative;
@@ -606,7 +588,7 @@ main {
   margin-top: 25px;
 }
 .bottom-grid {
-  grid-column: span 2;
+  grid-column: 2 / 4;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 14px;
@@ -614,7 +596,7 @@ main {
 .route-card,
 .tip-card {
   border: 1px solid var(--border);
-  background: #fffdfbf2;
+  background: var(--paper);
   box-shadow: var(--shadow);
   border-radius: 20px;
   min-height: 111px;
@@ -669,7 +651,7 @@ main {
   vertical-align: middle;
 }
 .bunny-nook {
-  grid-column: 3;
+  grid-column: 1;
   position: relative;
   display: grid;
   align-items: end;

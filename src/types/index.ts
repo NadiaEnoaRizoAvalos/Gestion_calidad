@@ -14,9 +14,14 @@ export interface Question {
   topic: string;
   prompt: string;
   options: string[];
-  correct: number;
+  correct: number | null;
+  type?: "choice" | "written";
+  examId?: string;
+  photoId?: string;
+  modelAnswer?: string;
+  verified?: boolean;
   explanation: string;
-  difficulty: "Inicial" | "Intermedio";
+  difficulty?: "Inicial" | "Intermedio" | "Avanzado";
   origin:
     | "Parcial anterior"
     | "Pregunta del profesor"
@@ -25,30 +30,16 @@ export interface Question {
   tags: string[];
 }
 
-export interface ClassNote {
-  id: string;
-  topic: string;
-  date: string | null;
-  title: string;
-  summary: string;
-  concepts: string[];
-  teacherExamples: string[];
-  observations: string;
-  questions: string[];
-  demo: boolean;
-}
-
 export interface Attempt {
   id: string;
   date: string;
   mode: "parcial" | "repaso";
-  answers: { questionId: string; correct: boolean }[];
+  answers: { questionId: string; correct: boolean; selfAssessed?: boolean }[];
 }
 
 export interface StudyState {
   completed: Record<string, string>;
   bookmarked: string[];
-  nextStudy: string;
-  weeklyGoal: number;
+  examDate: string;
   attempts: Attempt[];
 }

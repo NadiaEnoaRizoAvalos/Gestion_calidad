@@ -3,12 +3,12 @@ import {
   emptyState,
   parseStudyState,
   progress,
-  weekCount,
+  daysUntilExam,
+  validCalendarDate,
 } from "../src/hooks/studyStorage";
 import { activities, topics } from "../src/data/topics";
 import { questions } from "../src/data/questions";
 import { recommendTopics } from "../src/data/recommendations";
-import { simulationSteps } from "../src/data/simulation";
 import type { StudyState } from "../src/types";
 
 describe("Persistencia y progreso", () => {
@@ -44,22 +44,25 @@ describe("Persistencia y progreso", () => {
     );
     expect(Object.keys(state.completed)).toEqual(["phva"]);
     expect(state.attempts).toHaveLength(1);
-    expect(state.weeklyGoal).toBe(3);
-    expect(progress(state)).toBe(Math.round(100 / activities.length));
+    expect(state.examDate).toBe("");
+    expect(progress(state)).toBe(0);
   });
-  it("cuenta desde el lunes local y excluye otra semana", () => {
-    const state = {
-      ...emptyState,
-      completed: {
-        phva: new Date(2026, 10, 9, 0).toISOString(),
-        iso: new Date(2026, 10, 8, 23).toISOString(),
-        procesos: new Date(2026, 10, 15, 23).toISOString(),
-        mapas: new Date(2026, 10, 16, 0).toISOString(),
-      },
-    };
-    expect(weekCount(state, new Date(2026, 10, 14, 12))).toBe(2);
-    expect(weekCount(state, new Date(2026, 10, 15, 12))).toBe(2);
-    expect(weekCount(state, new Date(2026, 10, 16, 12))).toBe(1);
+  it("calcula días de calendario y valida fechas reales", () => {
+    const today = new Date(2026, 10, 14, 23, 59);
+    expect(daysUntilExam("2026-11-25", today)).toBe(11);
+    expect(daysUntilExam("2026-11-14", today)).toBe(0);
+    expect(daysUntilExam("2026-11-13", today)).toBe(-1);
+    expect(daysUntilExam("", today)).toBeNull();
+    expect(validCalendarDate("2026-02-30")).toBe(false);
+    expect(validCalendarDate("2028-02-29")).toBe(true);
+    expect(daysUntilExam("2026-03-09", new Date(2026, 2, 7, 23, 59))).toBe(2);
+  });
+  it("conserva los avances vigentes y la fecha sin contar secciones retiradas", () => {
+    const state = parseStudyState(JSON.stringify({ completed: { simulador: "2026-11-14", mapa: "2026-11-14", phva: "2026-11-14" }, examDate: "2026-11-25", weeklyGoal: 3, nextStudy: "2026-11-20" }));
+    expect(state.examDate).toBe("2026-11-25");
+    expect(state.completed).toEqual({ mapa: "2026-11-14", phva: "2026-11-14" });
+    expect(progress(state)).toBe(Math.round(100 / activities.length));
+    expect(activities.some(activity => activity.path === "/simulador" || activity.path === "/apuntes")).toBe(false);
   });
   it("alcanza 100% solo con todas las actividades", () => {
     expect(progress(emptyState)).toBe(0);
@@ -107,10 +110,8 @@ describe("Coherencia del material educativo", () => {
     expect(new Set(questions.map((q) => q.id)).size).toBe(questions.length);
     for (const question of questions) {
       expect(topics.some((topic) => topic.id === question.topic)).toBe(true);
-      expect(question.options[question.correct]).toBeTruthy();
+      expect(question.correct !== null && question.options[question.correct]).toBeTruthy();
       expect(question.origin).toBe("Pregunta de práctica generada con IA");
     }
-    for (const step of simulationSteps)
-      expect(step.options.filter((option) => option.good)).toHaveLength(1);
   });
 });

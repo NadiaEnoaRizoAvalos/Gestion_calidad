@@ -1,12 +1,11 @@
-import { activities } from "../data/topics";
+import { activities, topics } from "../data/topics";
 import type { StudyState } from "../types";
 
 export const storageKey = "gestion-calidad-estudio-v1";
 export const emptyState: StudyState = {
   completed: {},
   bookmarked: [],
-  nextStudy: "",
-  weeklyGoal: 3,
+  examDate: "",
   attempts: [],
 };
 
@@ -14,7 +13,7 @@ export function parseStudyState(value: string | null): StudyState {
   if (!value) return { ...emptyState };
   try {
     const data = JSON.parse(value);
-    const ids = new Set(activities.map((activity) => activity.id));
+    const ids = new Set([...activities, ...topics].map((activity) => activity.id));
     return {
       completed: Object.fromEntries(
         Object.entries(data.completed ?? {}).filter(
@@ -27,40 +26,29 @@ export function parseStudyState(value: string | null): StudyState {
       bookmarked: Array.isArray(data.bookmarked)
         ? data.bookmarked.filter((id: unknown) => typeof id === "string")
         : [],
-      nextStudy:
-        typeof data.nextStudy === "string" &&
-        /^\d{4}-\d{2}-\d{2}$/.test(data.nextStudy) &&
-        Number.isFinite(Date.parse(`${data.nextStudy}T12:00:00`))
-          ? data.nextStudy
-          : "",
-      weeklyGoal:
-        Number.isInteger(data.weeklyGoal) &&
-        data.weeklyGoal >= 1 &&
-        data.weeklyGoal <= 20
-          ? data.weeklyGoal
-          : 3,
+      examDate: validCalendarDate(data.examDate) ? data.examDate : "",
       attempts: Array.isArray(data.attempts)
         ? data.attempts.filter((attempt: unknown) => {
-            if (!attempt || typeof attempt !== "object") return false;
-            const a = attempt as Record<string, unknown>;
-            return (
-              typeof a.id === "string" &&
-              typeof a.date === "string" &&
-              Number.isFinite(Date.parse(a.date)) &&
-              (a.mode === "parcial" || a.mode === "repaso") &&
-              Array.isArray(a.answers) &&
-              a.answers.length > 0 &&
-              a.answers.every(
-                (answer: unknown) =>
-                  !!answer &&
-                  typeof answer === "object" &&
-                  typeof (answer as Record<string, unknown>).questionId ===
-                    "string" &&
-                  typeof (answer as Record<string, unknown>).correct ===
-                    "boolean",
-              )
-            );
-          })
+          if (!attempt || typeof attempt !== "object") return false;
+          const a = attempt as Record<string, unknown>;
+          return (
+            typeof a.id === "string" &&
+            typeof a.date === "string" &&
+            Number.isFinite(Date.parse(a.date)) &&
+            (a.mode === "parcial" || a.mode === "repaso") &&
+            Array.isArray(a.answers) &&
+            a.answers.length > 0 &&
+            a.answers.every(
+              (answer: unknown) =>
+                !!answer &&
+                typeof answer === "object" &&
+                typeof (answer as Record<string, unknown>).questionId ===
+                "string" &&
+                typeof (answer as Record<string, unknown>).correct ===
+                "boolean",
+            )
+          );
+        })
         : [],
     };
   } catch {
@@ -68,21 +56,25 @@ export function parseStudyState(value: string | null): StudyState {
   }
 }
 
-export function weekCount(state: StudyState, today = new Date()): number {
-  const start = new Date(today);
-  start.setHours(0, 0, 0, 0);
-  start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
-  const end = new Date(start);
-  end.setDate(end.getDate() + 7);
-  return Object.values(state.completed).filter(
-    (date) => new Date(date) >= start && new Date(date) < end,
-  ).length;
+export function validCalendarDate(value: unknown): value is string {
+  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const date = new Date(`${value}T12:00:00`);
+  return Number.isFinite(date.getTime()) && date.getFullYear() === Number(value.slice(0, 4)) && date.getMonth() + 1 === Number(value.slice(5, 7)) && date.getDate() === Number(value.slice(8, 10));
+}
+
+export function daysUntilExam(date: string, today = new Date()): number | null {
+  if (!validCalendarDate(date)) return null;
+  return Math.round((Date.parse(`${date}T00:00:00Z`) - Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())) / 86400000);
+}
+
+export function completedActivities(state: StudyState): number {
+  return activities.filter(activity => !!state.completed[activity.id]).length;
 }
 
 export function progress(state: StudyState): number {
   return Math.round(
-    (activities.filter((activity) => state.completed[activity.id]).length /
+    (completedActivities(state) /
       activities.length) *
-      100,
+    100,
   );
 }

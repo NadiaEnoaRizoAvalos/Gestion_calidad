@@ -3,17 +3,16 @@ import { Link } from "react-router-dom";
 import {
   BarChart3,
   CalendarDays,
-  Target,
   ChevronRight,
-  Check,
   Map,
   Lightbulb,
   Heart,
 } from "lucide-react";
 import { assets } from "../data/assets";
 import { useStudy } from "../hooks/useStudy";
-import { progress, weekCount } from "../hooks/studyStorage";
+import { progress, completedActivities, daysUntilExam } from "../hooks/studyStorage";
 import { activities } from "../data/topics";
+import "../styles/home-study.css";
 
 const modules = [
   {
@@ -24,13 +23,6 @@ const modules = [
     note: "Entendé las bases",
   },
   {
-    title: "Simulador SGC",
-    description: "Aplicación práctica de la gestión de calidad.",
-    image: "simulator",
-    path: "/simulador",
-    note: "Aprendé haciendo",
-  },
-  {
     title: "Procesos y BPMN",
     description: "Diagramas interactivos y explicaciones.",
     image: "processes",
@@ -39,17 +31,10 @@ const modules = [
   },
   {
     title: "Parciales",
-    description: "Preguntas de práctica y autoevaluaciones.",
+    description: "Exámenes anteriores, fotografías y preguntas de práctica.",
     image: "exams",
     path: "/parciales",
     note: "Ponete a prueba",
-  },
-  {
-    title: "Apuntes de clase",
-    description: "Explicaciones, ejemplos y observaciones.",
-    image: "notes",
-    path: "/apuntes",
-    note: "Todo en un lugar",
   },
   {
     title: "Repaso inteligente",
@@ -68,17 +53,29 @@ const tips = [
 ];
 
 export function Home() {
-  const { state, setSchedule } = useStudy();
+  const { state, setExamDate } = useStudy();
   const dialog = useRef<HTMLDialogElement>(null);
-  const [date, setDate] = useState(state.nextStudy);
-  const [goal, setGoal] = useState(state.weeklyGoal);
+  const [date, setDate] = useState(state.examDate);
   const percent = progress(state);
-  const weekly = weekCount(state);
+  const completed = completedActivities(state);
+  const days = daysUntilExam(state.examDate);
   const next = activities.find((activity) => !state.completed[activity.id]);
   const [day] = useState(() => Math.floor(Date.now() / 86400000));
   return (
     <div className="dashboard">
       <h1 className="sr-only">Mi biblioteca de Gestión de Calidad</h1>
+      <img
+        className="grid-leaves leaves-upper-left"
+        src={assets.leaves}
+        alt=""
+        aria-hidden="true"
+      />
+      <img
+        className="grid-leaves leaves-lower-right"
+        src={assets.leaves}
+        alt=""
+        aria-hidden="true"
+      />
       <section className="stats-grid" aria-label="Tu estudio en un vistazo">
         <Link to="/ruta" className="stat-card">
           <BarChart3 className="stat-icon" />
@@ -98,7 +95,7 @@ export function Home() {
               <strong>{percent}%</strong>
             </div>
             <small>
-              {Object.keys(state.completed).length} de {activities.length}{" "}
+              {completed} de {activities.length}{" "}
               actividades
             </small>
           </div>
@@ -106,66 +103,21 @@ export function Home() {
         <button
           className="stat-card schedule-card"
           onClick={() => {
-            setDate(state.nextStudy);
-            setGoal(state.weeklyGoal);
+            setDate(state.examDate);
             dialog.current?.showModal();
           }}
         >
           <CalendarDays className="stat-icon" />
           <div>
-            <h2>Próximo estudio</h2>
-            <p>
-              {state.nextStudy
-                ? new Date(`${state.nextStudy}T12:00:00`).toLocaleDateString(
-                    "es-AR",
-                    { weekday: "short", day: "numeric", month: "short" },
-                  )
-                : "Elegí tu próximo momento"}
-            </p>
-            <small>Organizá tu tiempo</small>
-          </div>
-        </button>
-        <button
-          className="stat-card goal-card"
-          onClick={() => {
-            setDate(state.nextStudy);
-            setGoal(state.weeklyGoal);
-            dialog.current?.showModal();
-          }}
-        >
-          <Target className="stat-icon" />
-          <div>
-            <h2>Meta semanal</h2>
-            <div className="goal-boxes" aria-hidden="true">
-              {Array.from(
-                { length: Math.min(state.weeklyGoal, 5) },
-                (_, index) => (
-                  <span key={index} className={index < weekly ? "checked" : ""}>
-                    {index < weekly && <Check size={13} />}
-                  </span>
-                ),
-              )}
-              {state.weeklyGoal > 5 && <small>+{state.weeklyGoal - 5}</small>}
-            </div>
-            <small>
-              {weekly} de {state.weeklyGoal} actividades · esta semana
-            </small>
+            <h2>Fecha del parcial</h2>
+            <p>{state.examDate ? new Date(`${state.examDate}T12:00:00`).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }) : "Configurá la fecha de tu próximo parcial"}</p>
+            {days !== null && <p>{days > 0 ? `Faltan ${days} ${days === 1 ? "día" : "días"}` : days === 0 ? "El parcial es hoy" : `La fecha pasó hace ${-days} ${days === -1 ? "día" : "días"}`}</p>}
+            <small>{completed} de {activities.length} actividades completadas · {percent}%</small>
+            <small>{activities.length - completed} pendientes</small>
           </div>
         </button>
       </section>
       <section className="module-grid" aria-label="Tu biblioteca">
-        <img
-          className="grid-leaves leaves-upper-left"
-          src={assets.leaves}
-          alt=""
-          aria-hidden="true"
-        />
-        <img
-          className="grid-leaves leaves-lower-right"
-          src={assets.leaves}
-          alt=""
-          aria-hidden="true"
-        />
         {modules.map((module, index) => (
           <Link to={module.path} className="module-card" key={module.path}>
             <div className="module-topline">
@@ -186,6 +138,16 @@ export function Home() {
         ))}
       </section>
       <div className="study-corner">
+        <div className="bunny-nook" aria-hidden="true">
+          <img
+            className="reading-bunny"
+            src={assets.reading}
+            width={545}
+            height={484}
+            alt=""
+          />
+          <div className="desk-surface" />
+        </div>
         <section className="bottom-grid" aria-label="Seguí aprendiendo">
           <Link to="/ruta" className="route-card">
             <div className="route-art">
@@ -213,44 +175,26 @@ export function Home() {
             </div>
           </article>
         </section>
-        <div className="bunny-nook" aria-hidden="true">
-          <img className="reading-bunny" src={assets.reading} alt="" />
-          <div className="desk-surface" />
-        </div>
       </div>
       <dialog ref={dialog} className="settings-dialog">
         <form
           onSubmit={(event) => {
             event.preventDefault();
-            setSchedule(date, goal);
+            setExamDate(date);
             dialog.current?.close();
           }}
         >
           <span className="eyebrow">UN MOMENTO PARA VOS</span>
-          <h2>Organizá tu estudio</h2>
+          <h2>Fecha del parcial</h2>
           <label>
-            Próximo día de estudio
+            Fecha del próximo parcial
             <input
               type="date"
               value={date}
               onChange={(event) => setDate(event.target.value)}
             />
           </label>
-          <label>
-            Actividades por semana
-            <input
-              type="number"
-              min="1"
-              max="20"
-              required
-              value={goal}
-              onChange={(event) => setGoal(Number(event.target.value))}
-            />
-          </label>
-          <p className="muted">
-            La semana empieza el lunes. Cada actividad completada cuenta una
-            vez.
-          </p>
+          <p className="muted">El avance cuenta los resúmenes publicados, la exploración del mapa y la práctica de preguntas. Sirve para organizarte; no predice una nota.</p>
           <div className="actions">
             <button
               type="button"
@@ -260,7 +204,7 @@ export function Home() {
               Cancelar
             </button>
             <button className="primary" type="submit">
-              Guardar preferencias
+              Guardar fecha
             </button>
           </div>
         </form>
