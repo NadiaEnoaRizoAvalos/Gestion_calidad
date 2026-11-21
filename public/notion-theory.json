@@ -100,6 +100,245 @@
       ]
     },
     {
+      "id": "notion-41f1996d4e8f80c6bf2ee9e34d18a830",
+      "title": "clase 26-08",
+      "category": "General",
+      "blocks": [
+        {
+          "id": "41f1996d-4e8f-80c6-955b-fb8d28368b6e",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "sistema de gestion de calidad",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            },
+            {
+              "text": ": es la forma en la que una empresa ordena sus procesos a fin de garantizar la satisfaccion del cliente. un SGC es certificable bajo la norma iso 9001:20215",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "41f1996d-4e8f-805b-b7d3-cef1988e96ae",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "41f1996d-4e8f-80ad-99b2-cf02a7b1e89f",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "los principios de la calidad",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            },
+            {
+              "text": " los componen una serie de pilares que deben estara para que ecxista una buena gestion empresarial y funcione cualquier sistema de gestion",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "41f1996d-4e8f-8007-a92f-c1f44f46035e",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "estos principios no deben ser cerrados porque debe aceptar cambios y deben adaptarse para la empresa,  porque al implementarse la norma iso 9001 la empresa no se la tiene q tomar como un sistema que debe implementar sino que debe tomarselo como referencia para mejorar procesos y detectar errores y satisfacer a sus clientes ",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "41f1996d-4e8f-80ed-aa8b-c6b5c8236190",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/603e4b1973cfce2bf0106c720b793a10116efd081a7695d4bbbfcd8467f277a8.png"
+        },
+        {
+          "id": "41f1996d-4e8f-8060-97e9-ee9a793a0f33",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "41f1996d-4e8f-8013-8056-f41c1323e348",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "1- enfoque en cliente: la calidad se implementa para brinda un mejor satisfaccion al cliente\n    existe 2 tipos de clientes",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "41f1996d-4e8f-804a-b289-cbf2cfa161b3",
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "text": "los que se preocupan por obtener un producto o servicio de calidad, ellos mismo saben los controles de calidad que hubo para perfeccionar y el esfuerzo que hubo y por eso aceptan el precio que le impone la organizacion",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "41f1996d-4e8f-80c0-a5c8-e7bb659e9e8b",
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "text": "los que se preocupan principalmente del precio, ellos no le importa la calidad del producto en si le importa el resultado y son muy sensibles al precio",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "41f1996d-4e8f-800f-83cf-cdb734cbb095",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "\n2- Liderazgo: un lider no se basa solo en el mienbro de la alta direccion sino tambien a las personas que estan a cargo de los diferentes equipos de trabajo, estos lideres conocen muy bien el sistema o el area en especifico que se les brindo por lo tanto saben cuando cada persona del equipo hizo bien o mal su trabajo y colaborar en trabajo en equipo y identificar posibles lideres\n",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "41f1996d-4e8f-8030-b769-d8b810d2e9b2",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "3- compromisos de las personas: esto es muy importante, el lider tiene q ayudar a que los empleados esten comprometido que cumplan con su objetivo y su proposito, sin empleados no existe empresa asi como sin cliente tampoco \n",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "41f1996d-4e8f-8032-8973-e92111dc964c",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "4-enfoque en los procesos: \n",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "41f1996d-4e8f-80c6-8b09-d77f94ddb9f7",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "41f1996d-4e8f-803b-a671-c191d850c83d",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "41f1996d-4e8f-8076-92ff-c96d181ebbb7",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "\n\n",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "41f1996d-4e8f-80dc-977a-dfee282b44a5",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "41f1996d-4e8f-805e-81ff-cfa74025729b",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "41f1996d-4e8f-80b4-9a10-c5611f3bed99",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "control de calidad:",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            },
+            {
+              "text": " es la inspeccion de un producto o servicio para determinar si cumple ciertos estandares que nosotros fijamos por la organizacion, estos estandares pueden ser por atributos que serian cualidades o caracteristica que tiene el producto o servicio o por variables que son cuantificables que son cualidades que tiene los productos o servicios ",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
       "id": "notion-cda1996d4e8f83abaff0012734875055",
       "title": "Unidad 1: Fundamentos de la Calidad",
       "category": "General",
@@ -125,7 +364,7 @@
           "type": "paragraph",
           "text": [
             {
-              "text": "UNIDAD TEMÁTICA 1: FUNDAMENTOS DE LA CALIDAD\nComprender el origen, evolución y principios fundamentales de la calidad como disciplina de gestión y su\nrelevancia en el contexto de la Ingeniería en Sistemas de Información.\n• Definiciones básicas: Control de la Calidad, Aseguramiento de la Calidad, Sistema de Gestión de la\nCalidad, Administración de la Calidad Total (TQM). Función de la calidad.\n• Evolución histórica del concepto de calidad: etapas del control, aseguramiento y gestión total.\n• Los Principios de la Calidad según la familia ISO 9000:2015.",
+              "text": "UNIDAD TEMÁTICA 1: FUNDAMENTOS DE LA CALIDAD\nComprender el origen, evolución y principios fundamentales de la calidad como disciplina de gestión y su relevancia en el contexto de la Ingeniería en Sistemas de Información.\n• Definiciones básicas: Control de la Calidad, Aseguramiento de la Calidad, Sistema de Gestión de la\nCalidad, Administración de la Calidad Total (TQM). Función de la calidad.\n• Evolución histórica del concepto de calidad: etapas del control, aseguramiento y gestión total.\n• Los Principios de la Calidad según la familia ISO 9000:2015.",
               "bold": false,
               "italic": false,
               "strike": false,
