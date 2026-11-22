@@ -264,7 +264,7 @@
           "type": "paragraph",
           "text": [
             {
-              "text": "4-enfoque en los procesos: \n",
+              "text": "4-enfoque en los procesos:  fundamental comprender los procesos ya que cualquier actividad de la organizacion deben funcionar con los procesos que se interrelacionan \n",
               "bold": false,
               "italic": false,
               "strike": false,
@@ -277,17 +277,42 @@
         {
           "id": "41f1996d-4e8f-80c6-8b09-d77f94ddb9f7",
           "type": "paragraph",
+          "text": [
+            {
+              "text": "5- tomar decisiones basadas en evidencias: esto nos ayuda a monitorear procesos para saber en que momento algo falla o no cumple con lo requerido la evidencia nos ayuda a tomar decisiones \n\n6- mejora continua: lo que se puede medir se puede mejorar y controlar, es algo clave para satisfacer a los cliente respecto a la calidad para eso pensamos en la mejora continua.\n\nesta el ciclo phva Este ciclo permite planificar mejoras, aplicarlas, comprobar sus resultados y realizar las correcciones necesarias.\n",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "41f1996d-4e8f-802d-a1b3-f89ca452d27b",
+          "type": "image",
           "text": [],
+          "children": [],
+          "src": "notion-images/7018318d6cf0f85963fa96a816e60c5b75db83e6674f87019d8f1b4d2aebf517.png"
+        },
+        {
+          "id": "41f1996d-4e8f-8086-8862-d3fb03135619",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "7- gestion de las relaciones: habla de los recursos humanos no solo interno de la empresa sino tambien externo los provedores, socios y ect, esto ayuda a la organizacion y sus partes interesadas a desarroolar una relacion de dependencia y beneficio mutuo",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
           "children": []
         },
         {
           "id": "41f1996d-4e8f-803b-a671-c191d850c83d",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "41f1996d-4e8f-8076-92ff-c96d181ebbb7",
           "type": "paragraph",
           "text": [
             {
@@ -334,6 +359,216 @@
               "code": false
             }
           ],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-80f6-b83a-fd994e87397d",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-80a2-b5d0-f64e037206bb",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/3933346b40cb633a99fefe0180f054d23c571a6b38ee39a68744b302ab51ee66.png"
+        }
+      ]
+    },
+    {
+      "id": "notion-4201996d4e8f8019ac69f0a0d2abc043",
+      "title": "Clase 09-09",
+      "category": "General",
+      "blocks": [
+        {
+          "id": "4201996d-4e8f-8002-b14b-c71a5e4a3074",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/3061cf6d0c1fe04709beef36778b4e1673364eacb2a8c722ea53f8867d012d59.png"
+        },
+        {
+          "id": "4201996d-4e8f-8086-9d6c-c07c6ca8ea5e",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-8040-b474-f08a81e57e61",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/68b563061234fa60f932f8d0383f40ef08a10a1e482c312e69a576ea780f306a.png"
+        },
+        {
+          "id": "4201996d-4e8f-803e-81ac-f6788790089b",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-8017-98c6-f2403f0d56b4",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-8093-a48c-fda090ecb686",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-80d6-9f71-cc543894ca13",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/a846a3e15d5f3761746013860886025d7bef35437e82b59cf4b4201bd42128fd.png"
+        }
+      ]
+    },
+    {
+      "id": "notion-4201996d4e8f809598b8ca87945dfcf5",
+      "title": "Clase 02-09",
+      "category": "General",
+      "blocks": [
+        {
+          "id": "4201996d-4e8f-8002-95cf-d708f8f17891",
+          "type": "heading_2",
+          "text": [
+            {
+              "text": "implementacion de los sitema de gestion:",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-80f2-a3b5-dabf7023f5a8",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-8034-a6f6-f9e1603a780a",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "aplicacion del enfoque basado en procesos para el ciclo productivo de una empresa",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-8020-bcdb-f2c4b1077e0b",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "Un mapa de procesos es una ",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            },
+            {
+              "text": "representación gráfica de los procesos de una organización y de cómo se interrelacionan entre sí",
+              "bold": true,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            },
+            {
+              "text": " para alcanzar sus objetivos y satisfacer las necesidades del cliente.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-8087-bd53-c3a60f2205d2",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "Es como tener una visión general de cómo funciona la empresa, permitiendo comprender que sus distintas áreas no trabajan de manera aislada, sino que están relacionadas.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-8061-868d-f4979f389cf5",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-80bb-b897-e30a54a4303c",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-800d-b9bc-e00b8c8e2fa3",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "un proceso no es lo mismo que un procedimiento",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            },
+            {
+              "text": ", un proceso es una secuencia de tareas que se realizan de forma concatenada, un procedimiento Es la forma especificada de realizar una actividad o un proceso.",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-804d-b955-f1b40aa9a68e",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "el proceso indica qué se hace y el procedimiento indica cómo se hace.",
+              "bold": true,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-8008-b8d4-c4dd8207d3f8",
+          "type": "paragraph",
+          "text": [],
           "children": []
         }
       ]
