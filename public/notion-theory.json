@@ -2,104 +2,6 @@
   "version": 1,
   "documents": [
     {
-      "id": "notion-4191996d4e8f80458ceeeab322b3c445",
-      "title": "Unidad 3: Liderazgo para la Calidad",
-      "category": "General",
-      "cover": "notion-images/5e755084b26094a5b8a5b29b2a762bf2eecd870876b1a023e1b620ead85c35f5.png",
-      "blocks": [
-        {
-          "id": "4191996d-4e8f-801b-9675-de6ecd4bee20",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "UNIDAD TEMÁTICA 3: LIDERAZGO PARA LA CALIDAD\nComprender el rol crítico del liderazgo y la cultura organizacional en la implementación exitosa de Sistemas\nde Gestión de la Calidad.\n• Responsabilidad de la Dirección en la gestión de la Calidad. Compromiso y política de calidad.\n• Liderazgo: estilos, competencias y rol del líder en la gestión de la calidad.\n• Comunicación interna y cultura de la calidad en la organización.\n• Modelos de Calidad y Excelencia:\n◦ Premio Nacional a la Calidad (Argentina): criterios y proceso de postulación.\n◦ EFQM (Modelo Europeo de Gestión de la Calidad): criterios, subcriterios y autoevaluación.\n• Comparación y aplicabilidad de los modelos en organizaciones de software y servicios de TI.",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        }
-      ]
-    },
-    {
-      "id": "notion-4191996d4e8f80c2b4ffe7f3a913b64b",
-      "title": "Unidad 6: Calidad del Software.",
-      "category": "General",
-      "cover": "notion-images/83cb05680d0d2e5f97ed6349b032cfef67a6aac880a3fa1edb1a35cb7841bf6c.png",
-      "blocks": [
-        {
-          "id": "4191996d-4e8f-80bd-9144-d9b8d14c59f2",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "UNIDAD TEMÁTICA 6: CALIDAD DEL SOFTWARE\nConocer y aplicar los principales modelos, normas y estándares de calidad del software, integrando los\nfundamentos de la gestión de la calidad al ciclo de vida del desarrollo de software y a la gestión de servicios\nde TI.\n• Calidad del software: definición, factores de calidad, modelo de calidad de producto ISO/IEC 25010.\n• Gestión de Configuración del Software (SCM): objetivos, actividades y herramientas.\n• Normas y modelos vinculados a la calidad del software:\n◦ ISO 90003:2018: directrices para aplicar ISO 9001 al software.\n◦ CMMI (Capability Maturity Model Integration): niveles de madurez y áreas de proceso.\n◦ ITIL (Information Technology Infrastructure Library): gestión de servicios de TI, ciclo de vida del\nservicio.\n• Integración entre SGC e ISO 27001 en organizaciones productoras de software.",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4191996d-4e8f-8042-89e7-dc97e2fe9907",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        }
-      ]
-    },
-    {
-      "id": "notion-4191996d4e8f80eb87baf0bf472fa79c",
-      "title": "Unidad 5: Costos y Herramientas para la Calidad.",
-      "category": "General",
-      "cover": "notion-images/b33402fed84348784f9747da20a403745ae17c607b0e021421e86f435304eead.png",
-      "blocks": [
-        {
-          "id": "4191996d-4e8f-8014-9dad-fc463c4f79b6",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "UNIDAD TEMÁTICA 5: COSTOS Y HERRAMIENTAS PARA LA CALIDAD\nConocer y aplicar las principales herramientas de la calidad para el análisis, diagnóstico y resolución de\nproblemas, y comprender la estructura de costos asociada a la calidad.\n• Las Herramientas Clásicas de la Calidad:\n◦ Diagrama de Causa-Efecto (Ishikawa / Espina de Pescado).\n◦ Diagrama de Flujo: mapeo y análisis de procesos.\n◦ Diagrama de Pareto: análisis 80/20 para priorización de problemas.\n• Costos de la Calidad: concepto e importancia estratégica para la organización.\n• Costos directos e indirectos de la calidad.",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        }
-      ]
-    },
-    {
-      "id": "notion-4191996d4e8f80f6bd85fb7b3b02ad72",
-      "title": "Unidad 4: Medición, Análisis y Mejora Continua",
-      "category": "General",
-      "cover": "notion-images/dcdc3e99906f3a46acf044fb7244a4c2cfa7b6e6860dd3ccad3da3375f0522b3.png",
-      "blocks": [
-        {
-          "id": "4191996d-4e8f-80a9-b346-ca7fb7f9fe6c",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "UNIDAD TEMÁTICA 4: MEDICIÓN, ANÁLISIS Y MEJORA CONTINUA\nAplicar metodologías de medición y análisis de datos para la mejora continua del Sistema de Gestión de la\nCalidad y de los procesos organizacionales.\n• Satisfacción del cliente: métodos de medición, análisis e interpretación de resultados.\n• Auditoría de Sistemas de Gestión de la Calidad (SGC): concepto, tipos y fases. Norma ISO 19011:2018.\n• Seguimiento y medición de procesos: indicadores de proceso.\n• Seguimiento y medición de productos y servicios: conformidad y no conformidad.\n• Análisis de datos: herramientas estadísticas, indicadores clave de desempeño (KPI).\n• Acciones correctivas, preventivas y de mejora continua del SGC.\n• Ciclo PDCA (Plan-Do-Check-Act) aplicado a la mejora de procesos. Revisión por la Dirección.\n• Gestión de no conformidades y producto no conforme.",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        }
-      ]
-    },
-    {
       "id": "notion-41f1996d4e8f80c6bf2ee9e34d18a830",
       "title": "clase 26-08",
       "category": "General",
@@ -314,21 +216,6 @@
         {
           "id": "41f1996d-4e8f-803b-a671-c191d850c83d",
           "type": "paragraph",
-          "text": [
-            {
-              "text": "\n\n",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "41f1996d-4e8f-80dc-977a-dfee282b44a5",
-          "type": "paragraph",
           "text": [],
           "children": []
         },
@@ -421,7 +308,168 @@
           "children": []
         },
         {
-          "id": "4201996d-4e8f-8064-b4dc-c07f82ee80da",
+          "id": "4201996d-4e8f-80f5-90f3-f2e9d6c8ef36",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/0a3904586e6be10e48482a9bfd7dfdf38d3f430295c9d36807cb832ff4b96ced.png"
+        },
+        {
+          "id": "4201996d-4e8f-804b-abf7-d4971148429d",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/59d4ac36cd294dc12c88e5a035ba64d10103131cf7b3912ecf61b9eccfaed791.png"
+        },
+        {
+          "id": "4201996d-4e8f-8065-8009-d95553b0f820",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/fb4d0bcc49fb0484ff4955eeb58e4c27d7e09b4ffc1273abd2cbb6092f8224d3.png"
+        },
+        {
+          "id": "4201996d-4e8f-8065-b307-c089c010e116",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/c3a17360406a8f6287e8e58ee3d5f8a7de3bd877f565e1348f69f2607e8fadc9.png"
+        },
+        {
+          "id": "4201996d-4e8f-8090-b43b-d21f265e9f2c",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/88f3e2d953b7206f927a876b562a208a562b51e32d47d1a89f99bdb0bb071047.png"
+        },
+        {
+          "id": "4201996d-4e8f-80f7-a307-e74f4c6873ad",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "notion-4201996d4e8f802ebfd2c2c735e44b1d",
+      "title": "Clase 12-10",
+      "category": "General",
+      "blocks": [
+        {
+          "id": "4211996d-4e8f-8077-9991-fd3036329ffa",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/f5726b3d6b59b6aaa4360bad9ef4f7bfe4f6213951171e9db5996b06b93119d9.png"
+        },
+        {
+          "id": "4211996d-4e8f-8005-8b62-dc811710be08",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/3c99ee3d16fd51a09c030dcafa734068b948f47e9927544a4d9b5fdb6d016d3b.png"
+        },
+        {
+          "id": "4211996d-4e8f-805b-b4da-e3cf75165f4c",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/c54379886ade4d289499e2ba420f94e32954dad70366df35fc63f39030267953.png"
+        },
+        {
+          "id": "4211996d-4e8f-8046-add6-f5c6393b8c7c",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/aa3f1c26e67283d04d16d6df2196aa0e8c8d0fdcf37cc89fcca5f0a68b59f664.png"
+        }
+      ]
+    },
+    {
+      "id": "notion-4201996d4e8f8031b6bcd49de633728d",
+      "title": "Clase 14-09",
+      "category": "General",
+      "blocks": [
+        {
+          "id": "4201996d-4e8f-8057-ba57-d7cead241e14",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "Proceso de certificacion",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-803f-a214-e35a917d785c",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/b57a53eb63885b2defee4f702374c2a52acf465ff1c5cf00025479cf0b256e44.png"
+        },
+        {
+          "id": "4201996d-4e8f-806d-8271-dcbf0ca6b53b",
+          "type": "paragraph",
+          "text": [],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-8038-956e-d6a783a8c05a",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/1d36e482df843bb8f132a250882285fc983e26945cebef0428a54498e5ad6bc5.png"
+        },
+        {
+          "id": "4201996d-4e8f-801d-a8ba-fddc9ed2ac38",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/815ce004c03f7e0accff43263fa5588620504d73035177cbdbfda1739330157b.png"
+        },
+        {
+          "id": "4201996d-4e8f-8018-b8fd-cd4a274d936f",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/5ae3af26d65d266dc6e2c86dc5d59c8b29cbac41c95aa2190ef2330de58a5464.png"
+        }
+      ]
+    },
+    {
+      "id": "notion-4201996d4e8f8042943acf31d27a445c",
+      "title": "Clase 23-09",
+      "category": "General",
+      "blocks": [
+        {
+          "id": "4201996d-4e8f-803d-b534-f3e17410b13d",
+          "type": "paragraph",
+          "text": [
+            {
+              "text": "Analisis FODA: se puede definir cmo un analisis estrategico fundamental en la deteccion de elementos internos(fortalezas y debilidades ) y externos(oportunidades y amenazas) que constituyen un diagnostico de la capacidad competitiva de la organizacion  ",
+              "bold": false,
+              "italic": false,
+              "strike": false,
+              "underline": false,
+              "code": false
+            }
+          ],
+          "children": []
+        },
+        {
+          "id": "4201996d-4e8f-80cd-ba8c-eb2a7c20ea1c",
+          "type": "image",
+          "text": [],
+          "children": [],
+          "src": "notion-images/551e9ccb777673dd2c6b3ee56af5e7abe8bdaa827b4fbd1f2e83b70c1c4f222f.png"
+        },
+        {
+          "id": "4201996d-4e8f-8037-98f0-c71bc45c7e73",
           "type": "paragraph",
           "text": [],
           "children": []
@@ -516,12 +564,6 @@
           "children": []
         },
         {
-          "id": "4201996d-4e8f-8061-868d-f4979f389cf5",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
           "id": "4201996d-4e8f-80bb-b897-e30a54a4303c",
           "type": "paragraph",
           "text": [],
@@ -574,17 +616,16 @@
       ]
     },
     {
-      "id": "notion-cda1996d4e8f83abaff0012734875055",
-      "title": "Unidad 1: Fundamentos de la Calidad",
+      "id": "notion-4201996d4e8f80f689d3e7027ceb19df",
+      "title": "Clase 16-09",
       "category": "General",
-      "cover": "notion-images/f648cb1702b685dfba0db8e043c65f8bcb59f943b77c4ea7fe676e32cd3f3b0e.png",
       "blocks": [
         {
-          "id": "aeb1996d-4e8f-835d-9fa4-81c77514aeaf",
+          "id": "4201996d-4e8f-808e-a5d8-fe4fda43e8ba",
           "type": "heading_2",
           "text": [
             {
-              "text": "Sistema de gestion:",
+              "text": "BPMN",
               "bold": false,
               "italic": false,
               "strike": false,
@@ -595,11 +636,11 @@
           "children": []
         },
         {
-          "id": "4191996d-4e8f-801c-ae9f-d0f664621a42",
+          "id": "4201996d-4e8f-80c5-a043-f7c4a03c2642",
           "type": "paragraph",
           "text": [
             {
-              "text": "UNIDAD TEMÁTICA 1: FUNDAMENTOS DE LA CALIDAD\nComprender el origen, evolución y principios fundamentales de la calidad como disciplina de gestión y su relevancia en el contexto de la Ingeniería en Sistemas de Información.\n• Definiciones básicas: Control de la Calidad, Aseguramiento de la Calidad, Sistema de Gestión de la\nCalidad, Administración de la Calidad Total (TQM). Función de la calidad.\n• Evolución histórica del concepto de calidad: etapas del control, aseguramiento y gestión total.\n• Los Principios de la Calidad según la familia ISO 9000:2015.",
+              "text": "1- que es el modelado de procesos? \nes la accion de representar los procesos de negocio de una empresa con el objetivo de que estos puedan ser analizados, ejecutados y mejorados",
               "bold": false,
               "italic": false,
               "strike": false,
@@ -610,37 +651,11 @@
           "children": []
         },
         {
-          "id": "4191996d-4e8f-80ef-af84-d70905ae3c9f",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4191996d-4e8f-8093-ba1d-c55437f65856",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-808a-97bb-cccb60b41f13",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-800e-a7d0-c634635e01be",
+          "id": "4201996d-4e8f-80f2-81c4-ca9a5b4497ba",
           "type": "paragraph",
           "text": [
             {
-              "text": "3 conceptos:",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            },
-            {
-              "text": "\n1-mejora continua\n2-satisfaccion con el usuario en relacion con mi producto o servicio\n3-gestion por procesos",
+              "text": "2- que es un proceso de negocio?\nes un conjunto de activodades relacionadas logicamente llevadas a cabo consecutivamente para lograr un resultado de negocio",
               "bold": false,
               "italic": false,
               "strike": false,
@@ -651,23 +666,11 @@
           "children": []
         },
         {
-          "id": "4141996d-4e8f-80a1-bb8a-cde37c450183",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-80ed-9000-cbe926b9fb38",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8025-9001-f6de05901822",
+          "id": "4201996d-4e8f-809b-b53d-cffdc007227e",
           "type": "paragraph",
           "text": [
             {
-              "text": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+              "text": "BPM (gestion de procesos de negocio) es una metodologia que se enfoca en administrar y optimizar en forma continua las actividades y procesos de negocio de la organizacion.\n\nBPMN (Gestion de procesos de negocio ) es un estandar que define simbolos y reglas lo que nos permite representar graficamente un proceso de negocio\n\nobjetivo:",
               "bold": false,
               "italic": false,
               "strike": false,
@@ -678,344 +681,11 @@
           "children": []
         },
         {
-          "id": "4141996d-4e8f-808e-b950-f7436b015612",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8001-9bf3-f248f673fe4c",
-          "type": "heading_2",
-          "text": [
-            {
-              "text": "Preguntas frecuentes",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-803d-a5b9-f022258f105d",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "1.- Que es ",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            },
-            {
-              "text": "CALIDAD",
-              "bold": true,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            },
-            {
-              "text": "? (utilice criterio, google y la ISO 9000 de vocabulario)\nsegun la norma 9000:2015, la calidad es el grado en el que un conjunto de caracteristicas, de un objeto cumple con los requisitos establecidos",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8078-beb0-f869b745965a",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-80fc-9253-d7bc6c382a06",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "2.- Que es ",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            },
-            {
-              "text": "SGC",
-              "bold": true,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            },
-            {
-              "text": " (Sistema de Gestión de la Calidad)\nes un conjunto de procesos, procedimientos, recursos y responsabilidades que utiliza una organizacion para garantizar que sus productos o servicios cumplan con los requisitos de calidad ",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-809f-8c27-fe0e09446c03",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "La norma ISO 9001 establece los requisitos para implementar un Sistema de Gestión de la Calidad.",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-80e4-8e3d-db02a381c918",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-80bd-a332-c842d0dd479a",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "3.-  Cual es el objetivo de la ",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            },
-            {
-              "text": "Ley 27.506",
-              "bold": true,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            },
-            {
-              "text": "?",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-808c-a512-c8e2924c7bd6",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "Busca fomentar la innovación, la generación de empleo calificado, la competitividad y el desarrollo tecnológico del país.",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8008-823b-fcb3f15b1f99",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8011-86ca-f182a7523e6e",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "4.- Cómo se relaciona con SGC",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8039-b017-ddadcee9d637",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "La Ley 27.506 se relaciona directamente con los Sistemas de Gestión de la Calidad porque promueve que las empresas mejoren continuamente sus productos, servicios y procesos.",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-807d-b47b-ddd75d1404e1",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "Para acceder al régimen, una empresa puede acreditar mejoras continuas en la calidad o demostrar que cumple con una norma reconocida, como ISO 9001.",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8034-becd-d783d27436c6",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8056-825f-d7d6d77ac362",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "5.- Cuáles son los requisitos?",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-80c1-b10f-e571e5514744",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "Para acceder a los beneficios de la ley, las empresas deben cumplir ciertos requisitos:",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8016-88dd-c2fc1350dcea",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "1. Estar constituidas legalmente: ser personas jurídicas habilitadas para desarrollar actividades en Argentina.",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-80d1-bdaf-f585d5b9bfaf",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "2. Realizar actividades promovidas: desarrollar actividades relacionadas con la economía del conocimiento.",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8023-90ca-d12d5f58f2ab",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "3. Cumplir con la facturación requerida: generalmente, al menos el 70% de la facturación anual debe provenir de actividades promovidas. Existen excepciones y condiciones especiales.",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-80c1-b062-e6bbbbecb0dd",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "4. Estar al día con sus obligaciones: no tener deudas fiscales, laborales, gremiales ni previsionales.",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-80eb-a905-e9ec77c36544",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "5. Inscribirse en el registro: formar parte del Registro Nacional de Beneficiarios del Régimen de Promoción de la Economía del Conocimiento.",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-80cf-8c7a-e410feb9be55",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "6. Cumplir al menos dos de las siguientes tres condiciones:",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-80b2-9593-ec0afaf59d79",
+          "id": "4201996d-4e8f-80cb-b2f2-d8ff03a516e1",
           "type": "bulleted_list_item",
           "text": [
             {
-              "text": "Acreditar mejoras continuas o una certificación de calidad reconocida.",
+              "text": "proveer una notacion para que lo entiendan tanto la gente del propio negocio y los desarrolladores",
               "bold": false,
               "italic": false,
               "strike": false,
@@ -1026,11 +696,11 @@
           "children": []
         },
         {
-          "id": "4141996d-4e8f-80b8-8987-f6135f62f92f",
+          "id": "4201996d-4e8f-8031-a11b-e5702d48514e",
           "type": "bulleted_list_item",
           "text": [
             {
-              "text": "Realizar inversiones en capacitación del personal o investigación y desarrollo.",
+              "text": "crea un puente estandarizado entre el diseño de procesos de negocio y su implementacion",
               "bold": false,
               "italic": false,
               "strike": false,
@@ -1041,11 +711,11 @@
           "children": []
         },
         {
-          "id": "4141996d-4e8f-8013-a15a-ead5784ae0a8",
+          "id": "4201996d-4e8f-80be-8bc2-e1fce0d1e8fb",
           "type": "bulleted_list_item",
           "text": [
             {
-              "text": "Exportar bienes o servicios relacionados con la economía del conocimiento.",
+              "text": "asegura que los lenguajes para la ejecucion de procesos de negocio puedan ser visualizados con una notacion comun",
               "bold": false,
               "italic": false,
               "strike": false,
@@ -1056,149 +726,17 @@
           "children": []
         },
         {
-          "id": "4141996d-4e8f-80fb-b0ad-cabc9218c79c",
+          "id": "4201996d-4e8f-80a3-8c9b-e793358de570",
           "type": "paragraph",
           "text": [],
           "children": []
         },
         {
-          "id": "4141996d-4e8f-80b4-82e3-ed5367aa0a1b",
+          "id": "4201996d-4e8f-803f-adea-e7de310bdf15",
           "type": "paragraph",
           "text": [
             {
-              "text": "6.-  Indique ",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            },
-            {
-              "text": "beneficios concretos que otorga",
-              "bold": true,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8092-9584-d32acb37fadc",
-          "type": "image",
-          "text": [],
-          "children": [],
-          "src": "notion-images/ab47c6a7d16bc25f6e5622e8e312a94f6732003c792767efebb99b33f41362fb.png"
-        },
-        {
-          "id": "4141996d-4e8f-808d-bf8c-d4c0b13ae8b5",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8060-8e26-e0390f509d1e",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-80c5-8074-d68c6540c412",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-800d-8639-eaa8dfe20736",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8009-8381-cc4612d39724",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-805d-83f7-e8ce29d73193",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-808f-ac42-c777a20adbc9",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-800e-9715-c54c90482ed9",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8039-8b54-db39809eade2",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-804c-a256-cee1da98389a",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-80f4-b9ae-cceb7c58565e",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-808c-b875-f1039c26c0e6",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-80fb-8c9d-c8f89d2936e8",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8026-b6ff-ce625f933ccb",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8077-9ee3-ebc37bfe9f12",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-807d-ad84-f45787f7cf32",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8096-818d-e5d8c48323a4",
-          "type": "paragraph",
-          "text": [],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-808d-8731-f1a77537cf05",
-          "type": "heading_3",
-          "text": [
-            {
-              "text": "conceptos importantes:",
+              "text": "\n",
               "bold": false,
               "italic": false,
               "strike": false,
@@ -1209,77 +747,9 @@
           "children": []
         },
         {
-          "id": "4141996d-4e8f-80d2-abb7-dfe406d67865",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "~ Recordá: ISO 9000 te enseña los conceptos. No establece los requisitos para certificar una empresa.\n\n~ La ISO 9001 establece requisitos para que la empresa organice y mejore estos procesos.",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8089-87a1-d0dd310418c4",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "~ISO/IEC 27001: Para identificar riesgos y proteger la información, evitando accesos no autorizados, pérdidas y modificaciones indebidas.",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-8060-a16f-f1a94f61d09c",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "~ISO/IEC 27002 proporciona recomendaciones y controles de seguridad de la información.",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
-          "children": []
-        },
-        {
-          "id": "4141996d-4e8f-80ac-b5f5-fc666ffdcd4f",
+          "id": "4201996d-4e8f-8076-a071-e37c8dfe741e",
           "type": "paragraph",
           "text": [],
-          "children": []
-        }
-      ]
-    },
-    {
-      "id": "notion-def1996d4e8f834cbd2181684a978511",
-      "title": "Unidad 2: Sistema de Gestión de la Calidad (SGC)",
-      "category": "General",
-      "cover": "notion-images/001ecb3379aaa8f007cf60151dc78516f70fe24da2b97ea30bd7cfbe608ae4e5.png",
-      "blocks": [
-        {
-          "id": "4191996d-4e8f-8066-a0aa-dedf700e4340",
-          "type": "paragraph",
-          "text": [
-            {
-              "text": "UNIDAD TEMÁTICA 2: SISTEMA DE GESTIÓN DE LA CALIDAD\nComprender la estructura, los requisitos y el enfoque por procesos del Sistema de Gestión de la Calidad\nconforme a la norma ISO 9001:2015.\n• Sistema de Gestión de la Calidad: concepto, alcance y propósito.\n• Enfoque basado en procesos: mapa de procesos, interacción y control. Ciclo PDCA.\n• Pensamiento basado en riesgos y oportunidades.\n• Relación del SGC con otros sistemas de gestión (ambiental, seguridad de la información, TI).\n• Requisitos de la documentación del SGC: manual de calidad, procedimientos, instrucciones y registros.\n• Gestión de los recursos: humanos, infraestructura, ambiente de trabajo, conocimientos organizacionales.\n• Planificación y control operacional. Diseño y desarrollo de productos y servicios.\n• Norma ISO 9001:2015: estructura de alto nivel (Anexo SL), requisitos y aplicación práctica.\n• Proceso de certificación: etapas, auditorías de certificación y mantenimiento del certificado.",
-              "bold": false,
-              "italic": false,
-              "strike": false,
-              "underline": false,
-              "code": false
-            }
-          ],
           "children": []
         }
       ]
